@@ -78,5 +78,38 @@ namespace Timer_Rubik.WebApp.Controllers
                 });
             }
         }
+
+
+        [HttpGet("account/{accountId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetRuleOfAccount([FromRoute] Guid accountId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var rule = _mapper.Map<RuleDto>(_ruleRepository.GetRuleOfAccount(accountId));
+
+                if (rule == null)
+                {
+                    return NotFound("Not Found Rule");
+                }
+
+                return Ok(rule);
+            } catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
+        }
     }
 }

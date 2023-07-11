@@ -18,6 +18,11 @@ namespace Timer_Rubik.WebApp.Repository
             return _context.Rules.Find(ruleId);
         }
 
+        public Rule GetRuleOfAccount(Guid accountId)
+        {
+            return _context.Accounts.Where(account => account.Id == accountId).Select(rule => rule.Rule).FirstOrDefault();
+        }
+
         public ICollection<Rule> GetRules()
         {
             return _context.Rules.OrderBy(rule => rule.Id).ToList();

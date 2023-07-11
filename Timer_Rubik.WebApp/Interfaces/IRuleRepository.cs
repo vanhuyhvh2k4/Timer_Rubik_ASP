@@ -8,6 +8,8 @@ namespace Timer_Rubik.WebApp.Interfaces
 
         Rule GetRule(Guid ruleId);
 
+        Rule GetRuleOfAccount(Guid accountId);
+
         bool RuleExists(Guid ruleId);
     }
 }
