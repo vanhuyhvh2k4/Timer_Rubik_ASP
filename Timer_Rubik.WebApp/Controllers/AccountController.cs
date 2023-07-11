@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Dto;
 using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Controllers
 {
@@ -74,7 +75,6 @@ namespace Timer_Rubik.WebApp.Controllers
                 var accountRes = new
                 {
                     id = account.Id,
-                    ruleId = account.RuleId,
                     name = account.Name,
                     thumbnail = account.Thumbnail,
                     email = account.Email,
@@ -86,6 +86,45 @@ namespace Timer_Rubik.WebApp.Controllers
                 }
 
                 return Ok(accountRes);
+            } catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult CreateAccount([FromBody] AccountDto createAccount)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var entityAccount = _accountRepository
+                                        .GetAccounts()
+                                        .Where(ac => ac.Email == createAccount.Email)
+                                        .FirstOrDefault();
+
+                if (entityAccount != null)
+                {
+                    return Conflict("Email Already Exists");
+                }
+
+                var accountMap = _mapper.Map<Account>(createAccount);
+
+                _accountRepository.CreateAccount(accountMap);
+
+                return Ok("Created successfully");
             } catch (Exception ex)
             {
                 return StatusCode(500, new
