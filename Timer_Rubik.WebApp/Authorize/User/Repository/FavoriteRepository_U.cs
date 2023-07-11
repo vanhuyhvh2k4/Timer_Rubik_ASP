@@ -17,7 +17,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Repository
         {
             var newFavorite = new Favorite()
             {
-                Id = favorite.Id,
+                Id = new Guid(),
                 AccountId = favorite.AccountId,
                 ScrambleId = favorite.ScrambleId,
                 Time = favorite.Time,
