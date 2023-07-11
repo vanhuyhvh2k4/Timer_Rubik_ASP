@@ -21,6 +21,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 //Register Interface
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IRuleRepository, RuleRepository>();
+builder.Services.AddScoped<IScrambleRepository, ScrambleRepository>();
 
 // Register auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
