@@ -10,6 +10,9 @@ namespace Timer_Rubik.WebApp.Helper
         {
             CreateMap<Account, AccountDto>();
             CreateMap<AccountDto, Account>();
+
+            CreateMap<Rule, RuleDto>();
+            CreateMap<RuleDto, Rule>();
         }
     }
 }

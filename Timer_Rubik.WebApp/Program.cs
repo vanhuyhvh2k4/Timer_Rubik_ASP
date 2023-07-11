@@ -20,6 +20,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 //Register Interface
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IRuleRepository, RuleRepository>();
 
 // Register auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
