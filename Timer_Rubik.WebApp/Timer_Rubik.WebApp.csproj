@@ -18,4 +18,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Authorize\Anonymous\" />
+    <Folder Include="Authorize\User\" />
+  </ItemGroup>
+
 </Project>

@@ -1,21 +1,16 @@
-﻿using Timer_Rubik.WebApp.Data;
-using Timer_Rubik.WebApp.Interfaces;
+﻿using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
+using Timer_Rubik.WebApp.Data;
 using Timer_Rubik.WebApp.Models;
 
-namespace Timer_Rubik.WebApp.Repository
+namespace Timer_Rubik.WebApp.Authorize.Admin.Repository
 {
-    public class AccountRepository : IAccountRepository
+    public class AccountRepository_AD : IAccountRepository_AD
     {
         private readonly DataContext _context;
 
-        public AccountRepository(DataContext context)
+        public AccountRepository_AD(DataContext context)
         {
             _context = context;
-        }
-
-        public bool AccountExists(Guid accountId)
-        {
-            return _context.Accounts.Any(account => account.Id == accountId);
         }
 
         public bool CreateAccount(Account account)
@@ -26,8 +21,8 @@ namespace Timer_Rubik.WebApp.Repository
                 Name = account.Name,
                 Email = account.Email,
                 Password = account.Password,
-                RuleId = Guid.Parse("4e4d22d4-1fc2-11ee-8407-a02bb82e10f9"),
                 Thumbnail = account.Thumbnail,
+                RuleId = account.RuleId,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.MinValue,
             };
@@ -35,16 +30,6 @@ namespace Timer_Rubik.WebApp.Repository
             _context.Accounts.Add(newAccount);
 
             return Save();
-        }
-
-        public Account GetAccount(Guid accountId)
-        {
-            return _context.Accounts.Find(accountId);
-        }
-
-        public ICollection<Account> GetAccounts()
-        {
-            return _context.Accounts.OrderBy(account => account.Id).ToList();
         }
 
         public bool Save()

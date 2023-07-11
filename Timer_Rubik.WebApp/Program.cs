@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
+using Timer_Rubik.WebApp.Authorize.Admin.Repository;
 using Timer_Rubik.WebApp.Data;
 using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Repository;
@@ -25,6 +27,8 @@ builder.Services.AddScoped<IScrambleRepository, ScrambleRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ISolveRepository, SolveRepository>();
 builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+
+builder.Services.AddScoped<IAccountRepository_AD, AccountRepository_AD>();
 
 // Register auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

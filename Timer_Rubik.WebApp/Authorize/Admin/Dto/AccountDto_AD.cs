@@ -1,8 +1,10 @@
-﻿namespace Timer_Rubik.WebApp.Dto
+﻿namespace Timer_Rubik.WebApp.Authorize.Admin.Dto
 {
-    public class AccountDto
+    public class AccountDto_AD
     {
         public Guid Id { get; set; }
+
+        public Guid RuleId { get; set; }
 
         public string Name { get; set; }
 
