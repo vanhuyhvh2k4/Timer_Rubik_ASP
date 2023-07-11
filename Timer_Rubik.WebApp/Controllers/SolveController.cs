@@ -2,40 +2,41 @@
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Dto;
 using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Repository;
 
 namespace Timer_Rubik.WebApp.Controllers
 {
     [ApiController]
-    [Route("api/rule")]
-    public class RuleController : Controller
+    [Route("api/solve")]
+    public class SolveController : Controller
     {
-        private readonly IRuleRepository _ruleRepository;
+        private readonly ISolveRepository _solveRepository;
         private readonly IMapper _mapper;
 
-        public RuleController(IRuleRepository ruleRepository, IMapper mapper)
+        public SolveController(ISolveRepository solveRepository, IMapper mapper)
         {
-            _ruleRepository = ruleRepository;
+            _solveRepository = solveRepository;
             _mapper = mapper;
         }
-
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetRules()
+        public IActionResult GetSolves()
         {
             try
             {
-                var rules = _mapper.Map<List<RuleDto>>(_ruleRepository.GetRules());
+                var solves = _mapper.Map<List<SolveDto>>(_solveRepository.GetSolves());
 
-                if (rules.Count == 0)
+                if (solves.Count == 0)
                 {
-                    return NotFound("Not Found Rule");
+                    return NotFound("Not Found Solve");
                 }
 
-                return Ok(rules);
-            } catch (Exception ex)
+                return Ok(solves);
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
@@ -45,13 +46,12 @@ namespace Timer_Rubik.WebApp.Controllers
             }
         }
 
-
-        [HttpGet("{ruleId}")]
+        [HttpGet("{solveId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetRule([FromRoute] Guid ruleId)
+        public IActionResult GetSolve([FromRoute] Guid solveId)
         {
             try
             {
@@ -60,15 +60,16 @@ namespace Timer_Rubik.WebApp.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var rule = _mapper.Map<RuleDto>(_ruleRepository.GetRule(ruleId));
+                var scramble = _mapper.Map<SolveDto>(_solveRepository.GetSolve(solveId));
 
-                if (rule == null)
+                if (scramble == null)
                 {
-                    return NotFound("Not Found Rule");
+                    return NotFound("Not Found Solve");
                 }
 
-                return Ok(rule);
-            } catch (Exception ex)
+                return Ok(scramble);
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
@@ -78,13 +79,12 @@ namespace Timer_Rubik.WebApp.Controllers
             }
         }
 
-
-        [HttpGet("account/{accountId}")]
+        [HttpGet("scramble/{scrambleId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetRuleOfAccount([FromRoute] Guid accountId)
+        public IActionResult GetSolveOfScramble([FromRoute] Guid scrambleId)
         {
             try
             {
@@ -93,15 +93,16 @@ namespace Timer_Rubik.WebApp.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var rule = _mapper.Map<RuleDto>(_ruleRepository.GetRuleOfAccount(accountId));
+                var scramble = _mapper.Map<SolveDto>(_solveRepository.GetSolveOfScramble(scrambleId));
 
-                if (rule == null)
+                if (scramble == null)
                 {
-                    return NotFound("Not Found Rule");
+                    return NotFound("Not Found Solve");
                 }
 
-                return Ok(rule);
-            } catch (Exception ex)
+                return Ok(scramble);
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new
                 {

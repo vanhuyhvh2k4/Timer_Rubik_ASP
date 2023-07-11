@@ -16,6 +16,15 @@ namespace Timer_Rubik.WebApp.Helper
 
             CreateMap<Scramble, ScrambleDto>();
             CreateMap<ScrambleDto, Scramble>();
+
+            CreateMap<Category, CategoryDto>();
+            CreateMap<CategoryDto, Category>();
+
+            CreateMap<Solve, SolveDto>();
+            CreateMap<SolveDto, Solve>();
+
+            CreateMap<Favorite, FavoriteDto>();
+            CreateMap<FavoriteDto, Favorite>();
         }
     }
 }

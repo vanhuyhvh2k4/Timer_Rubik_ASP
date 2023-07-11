@@ -2,40 +2,41 @@
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Dto;
 using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Repository;
 
 namespace Timer_Rubik.WebApp.Controllers
 {
     [ApiController]
-    [Route("api/scramble")]
-    public class ScrambleController : Controller
+    [Route("api/favorite")]
+    public class FavoriteController : Controller
     {
-        private readonly IScrambleRepository _scrambleRepository;
+        private readonly IFavoriteRepository _favoriteRepository;
         private readonly IMapper _mapper;
 
-        public ScrambleController(IScrambleRepository scrambleRepository, IMapper mapper)
+        public FavoriteController(IFavoriteRepository favoriteRepository, IMapper mapper)
         {
-            _scrambleRepository = scrambleRepository;
+            _favoriteRepository = favoriteRepository;
             _mapper = mapper;
         }
-
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetScrambles()
+        public IActionResult GetFavorites()
         {
             try
             {
-                var scrambles = _mapper.Map<List<ScrambleDto>>(_scrambleRepository.GetScrambles());
+                var favorites = _mapper.Map<List<FavoriteDto>>(_favoriteRepository.GetFavorites());
 
-                if (scrambles.Count == 0)
+                if (favorites.Count == 0)
                 {
-                    return NotFound("Not Found Scramble");
+                    return NotFound("Not Found Favorite");
                 }
 
-                return Ok(scrambles);
-            } catch (Exception ex)
+                return Ok(favorites);
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
@@ -45,12 +46,12 @@ namespace Timer_Rubik.WebApp.Controllers
             }
         }
 
-        [HttpGet("{scrambleId}")]
+        [HttpGet("{favoriteId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetScramble([FromRoute] Guid scrambleId)
+        public IActionResult GetFavorite([FromRoute] Guid favoriteId)
         {
             try
             {
@@ -59,15 +60,16 @@ namespace Timer_Rubik.WebApp.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<ScrambleDto>(_scrambleRepository.GetScramble(scrambleId));
+                var favorite = _mapper.Map<FavoriteDto>(_favoriteRepository.GetFavorite(favoriteId));
 
-                if (scramble == null)
+                if (favorite == null)
                 {
-                    return NotFound("Not Found Scramble");
+                    return NotFound("Not Found Favorite");
                 }
 
-                return Ok(scramble);
-            } catch (Exception ex)
+                return Ok(favorite);
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
@@ -76,14 +78,13 @@ namespace Timer_Rubik.WebApp.Controllers
                 });
             }
         }
-
 
         [HttpGet("account/{accountId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetScrambleOfAccount([FromRoute] Guid accountId)
+        public IActionResult GetFavoritesOfAccount([FromRoute] Guid accountId)
         {
             try
             {
@@ -92,15 +93,16 @@ namespace Timer_Rubik.WebApp.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<List<ScrambleDto>>(_scrambleRepository.GetScramblesOfAccount(accountId));
+                var favorites = _mapper.Map<List<FavoriteDto>>(_favoriteRepository.GetFavoritesOfAccount(accountId));
 
-                if (scramble.Count == 0)
+                if (favorites.Count == 0)
                 {
-                    return NotFound("Not Found Scramble");
+                    return NotFound("Not Found Favorite");
                 }
 
-                return Ok(scramble);
-            } catch (Exception ex)
+                return Ok(favorites);
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
@@ -110,12 +112,12 @@ namespace Timer_Rubik.WebApp.Controllers
             }
         }
 
-        [HttpGet("category/{categoryId}")]
+        [HttpGet("scramble/{scrambleId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetScrambleByCategory([FromRoute] Guid categoryId)
+        public IActionResult GetFavoritesByScramble([FromRoute] Guid scrambleId)
         {
             try
             {
@@ -124,15 +126,16 @@ namespace Timer_Rubik.WebApp.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<List<ScrambleDto>>(_scrambleRepository.GetScrambleByCategory(categoryId));
+                var favorites = _mapper.Map<List<FavoriteDto>>(_favoriteRepository.GetFavoritesByScramble(scrambleId));
 
-                if (scramble.Count == 0)
+                if (favorites.Count == 0)
                 {
-                    return NotFound("Not Found Scramble");
+                    return NotFound("Not Found Favorite");
                 }
 
-                return Ok(scramble);
-            } catch (Exception ex)
+                return Ok(favorites);
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
