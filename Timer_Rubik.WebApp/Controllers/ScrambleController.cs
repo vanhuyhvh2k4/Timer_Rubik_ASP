@@ -45,7 +45,6 @@ namespace Timer_Rubik.WebApp.Controllers
             }
         }
 
-
         [HttpGet("{scrambleId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -19,6 +19,9 @@ namespace Timer_Rubik.WebApp.Helper
 
             CreateMap<Category, CategoryDto>();
             CreateMap<CategoryDto, Category>();
+
+            CreateMap<Solve, SolveDto>();
+            CreateMap<SolveDto, Solve>();
         }
     }
 }
