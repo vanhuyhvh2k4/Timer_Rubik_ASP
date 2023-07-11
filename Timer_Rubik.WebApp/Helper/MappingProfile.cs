@@ -22,6 +22,9 @@ namespace Timer_Rubik.WebApp.Helper
 
             CreateMap<Solve, SolveDto>();
             CreateMap<SolveDto, Solve>();
+
+            CreateMap<Favorite, FavoriteDto>();
+            CreateMap<FavoriteDto, Favorite>();
         }
     }
 }
