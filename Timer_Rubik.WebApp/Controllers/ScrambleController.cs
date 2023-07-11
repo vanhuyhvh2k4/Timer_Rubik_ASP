@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Timer_Rubik.WebApp.Authorize.Admin.Dto;
 using Timer_Rubik.WebApp.Dto;
 using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Models;
+using Timer_Rubik.WebApp.Repository;
 
 namespace Timer_Rubik.WebApp.Controllers
 {
@@ -10,11 +13,15 @@ namespace Timer_Rubik.WebApp.Controllers
     public class ScrambleController : Controller
     {
         private readonly IScrambleRepository _scrambleRepository;
+        private readonly IAccountRepository _accountRepository;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public ScrambleController(IScrambleRepository scrambleRepository, IMapper mapper)
+        public ScrambleController(IScrambleRepository scrambleRepository,IAccountRepository accountRepository,  ICategoryRepository categoryRepository, IMapper mapper)
         {
             _scrambleRepository = scrambleRepository;
+            _accountRepository = accountRepository;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
@@ -133,6 +140,46 @@ namespace Timer_Rubik.WebApp.Controllers
 
                 return Ok(scramble);
             } catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult CreateCategory([FromBody] ScrambleDto createScramble)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (!_accountRepository.AccountExists(createScramble.AccountId))
+                {
+                    return NotFound("Account is not exists");
+                }
+
+                if (!_categoryRepository.CategoryExists(createScramble.CategoryId))
+                {
+                    return NotFound("Category is not exists");
+                }
+
+                var scrambleMap = _mapper.Map<Scramble>(createScramble);
+
+                _scrambleRepository.CreateScramble(scrambleMap);
+
+                return Ok("Created successfully");
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new
                 {

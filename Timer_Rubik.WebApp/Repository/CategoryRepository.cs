@@ -13,6 +13,11 @@ namespace Timer_Rubik.WebApp.Repository
             _context = context;
         }
 
+        public bool CategoryExists(Guid categoryId)
+        {
+            return _context.Categories.Any(cate => cate.Id == categoryId);
+        }
+
         public ICollection<Category> GetCategories()
         {
             return _context.Categories.OrderBy(cate => cate.Id).ToList();

@@ -7,5 +7,7 @@ namespace Timer_Rubik.WebApp.Interfaces
         ICollection<Category> GetCategories();
 
         Category GetCategory(Guid categoryId);
+
+        bool CategoryExists(Guid categoryId);
     }
 }
