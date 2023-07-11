@@ -54,7 +54,7 @@ namespace Timer_Rubik.WebApp.Migrations
 
                     b.HasIndex("RuleId");
 
-                    b.ToTable("accounts");
+                    b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("Timer_Rubik.WebApp.Models.Category", b =>
@@ -75,7 +75,7 @@ namespace Timer_Rubik.WebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("categories");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Timer_Rubik.WebApp.Models.Favorite", b =>
@@ -93,6 +93,9 @@ namespace Timer_Rubik.WebApp.Migrations
                     b.Property<Guid>("ScrambleId")
                         .HasColumnType("char(36)");
 
+                    b.Property<long>("Time")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -102,7 +105,7 @@ namespace Timer_Rubik.WebApp.Migrations
 
                     b.HasIndex("ScrambleId");
 
-                    b.ToTable("favorites");
+                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("Timer_Rubik.WebApp.Models.Rule", b =>
@@ -123,7 +126,7 @@ namespace Timer_Rubik.WebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("rules");
+                    b.ToTable("Rules");
                 });
 
             modelBuilder.Entity("Timer_Rubik.WebApp.Models.Scramble", b =>
@@ -158,7 +161,7 @@ namespace Timer_Rubik.WebApp.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("scrambles");
+                    b.ToTable("Scrambles");
                 });
 
             modelBuilder.Entity("Timer_Rubik.WebApp.Models.Solve", b =>
@@ -185,7 +188,7 @@ namespace Timer_Rubik.WebApp.Migrations
                     b.HasIndex("ScrambleId")
                         .IsUnique();
 
-                    b.ToTable("solves");
+                    b.ToTable("Solves");
                 });
 
             modelBuilder.Entity("Timer_Rubik.WebApp.Models.Account", b =>

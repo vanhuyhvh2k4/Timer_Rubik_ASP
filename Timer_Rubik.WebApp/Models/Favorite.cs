@@ -8,6 +8,8 @@
 
         public Guid ScrambleId { get; set; }
 
+        public long Time { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }

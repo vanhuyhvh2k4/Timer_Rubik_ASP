@@ -15,7 +15,7 @@ namespace Timer_Rubik.WebApp.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "categories",
+                name: "Categories",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
@@ -26,12 +26,12 @@ namespace Timer_Rubik.WebApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_categories", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "rules",
+                name: "Rules",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
@@ -42,12 +42,12 @@ namespace Timer_Rubik.WebApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_rules", x => x.Id);
+                    table.PrimaryKey("PK_Rules", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "accounts",
+                name: "Accounts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
@@ -65,18 +65,18 @@ namespace Timer_Rubik.WebApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_accounts", x => x.Id);
+                    table.PrimaryKey("PK_Accounts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_accounts_rules_RuleId",
+                        name: "FK_Accounts_Rules_RuleId",
                         column: x => x.RuleId,
-                        principalTable: "rules",
+                        principalTable: "Rules",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "scrambles",
+                name: "Scrambles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
@@ -91,52 +91,53 @@ namespace Timer_Rubik.WebApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_scrambles", x => x.Id);
+                    table.PrimaryKey("PK_Scrambles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_scrambles_accounts_AccountId",
+                        name: "FK_Scrambles_Accounts_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "accounts",
+                        principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_scrambles_categories_CategoryId",
+                        name: "FK_Scrambles_Categories_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "categories",
+                        principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "favorites",
+                name: "Favorites",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     AccountId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     ScrambleId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Time = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_favorites", x => x.Id);
+                    table.PrimaryKey("PK_Favorites", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_favorites_accounts_AccountId",
+                        name: "FK_Favorites_Accounts_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "accounts",
+                        principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_favorites_scrambles_ScrambleId",
+                        name: "FK_Favorites_Scrambles_ScrambleId",
                         column: x => x.ScrambleId,
-                        principalTable: "scrambles",
+                        principalTable: "Scrambles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "solves",
+                name: "Solves",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
@@ -148,44 +149,44 @@ namespace Timer_Rubik.WebApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_solves", x => x.Id);
+                    table.PrimaryKey("PK_Solves", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_solves_scrambles_ScrambleId",
+                        name: "FK_Solves_Scrambles_ScrambleId",
                         column: x => x.ScrambleId,
-                        principalTable: "scrambles",
+                        principalTable: "Scrambles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_accounts_RuleId",
-                table: "accounts",
+                name: "IX_Accounts_RuleId",
+                table: "Accounts",
                 column: "RuleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_favorites_AccountId",
-                table: "favorites",
+                name: "IX_Favorites_AccountId",
+                table: "Favorites",
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_favorites_ScrambleId",
-                table: "favorites",
+                name: "IX_Favorites_ScrambleId",
+                table: "Favorites",
                 column: "ScrambleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_scrambles_AccountId",
-                table: "scrambles",
+                name: "IX_Scrambles_AccountId",
+                table: "Scrambles",
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_scrambles_CategoryId",
-                table: "scrambles",
+                name: "IX_Scrambles_CategoryId",
+                table: "Scrambles",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_solves_ScrambleId",
-                table: "solves",
+                name: "IX_Solves_ScrambleId",
+                table: "Solves",
                 column: "ScrambleId",
                 unique: true);
         }
@@ -194,22 +195,22 @@ namespace Timer_Rubik.WebApp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "favorites");
+                name: "Favorites");
 
             migrationBuilder.DropTable(
-                name: "solves");
+                name: "Solves");
 
             migrationBuilder.DropTable(
-                name: "scrambles");
+                name: "Scrambles");
 
             migrationBuilder.DropTable(
-                name: "accounts");
+                name: "Accounts");
 
             migrationBuilder.DropTable(
-                name: "categories");
+                name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "rules");
+                name: "Rules");
         }
     }
 }

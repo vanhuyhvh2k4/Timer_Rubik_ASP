@@ -9,17 +9,17 @@ namespace Timer_Rubik.WebApp.Data
         {
         }
 
-        public DbSet<Account> accounts { get; set; }
+        public DbSet<Account> Accounts { get; set; }
 
-        public DbSet<Category> categories { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
-        public DbSet<Favorite> favorites { get; set; }
+        public DbSet<Favorite> Favorites { get; set; }
 
-        public DbSet<Rule> rules { get; set; }
+        public DbSet<Rule> Rules { get; set; }
 
-        public DbSet<Scramble> scrambles { get; set; }
+        public DbSet<Scramble> Scrambles { get; set; }
 
-        public DbSet<Solve> solves { get; set; }
+        public DbSet<Solve> Solves { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
