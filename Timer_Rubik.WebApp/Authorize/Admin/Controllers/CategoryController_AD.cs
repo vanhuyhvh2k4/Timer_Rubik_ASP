@@ -8,17 +8,17 @@ using Timer_Rubik.WebApp.Models;
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
 {
     [ApiController]
-    [Route("api/admin/account")]
-    public class AccountController_AD : Controller
+    [Route("api/admin/category")]
+    public class CategoryController_AD : Controller
     {
-        private readonly IAccountRepository_AD _accountRepository_AD;
-        private readonly IAccountRepository _accountRepository;
+        private readonly ICategoryRepository_AD _categoryRepository_AD;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public AccountController_AD(IAccountRepository_AD accountRepository_AD, IAccountRepository accountRepository, IMapper mapper)
+        public CategoryController_AD(ICategoryRepository_AD categoryRepository_AD, ICategoryRepository categoryRepository, IMapper mapper)
         {
-            _accountRepository_AD = accountRepository_AD;
-            _accountRepository = accountRepository;
+            _categoryRepository_AD = categoryRepository_AD;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
@@ -27,7 +27,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult CreateAccount([FromBody] AccountDto_AD createAccount)
+        public IActionResult CreateCategory([FromBody] CategoryDto_AD createCategory)
         {
             try
             {
@@ -36,23 +36,22 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var entityAccount = _accountRepository
-                                        .GetAccounts()
-                                        .Where(ac => ac.Email.Trim().ToUpper() == createAccount.Email.Trim().ToUpper())
+                var entityCategory = _categoryRepository
+                                        .GetCategories()
+                                        .Where(cate => cate.Name.Trim().ToUpper() == createCategory.Name.Trim().ToUpper())
                                         .FirstOrDefault();
 
-                if (entityAccount != null)
+                if (entityCategory != null)
                 {
-                    return Conflict("Email Already Exists");
+                    return Conflict("Name Already Exists");
                 }
 
-                var accountMap = _mapper.Map<Account>(createAccount);
+                var categoryMap = _mapper.Map<Category>(createCategory);
 
-                _accountRepository_AD.CreateAccount(accountMap);
+                _categoryRepository_AD.CreateCategory(categoryMap);
 
                 return Ok("Created successfully");
-            }
-            catch (Exception ex)
+            } catch (Exception ex)
             {
                 return StatusCode(500, new
                 {

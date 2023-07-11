@@ -29,6 +29,7 @@ builder.Services.AddScoped<ISolveRepository, SolveRepository>();
 builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
 
 builder.Services.AddScoped<IAccountRepository_AD, AccountRepository_AD>();
+builder.Services.AddScoped<ICategoryRepository_AD, CategoryRepository_AD>();
 
 // Register auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

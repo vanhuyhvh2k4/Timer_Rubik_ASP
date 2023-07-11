@@ -10,6 +10,9 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Helper
         {
             CreateMap<Account, AccountDto_AD>();
             CreateMap<AccountDto_AD, Account>();
+
+            CreateMap<Category, CategoryDto_AD>();
+            CreateMap<CategoryDto_AD, Category>();
         }
     }
 }
