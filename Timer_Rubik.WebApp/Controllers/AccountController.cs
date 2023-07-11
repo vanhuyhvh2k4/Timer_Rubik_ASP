@@ -26,7 +26,17 @@ namespace Timer_Rubik.WebApp.Controllers
         {
             try
             {
-                var accounts = _mapper.Map<List<AccountDto>>(_accountRepository.GetAccounts());
+                var accounts = _accountRepository
+                                .GetAccounts()
+                                .Select(rule => new
+                                {
+                                    id = rule.Id,
+                                    ruleId = rule.RuleId,
+                                    name = rule.Name,
+                                    thumbnail = rule.Thumbnail,
+                                    email = rule.Email,
+                                })
+                                .ToList();
 
                 if (accounts.Count == 0)
                 {
@@ -61,12 +71,21 @@ namespace Timer_Rubik.WebApp.Controllers
 
                 var account = _mapper.Map<AccountDto>(_accountRepository.GetAccount(accountId));
 
-                if (account == null)
+                var accountRes = new
+                {
+                    id = account.Id,
+                    ruleId = account.RuleId,
+                    name = account.Name,
+                    thumbnail = account.Thumbnail,
+                    email = account.Email,
+                };
+
+                if (accountRes == null)
                 {
                     return NotFound("Not Found Account");
                 }
 
-                return Ok(account);
+                return Ok(accountRes);
             } catch (Exception ex)
             {
                 return StatusCode(500, new
