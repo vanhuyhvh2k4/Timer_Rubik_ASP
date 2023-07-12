@@ -13,6 +13,9 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Helper
 
             CreateMap<Category, CategoryDto_AD>();
             CreateMap<CategoryDto_AD, Category>();
+
+            CreateMap<Scramble, ScrambleDto_AD>();
+            CreateMap<ScrambleDto_AD, Scramble>();
         }
     }
 }
