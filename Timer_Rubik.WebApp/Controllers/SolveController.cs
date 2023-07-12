@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Dto;
 using Timer_Rubik.WebApp.Interfaces;
-using Timer_Rubik.WebApp.Repository;
+using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Controllers
 {
@@ -11,11 +11,13 @@ namespace Timer_Rubik.WebApp.Controllers
     public class SolveController : Controller
     {
         private readonly ISolveRepository _solveRepository;
+        private readonly IScrambleRepository _scrambleRepository;
         private readonly IMapper _mapper;
 
-        public SolveController(ISolveRepository solveRepository, IMapper mapper)
+        public SolveController(ISolveRepository solveRepository, IScrambleRepository scrambleRepository, IMapper mapper)
         {
             _solveRepository = solveRepository;
+            _scrambleRepository = scrambleRepository;
             _mapper = mapper;
         }
 
@@ -101,6 +103,41 @@ namespace Timer_Rubik.WebApp.Controllers
                 }
 
                 return Ok(scramble);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult CreateSolve([FromBody] SolveDto createSolve)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (!_scrambleRepository.ScrambleExists(createSolve.ScrambleId))
+                {
+                    return NotFound("Scramble is not exists");
+                }
+
+                var solveMap = _mapper.Map<Solve>(createSolve);
+
+                _solveRepository.CreateSolve(solveMap);
+
+                return Ok("Created successfully");
             }
             catch (Exception ex)
             {

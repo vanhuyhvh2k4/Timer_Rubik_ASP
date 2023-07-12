@@ -11,5 +11,9 @@ namespace Timer_Rubik.WebApp.Interfaces
         bool SolveExists(Guid solveId);
 
         Solve GetSolveOfScramble(Guid scrambleId);
+
+        bool CreateSolve(Solve solve);
+
+        bool Save();
     }
 }

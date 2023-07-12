@@ -13,6 +13,22 @@ namespace Timer_Rubik.WebApp.Repository
             _context = context;
         }
 
+        public bool CreateSolve(Solve solve)
+        {
+            var newSolve = new Solve()
+            {
+                Id = new Guid(),
+                ScrambleId = solve.ScrambleId,
+                Answer = solve.Answer,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.MinValue,
+            };
+
+            _context.Solves.Add(newSolve);
+
+            return Save();
+        }
+
         public Solve GetSolve(Guid solveId)
         {
             return _context.Solves.Find(solveId);
@@ -26,6 +42,12 @@ namespace Timer_Rubik.WebApp.Repository
         public ICollection<Solve> GetSolves()
         {
             return _context.Solves.OrderBy(solve => solve.Id).ToList();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
 
         public bool SolveExists(Guid solveId)

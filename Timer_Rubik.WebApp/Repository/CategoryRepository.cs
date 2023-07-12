@@ -13,6 +13,11 @@ namespace Timer_Rubik.WebApp.Repository
             _context = context;
         }
 
+        public bool CategoryExists(Guid categoryId)
+        {
+            return _context.Categories.Any(cate => cate.Id == categoryId);
+        }
+
         public ICollection<Category> GetCategories()
         {
             return _context.Categories.OrderBy(cate => cate.Id).ToList();
@@ -21,6 +26,11 @@ namespace Timer_Rubik.WebApp.Repository
         public Category GetCategory(Guid categoryId)
         {
             return _context.Categories.Find(categoryId);
+        }
+
+        public Category GetCategory(string categoryName)
+        {
+            return _context.Categories.Where(cate => cate.Name == categoryName).FirstOrDefault();
         }
     }
 }
