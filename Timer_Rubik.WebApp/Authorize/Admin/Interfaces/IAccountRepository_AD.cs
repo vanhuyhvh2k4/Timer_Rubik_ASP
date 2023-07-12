@@ -7,5 +7,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Interfaces
         bool CreateAccount(Account account);
 
         bool Save();
+
+        bool UpdateAccount(Account account);
     }
 }

@@ -37,5 +37,18 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Repository
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
         }
+
+        public bool UpdateAccount(Account account)
+        {
+            var updateAccount = _context.Accounts.Where(ac => ac.Id == account.Id).FirstOrDefault();
+
+            updateAccount.RuleId = account.RuleId;
+            updateAccount.Name = account.Name;
+            updateAccount.Thumbnail = account.Thumbnail;
+            updateAccount.Email = account.Email;
+            updateAccount.Password = account.Password;
+            updateAccount.UpdatedAt = DateTime.Now;
+            return Save();
+        }
     }
 }

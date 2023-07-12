@@ -42,6 +42,11 @@ namespace Timer_Rubik.WebApp.Repository
             return _context.Accounts.Find(accountId);
         }
 
+        public Account GetAccount(string email)
+        {
+            return _context.Accounts.Where(account => account.Email == email).FirstOrDefault();
+        }
+
         public ICollection<Account> GetAccounts()
         {
             return _context.Accounts.OrderBy(account => account.Id).ToList();
