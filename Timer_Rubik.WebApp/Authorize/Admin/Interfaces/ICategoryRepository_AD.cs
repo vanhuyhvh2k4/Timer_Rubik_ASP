@@ -7,5 +7,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Interfaces
         bool CreateCategory(Category category);
 
         bool Save();
+
+        bool UpdateCategory(Category category);
     }
 }

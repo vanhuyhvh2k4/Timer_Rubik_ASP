@@ -27,5 +27,10 @@ namespace Timer_Rubik.WebApp.Repository
         {
             return _context.Categories.Find(categoryId);
         }
+
+        public Category GetCategory(string categoryName)
+        {
+            return _context.Categories.Where(cate => cate.Name == categoryName).FirstOrDefault();
+        }
     }
 }

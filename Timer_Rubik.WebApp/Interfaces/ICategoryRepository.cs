@@ -8,6 +8,8 @@ namespace Timer_Rubik.WebApp.Interfaces
 
         Category GetCategory(Guid categoryId);
 
+        Category GetCategory(string categoryName);
+
         bool CategoryExists(Guid categoryId);
     }
 }

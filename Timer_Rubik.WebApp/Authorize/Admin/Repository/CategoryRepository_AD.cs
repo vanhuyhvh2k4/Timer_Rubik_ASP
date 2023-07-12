@@ -33,5 +33,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Repository
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
         }
+
+        public bool UpdateCategory(Category category)
+        {
+            var updateCategory = _context.Categories.Where(cate => cate.Id == category.Id).FirstOrDefault();
+
+            updateCategory.Name = category.Name;
+            updateCategory.UpdatedAt = DateTime.Now;
+            return Save();
+        }
     }
 }
