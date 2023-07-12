@@ -33,6 +33,7 @@ builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
 builder.Services.AddScoped<IAccountRepository_AD, AccountRepository_AD>();
 builder.Services.AddScoped<ICategoryRepository_AD, CategoryRepository_AD>();
 builder.Services.AddScoped<IScrambleRepository_AD, ScrambleRepository_AD>();
+builder.Services.AddScoped<ISolveRepository_AD, SolveRepository_AD>();
 
 builder.Services.AddScoped<IFavoriteRepository_U, FavoriteRepository_U>();
 
