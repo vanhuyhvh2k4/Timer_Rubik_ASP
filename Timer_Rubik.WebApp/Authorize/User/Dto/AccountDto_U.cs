@@ -1,6 +1,6 @@
 ﻿namespace Timer_Rubik.WebApp.Authorize.User.Dto
 {
-    public class AccountDto_U
+    public class UpdateAccountDto_U
     {
         public Guid Id { get; set; }
 

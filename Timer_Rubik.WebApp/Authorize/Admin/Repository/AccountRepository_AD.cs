@@ -1,6 +1,7 @@
 ﻿using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
 using Timer_Rubik.WebApp.Data;
 using Timer_Rubik.WebApp.Models;
+using Timer_Rubik.WebApp.Utils;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Repository
 {
@@ -15,12 +16,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Repository
 
         public bool CreateAccount(Account account)
         {
+            var hashedPassword = Password.HashPassword(account.Password);
+
             var newAccount = new Account()
             {
                 Id = new Guid(),
                 Name = account.Name,
                 Email = account.Email,
-                Password = account.Password,
+                Password = hashedPassword,
                 Thumbnail = account.Thumbnail,
                 RuleId = account.RuleId,
                 CreatedAt = DateTime.Now,
@@ -41,12 +44,13 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Repository
         public bool UpdateAccount(Account account)
         {
             var updateAccount = _context.Accounts.Where(ac => ac.Id == account.Id).FirstOrDefault();
+            var hashedPassword = Password.HashPassword(account.Password);
 
             updateAccount.RuleId = account.RuleId;
             updateAccount.Name = account.Name;
             updateAccount.Thumbnail = account.Thumbnail;
             updateAccount.Email = account.Email;
-            updateAccount.Password = account.Password;
+            updateAccount.Password = hashedPassword;
             updateAccount.UpdatedAt = DateTime.Now;
             return Save();
         }

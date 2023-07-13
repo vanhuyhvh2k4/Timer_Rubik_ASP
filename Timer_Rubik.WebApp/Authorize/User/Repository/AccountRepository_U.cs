@@ -1,7 +1,7 @@
-﻿using BCrypt.Net;
-using Timer_Rubik.WebApp.Authorize.User.Interfaces;
+﻿using Timer_Rubik.WebApp.Authorize.User.Interfaces;
 using Timer_Rubik.WebApp.Data;
 using Timer_Rubik.WebApp.Models;
+using Timer_Rubik.WebApp.Utils;
 
 namespace Timer_Rubik.WebApp.Authorize.User.Repository
 {
@@ -14,6 +14,29 @@ namespace Timer_Rubik.WebApp.Authorize.User.Repository
             _context = context;
         }
 
+        public bool CreateAccount(Account account)
+        {
+            var UserRuleId = _context.Rules.Where(rule => rule.RoleName.Trim().ToUpper() == "USER").Select(rule => rule.Id).FirstOrDefault();
+
+            string hashedPassword = Password.HashPassword(account.Password);
+
+            var newAccount = new Account()
+            {
+                Id = new Guid(),
+                Name = account.Name,
+                Email = account.Email,
+                Password = hashedPassword,
+                RuleId = UserRuleId,
+                Thumbnail = account.Thumbnail,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.MinValue,
+            };
+
+            _context.Accounts.Add(newAccount);
+
+            return Save();
+        }
+
         public bool Save()
         {
             var saved = _context.SaveChanges();
@@ -23,9 +46,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Repository
         public bool UpdateAccount(Account account)
         {
             var updateAccount = _context.Accounts.Where(acc => acc.Id == account.Id).FirstOrDefault();
-            string salt = BCrypt.Net.BCrypt.GenerateSalt(10);
-            string passwordWithSalt = account.Password + salt;
-            string hashedPassowrd = BCrypt.Net.BCrypt.HashPassword(passwordWithSalt);
+            string hashedPassowrd = Password.HashPassword(account.Password);
 
             updateAccount.Name = account.Name;
             updateAccount.Thumbnail = account.Thumbnail;

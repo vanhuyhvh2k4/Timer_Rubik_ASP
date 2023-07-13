@@ -95,44 +95,5 @@ namespace Timer_Rubik.WebApp.Controllers
                 });
             }
         }
-
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult CreateAccount([FromBody] AccountDto createAccount)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var entityAccount = _accountRepository
-                                        .GetAccounts()
-                                        .Where(ac => ac.Email == createAccount.Email)
-                                        .FirstOrDefault();
-
-                if (entityAccount != null)
-                {
-                    return Conflict("Email Already Exists");
-                }
-
-                var accountMap = _mapper.Map<Account>(createAccount);
-
-                _accountRepository.CreateAccount(accountMap);
-
-                return Ok("Created successfully");
-            } catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Title = "Something went wrong",
-                    Message = ex.Message,
-                });
-            }
-        }
     }
 }
