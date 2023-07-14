@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Authorize\Anonymous\" />
+    <Folder Include="Authorize\User\" />
   </ItemGroup>
 
 </Project>

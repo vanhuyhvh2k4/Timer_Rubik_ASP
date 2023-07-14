@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
 using Timer_Rubik.WebApp.Dto;
-using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
@@ -12,13 +11,11 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     public class AccountController_Admin : Controller
     {
         private readonly IAccountRepository_Admin _accountRepository_Admin;
-        private readonly IRuleRepository _ruleRepository;
         private readonly IMapper _mapper;
 
-        public AccountController_Admin(IAccountRepository_Admin accountRepository_Admin, IRuleRepository ruleRepository, IMapper mapper)
+        public AccountController_Admin(IAccountRepository_Admin accountRepository_Admin, IMapper mapper)
         {
             _accountRepository_Admin = accountRepository_Admin;
-            _ruleRepository = ruleRepository;
             _mapper = mapper;
         }
 
@@ -171,11 +168,6 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 if (_accountRepository_Admin.GetAccount(updateAccount.Email) != null && oldAccount.Email.Trim().ToUpper() != updateAccount.Email.Trim().ToUpper())
                 {
                     return Conflict("Email already exists");
-                }
-
-                if (!_ruleRepository.RuleExists(updateAccount.RuleId))
-                {
-                    return NotFound("Not Found Rule");
                 }
 
                 var accountMap = _mapper.Map<Account>(updateAccount);
