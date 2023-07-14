@@ -162,5 +162,39 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 });
             }
         }
+
+        [HttpDelete("{accountId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult DeleteAccount([FromRoute] Guid accountId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (!_accountRepository_Admin.AccountExists(accountId))
+                {
+                    return NotFound("Not Found Account");
+                }
+
+                var accountEntity = _accountRepository_Admin.GetAccount(accountId);
+
+                _accountRepository_Admin.DeleteAccount(accountEntity);
+
+                return Ok("Deleted successfully");
+            } catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
+        }
     }
 }

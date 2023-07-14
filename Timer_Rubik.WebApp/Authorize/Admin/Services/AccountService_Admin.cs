@@ -74,5 +74,11 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Services
             updateAccount.UpdatedAt = DateTime.Now;
             return Save();
         }
+
+        public bool DeleteAccount(Account account)
+        {
+            _context.Accounts.Remove(account);
+            return Save();
+        }
     }
 }
