@@ -235,5 +235,40 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 });
             }
         }
+
+        [HttpDelete("{scrambleId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult DeleteScramble([FromRoute] Guid scrambleId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (!_scrambleRepository_Admin.ScrambleExists(scrambleId))
+                {
+                    return NotFound("Not Found Scramble");
+                }
+
+                var scrambleEntity = _scrambleRepository_Admin.GetScramble(scrambleId);
+
+                _scrambleRepository_Admin.DeleteScramble(scrambleEntity);
+
+                return Ok("Deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
+        }
     }
 }

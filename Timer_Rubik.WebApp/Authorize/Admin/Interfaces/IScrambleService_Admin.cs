@@ -19,5 +19,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Interfaces
         bool UpdateScramble(Scramble scramble);
 
         bool Save();
+
+        bool DeleteScramble(Scramble scramble);
     }
 }

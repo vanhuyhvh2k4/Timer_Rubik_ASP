@@ -31,6 +31,12 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Services
             return Save();
         }
 
+        public bool DeleteScramble(Scramble scramble)
+        {
+            _context.Scrambles.Remove(scramble);
+            return Save();
+        }
+
         public Scramble GetScramble(Guid scrambleId)
         {
             return _context.Scrambles.Find(scrambleId);
