@@ -1,4 +1,5 @@
-﻿using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
 using Timer_Rubik.WebApp.Data;
 using Timer_Rubik.WebApp.Models;
 
@@ -43,12 +44,22 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Services
 
         public Favorite GetFavorite(Guid favoriteId)
         {
-            return _context.Favorites.Find(favoriteId);
+            return _context.Favorites
+                    .Where(fav => fav.Id == favoriteId)
+                    .Include(fav => fav.Account)
+                    .Include(fav => fav.Scramble)
+                    .Include(fav => fav.Scramble.Category)
+                    .FirstOrDefault();
         }
 
         public ICollection<Favorite> GetFavorites()
         {
-            return _context.Favorites.OrderBy(fav => fav.Id).ToList();
+            return _context.Favorites
+                .OrderBy(fav => fav.Id)
+                .Include(fav => fav.Account)
+                .Include(fav => fav.Scramble)
+                .Include(fav => fav.Scramble.Category)
+                .ToList();
         }
 
         public ICollection<Favorite> GetFavoritesByScramble(Guid scrambleId)

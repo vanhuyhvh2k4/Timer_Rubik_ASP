@@ -31,7 +31,28 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var favorites = _mapper.Map<List<GetFavoriteDTO_Admin>>(_favoriteService_Admin.GetFavorites());
+                var favorites = _favoriteService_Admin
+                                    .GetFavorites()
+                                    .Select(fav => new 
+                                    {
+                                        Id = fav.Id,
+                                        Account = new {
+                                            Id = fav.AccountId,
+                                            Name = fav.Account.Name,
+                                            Thumbnail = fav.Account.Thumbnail,
+                                            Email = fav.Account.Email
+                                        },
+                                        Scramble = new {
+                                            Id = fav.ScrambleId,
+                                            Algorithm = fav.Scramble.Algorithm,
+                                            Thumbnail = fav.Scramble.Thumbnail,
+                                            Category = fav.Scramble.Category.Name
+                                        },
+                                        Time = fav.Time,
+                                        CreatedAt = fav.CreatedAt,
+                                        UpdatedAt = fav.UpdatedAt,
+                                    })
+                                    .ToList();
 
                 if (favorites.Count == 0)
                 {
@@ -64,14 +85,37 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var favorite = _mapper.Map<GetFavoriteDTO_Admin>(_favoriteService_Admin.GetFavorite(favoriteId));
+                var favorite = _favoriteService_Admin.GetFavorite(favoriteId);
 
                 if (favorite == null)
                 {
                     return NotFound("Not Found Favorite");
-                }
+                } else
+                {
+                    var favoriteRes = new
+                    {
+                        Id = favorite.Id,
+                        Account = new
+                        {
+                            Id = favorite.AccountId,
+                            Name = favorite.Account.Name,
+                            Thumbnail = favorite.Account.Thumbnail,
+                            Email = favorite.Account.Email
+                        },
+                        Scramble = new
+                        {
+                            Id = favorite.ScrambleId,
+                            Algorithm = favorite.Scramble.Algorithm,
+                            Thumbnail = favorite.Scramble.Thumbnail,
+                            Category = favorite.Scramble.Category.Name
+                        },
+                        Time = favorite.Time,
+                        CreatedAt = favorite.CreatedAt,
+                        UpdatedAt = favorite.UpdatedAt,
+                    };
 
-                return Ok(favorite);
+                    return Ok(favoriteRes);
+                }
             }
             catch (Exception ex)
             {
