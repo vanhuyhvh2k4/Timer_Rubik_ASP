@@ -11,17 +11,94 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/account")]
     public class AccountController_Admin : Controller
     {
-        private readonly IAccountRepository_Admin _accountRepository_AD;
-        private readonly IAccountRepository _accountRepository;
+        private readonly IAccountRepository_Admin _accountRepository_Admin;
         private readonly IRuleRepository _ruleRepository;
         private readonly IMapper _mapper;
 
-        public AccountController_Admin(IAccountRepository_Admin accountRepository_AD, IAccountRepository accountRepository, IRuleRepository ruleRepository, IMapper mapper)
+        public AccountController_Admin(IAccountRepository_Admin accountRepository_Admin, IRuleRepository ruleRepository, IMapper mapper)
         {
-            _accountRepository_AD = accountRepository_AD;
-            _accountRepository = accountRepository;
+            _accountRepository_Admin = accountRepository_Admin;
             _ruleRepository = ruleRepository;
             _mapper = mapper;
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetAccounts()
+        {
+            try
+            {
+                var accounts = _accountRepository_Admin
+                                .GetAccounts()
+                                .Select(rule => new
+                                {
+                                    id = rule.Id,
+                                    ruleId = rule.RuleId,
+                                    name = rule.Name,
+                                    thumbnail = rule.Thumbnail,
+                                    email = rule.Email,
+                                })
+                                .ToList();
+
+                if (accounts.Count == 0)
+                {
+                    return NotFound("Not Found Account");
+                }
+
+                return Ok(accounts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
+        }
+
+
+        [HttpGet("{accountId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetAccount([FromRoute] Guid accountId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var account = _mapper.Map<AccountDto>(_accountRepository_Admin.GetAccount(accountId));
+
+                var accountRes = new
+                {
+                    id = account.Id,
+                    name = account.Name,
+                    thumbnail = account.Thumbnail,
+                    email = account.Email,
+                };
+
+                if (accountRes == null)
+                {
+                    return NotFound("Not Found Account");
+                }
+
+                return Ok(accountRes);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
         }
 
         [HttpPost]
@@ -38,7 +115,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var entityAccount = _accountRepository
+                var entityAccount = _accountRepository_Admin
                                         .GetAccounts()
                                         .Where(ac => ac.Email.Trim().ToUpper() == createAccount.Email.Trim().ToUpper())
                                         .FirstOrDefault();
@@ -50,7 +127,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
 
                 var accountMap = _mapper.Map<Account>(createAccount);
 
-                _accountRepository_AD.CreateAccount(accountMap);
+                _accountRepository_Admin.CreateAccount(accountMap);
 
                 return Ok("Created successfully");
             }
@@ -84,14 +161,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest("Id is not match");
                 }
 
-                var oldAccount = _accountRepository.GetAccount(accountId);
+                var oldAccount = _accountRepository_Admin.GetAccount(accountId);
                     
-                if (!_accountRepository.AccountExists(accountId))
+                if (!_accountRepository_Admin.AccountExists(accountId))
                 {
                     return NotFound("Not Found Account");
                 }
 
-                if (_accountRepository.GetAccount(updateAccount.Email) != null && oldAccount.Email.Trim().ToUpper() != updateAccount.Email.Trim().ToUpper())
+                if (_accountRepository_Admin.GetAccount(updateAccount.Email) != null && oldAccount.Email.Trim().ToUpper() != updateAccount.Email.Trim().ToUpper())
                 {
                     return Conflict("Email already exists");
                 }
@@ -103,7 +180,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
 
                 var accountMap = _mapper.Map<Account>(updateAccount);
 
-                _accountRepository_AD.UpdateAccount(accountMap);
+                _accountRepository_Admin.UpdateAccount(accountMap);
 
                 return Ok("Updated successfully");
             } catch (Exception ex)

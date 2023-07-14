@@ -13,6 +13,42 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Repository
             _context = context;
         }
 
+        public bool CreateSolve(Solve solve)
+        {
+            var newSolve = new Solve()
+            {
+                Id = new Guid(),
+                ScrambleId = solve.ScrambleId,
+                Answer = solve.Answer,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.MinValue,
+            };
+
+            _context.Solves.Add(newSolve);
+
+            return Save();
+        }
+
+        public Solve GetSolve(Guid solveId)
+        {
+            return _context.Solves.Find(solveId);
+        }
+
+        public Solve GetSolveOfScramble(Guid scrambleId)
+        {
+            return _context.Solves.Where(solve => solve.ScrambleId == scrambleId).FirstOrDefault();
+        }
+
+        public ICollection<Solve> GetSolves()
+        {
+            return _context.Solves.OrderBy(solve => solve.Id).ToList();
+        }
+
+        public bool SolveExists(Guid solveId)
+        {
+            return _context.Solves.Any(solve => solve.Id == solveId);
+        }
+
         public bool Save()
         {
             var saved = _context.SaveChanges();
