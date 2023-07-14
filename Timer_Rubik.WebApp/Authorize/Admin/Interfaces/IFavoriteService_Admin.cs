@@ -19,5 +19,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Interfaces
         bool UpdateFavorite(Favorite favorite);
 
         bool Save();
+
+        bool DeleteFavorite(Favorite favorite);
     }
 }

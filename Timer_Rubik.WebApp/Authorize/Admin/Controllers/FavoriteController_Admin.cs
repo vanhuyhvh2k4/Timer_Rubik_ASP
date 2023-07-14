@@ -238,5 +238,40 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 });
             }
         }
+
+        [HttpDelete("{favoriteId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult DeleteFavorite([FromRoute] Guid favoriteId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (!_favoriteService_Admin.FavoriteExists(favoriteId))
+                {
+                    return NotFound("Not Found Favorite");
+                }
+
+                var favoriteEntity= _favoriteService_Admin.GetFavorite(favoriteId);
+
+                _favoriteService_Admin.DeleteFavorite(favoriteEntity);
+
+                return Ok("Deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
+        }
     }
 }

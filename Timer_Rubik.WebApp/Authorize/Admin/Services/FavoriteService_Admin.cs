@@ -30,6 +30,12 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Services
             return Save();
         }
 
+        public bool DeleteFavorite(Favorite favorite)
+        {
+            _context.Favorites.Remove(favorite);
+            return Save();
+        }
+
         public bool FavoriteExists(Guid favoriteId)
         {
             return _context.Favorites.Any(fav => fav.Id == favoriteId);
