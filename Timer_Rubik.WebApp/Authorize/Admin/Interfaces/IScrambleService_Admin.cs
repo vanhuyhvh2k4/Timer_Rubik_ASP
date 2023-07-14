@@ -2,7 +2,7 @@
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Interfaces
 {
-    public interface IScrambleRepository_Admin
+    public interface IScrambleService_Admin
     {
         ICollection<Scramble> GetScrambles();
 

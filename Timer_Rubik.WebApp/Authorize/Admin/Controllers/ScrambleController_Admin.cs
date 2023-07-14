@@ -10,12 +10,12 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/scramble")]
     public class ScrambleController_Admin : Controller
     {
-        private readonly IScrambleRepository_Admin _scrambleRepository_Admin;
-        private readonly IAccountRepository_Admin _accountRepository_Admin;
-        private readonly ICategoryRepository_Admin _categoryRepository_Admin;
+        private readonly IScrambleService_Admin _scrambleRepository_Admin;
+        private readonly IAccountService_Admin _accountRepository_Admin;
+        private readonly ICategoryService_Admin _categoryRepository_Admin;
         private readonly IMapper _mapper;
 
-        public ScrambleController_Admin(IScrambleRepository_Admin scrambleRepository_Admin, IAccountRepository_Admin accountRepository_Admin, ICategoryRepository_Admin categoryRepository_Admin, IMapper mapper)
+        public ScrambleController_Admin(IScrambleService_Admin scrambleRepository_Admin, IAccountService_Admin accountRepository_Admin, ICategoryService_Admin categoryRepository_Admin, IMapper mapper)
         {
             _scrambleRepository_Admin = scrambleRepository_Admin;
             _accountRepository_Admin = accountRepository_Admin;

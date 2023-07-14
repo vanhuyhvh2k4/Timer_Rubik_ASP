@@ -10,10 +10,10 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/category")]
     public class CategoryController_Admin : Controller
     {
-        private readonly ICategoryRepository_Admin _categoryRepository_Admin;
+        private readonly ICategoryService_Admin _categoryRepository_Admin;
         private readonly IMapper _mapper;
 
-        public CategoryController_Admin(ICategoryRepository_Admin categoryRepository_Admin, IMapper mapper)
+        public CategoryController_Admin(ICategoryService_Admin categoryRepository_Admin, IMapper mapper)
         {
             _categoryRepository_Admin = categoryRepository_Admin;
             _mapper = mapper;

@@ -2,7 +2,7 @@
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Interfaces
 {
-    public interface ISolveRepository_Admin
+    public interface ISolveService_Admin
     {
         ICollection<Solve> GetSolves();
 

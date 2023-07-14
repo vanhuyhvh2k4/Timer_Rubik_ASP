@@ -10,11 +10,11 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/solve")]
     public class SolveController_Admin : Controller
     {
-        private readonly ISolveRepository_Admin _solveRepository_Admin;
-        private readonly IScrambleRepository_Admin _scrambleRepository_Admin;
+        private readonly ISolveService_Admin _solveRepository_Admin;
+        private readonly IScrambleService_Admin _scrambleRepository_Admin;
         private readonly IMapper _mapper;
 
-        public SolveController_Admin(ISolveRepository_Admin solveRepository_Admin, IScrambleRepository_Admin scrambleRepository_Admin, IMapper mapper)
+        public SolveController_Admin(ISolveService_Admin solveRepository_Admin, IScrambleService_Admin scrambleRepository_Admin, IMapper mapper)
         {
             _solveRepository_Admin = solveRepository_Admin;
             _scrambleRepository_Admin = scrambleRepository_Admin;

@@ -2,7 +2,7 @@
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Interfaces
 {
-    public interface ICategoryRepository_Admin
+    public interface ICategoryService_Admin
     {
         ICollection<Category> GetCategories();
 

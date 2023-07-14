@@ -3,13 +3,13 @@ using Timer_Rubik.WebApp.Data;
 using Timer_Rubik.WebApp.Models;
 using Timer_Rubik.WebApp.Utils;
 
-namespace Timer_Rubik.WebApp.Authorize.Admin.Repository
+namespace Timer_Rubik.WebApp.Authorize.Admin.Services
 {
-    public class AccountRepository_Admin : IAccountRepository_Admin
+    public class AccountService_Admin : IAccountService_Admin
     {
         private readonly DataContext _context;
 
-        public AccountRepository_Admin(DataContext context)
+        public AccountService_Admin(DataContext context)
         {
             _context = context;
         }

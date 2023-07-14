@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Timer_Rubik.WebApp.Authorize.Admin.DTO;
 using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
 using Timer_Rubik.WebApp.Dto;
 using Timer_Rubik.WebApp.Models;
@@ -10,10 +11,10 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/account")]
     public class AccountController_Admin : Controller
     {
-        private readonly IAccountRepository_Admin _accountRepository_Admin;
+        private readonly IAccountService_Admin _accountRepository_Admin;
         private readonly IMapper _mapper;
 
-        public AccountController_Admin(IAccountRepository_Admin accountRepository_Admin, IMapper mapper)
+        public AccountController_Admin(IAccountService_Admin accountRepository_Admin, IMapper mapper)
         {
             _accountRepository_Admin = accountRepository_Admin;
             _mapper = mapper;
@@ -29,13 +30,15 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
             {
                 var accounts = _accountRepository_Admin
                                 .GetAccounts()
-                                .Select(rule => new
+                                .Select(account => new
                                 {
-                                    id = rule.Id,
-                                    ruleId = rule.RuleId,
-                                    name = rule.Name,
-                                    thumbnail = rule.Thumbnail,
-                                    email = rule.Email,
+                                    id = account.Id,
+                                    ruleId = account.RuleId,
+                                    name = account.Name,
+                                    thumbnail = account.Thumbnail,
+                                    email = account.Email,
+                                    createdAt = account.CreatedAt,
+                                    updatedAt = account.UpdatedAt,
                                 })
                                 .ToList();
 
@@ -103,7 +106,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult CreateAccount([FromBody] AccountDto createAccount)
+        public IActionResult CreateAccount([FromBody] CreateAccountDTO_Admin createAccount)
         {
             try
             {
@@ -144,7 +147,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UpdateAccount([FromRoute] Guid accountId, [FromBody] AccountDto updateAccount)
+        public IActionResult UpdateAccount([FromRoute] Guid accountId, [FromBody] UpdateAccountDTO_Admin updateAccount)
         {
             try
             {

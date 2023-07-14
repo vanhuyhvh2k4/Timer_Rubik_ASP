@@ -2,13 +2,13 @@
 using Timer_Rubik.WebApp.Data;
 using Timer_Rubik.WebApp.Models;
 
-namespace Timer_Rubik.WebApp.Authorize.Admin.Repository
+namespace Timer_Rubik.WebApp.Authorize.Admin.Services
 {
-    public class ScrambleRepository_Admin : IScrambleRepository_Admin
+    public class ScrambleService_Admin : IScrambleService_Admin
     {
         private readonly DataContext _context;
 
-        public ScrambleRepository_Admin(DataContext context)
+        public ScrambleService_Admin(DataContext context)
         {
             _context = context;
         }
