@@ -76,20 +76,24 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
 
                 var account = _mapper.Map<AccountDto>(_accountRepository_Admin.GetAccount(accountId));
 
-                var accountRes = new
-                {
-                    id = account.Id,
-                    name = account.Name,
-                    thumbnail = account.Thumbnail,
-                    email = account.Email,
-                };
-
-                if (accountRes == null)
+                if (account == null)
                 {
                     return NotFound("Not Found Account");
+                } else
+                {
+                    var accountRes = new
+                    {
+                        id = account.Id,
+                        ruleId = account.RuleId,
+                        name = account.Name,
+                        thumbnail = account.Thumbnail,
+                        email = account.Email,
+                        createdAt = account.CreatedAt,
+                        updatedAt = account.UpdatedAt,
+                    };
+                    return Ok(accountRes);
                 }
 
-                return Ok(accountRes);
             }
             catch (Exception ex)
             {
