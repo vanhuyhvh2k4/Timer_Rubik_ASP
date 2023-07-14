@@ -187,5 +187,40 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 });
             }
         }
+
+        [HttpDelete("{solveId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult DeleteSolve([FromRoute] Guid solveId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (!_solveRepository_Admin.SolveExists(solveId))
+                {
+                    return NotFound("Not Found Solve");
+                }
+
+                var solveEntity = _solveRepository_Admin.GetSolve(solveId);
+
+                _solveRepository_Admin.DeleteSolve(solveEntity);
+
+                return Ok("Deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
+        }
     }
 }

@@ -17,5 +17,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Interfaces
         bool UpdateSolve(Solve solve);
 
         bool Save();
+
+        bool DeleteSolve(Solve solve);
     }
 }

@@ -65,5 +65,11 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Services
             return Save();
             
         }
+
+        public bool DeleteSolve(Solve solve)
+        {
+            _context.Solves.Remove(solve);
+            return Save();
+        }
     }
 }
