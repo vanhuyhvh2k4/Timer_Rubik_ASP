@@ -1,10 +1,10 @@
-﻿namespace Timer_Rubik.WebApp.Dto
+﻿namespace Timer_Rubik.WebApp.Authorize.Admin.DTO
 {
-    public class CategoryDto
+    public class GetRuleDTO_Admin
     {
         public Guid Id { get; set; }
 
-        public string Name { get; set; }
+        public string RoleName { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
