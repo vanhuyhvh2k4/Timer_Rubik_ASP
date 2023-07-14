@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Timer_Rubik.WebApp.Authorize.Admin.DTO;
 using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
 using Timer_Rubik.WebApp.Dto;
 using Timer_Rubik.WebApp.Models;
@@ -31,7 +32,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var scrambles = _mapper.Map<List<ScrambleDto>>(_scrambleRepository_Admin.GetScrambles());
+                var scrambles = _mapper.Map<List<GetScrambleDTO_Admin>>(_scrambleRepository_Admin.GetScrambles());
 
                 if (scrambles.Count == 0)
                 {
@@ -64,7 +65,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<ScrambleDto>(_scrambleRepository_Admin.GetScramble(scrambleId));
+                var scramble = _mapper.Map<GetScrambleDTO_Admin>(_scrambleRepository_Admin.GetScramble(scrambleId));
 
                 if (scramble == null)
                 {
@@ -98,7 +99,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<List<ScrambleDto>>(_scrambleRepository_Admin.GetScramblesOfAccount(accountId));
+                var scramble = _mapper.Map<List<GetScrambleDTO_Admin>>(_scrambleRepository_Admin.GetScramblesOfAccount(accountId));
 
                 if (scramble.Count == 0)
                 {
@@ -131,7 +132,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<List<ScrambleDto>>(_scrambleRepository_Admin.GetScrambleByCategory(categoryId));
+                var scramble = _mapper.Map<List<GetScrambleDTO_Admin>>(_scrambleRepository_Admin.GetScrambleByCategory(categoryId));
 
                 if (scramble.Count == 0)
                 {
@@ -155,7 +156,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult CreateCategory([FromBody] ScrambleDto createScramble)
+        public IActionResult CreateCategory([FromBody] CreateScrambleDTO_Admin createScramble)
         {
             try
             {
@@ -196,7 +197,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UpdateScramble([FromRoute] Guid scrambleId, [FromBody] ScrambleDto updateScramble)
+        public IActionResult UpdateScramble([FromRoute] Guid scrambleId, [FromBody] UpdateScrambleDTO_Admin updateScramble)
         {
             try
             {
