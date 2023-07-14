@@ -1,4 +1,5 @@
-﻿using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
+﻿using System.Security.Principal;
+using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
 using Timer_Rubik.WebApp.Data;
 using Timer_Rubik.WebApp.Models;
 
@@ -60,6 +61,12 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Services
 
             updateCategory.Name = category.Name;
             updateCategory.UpdatedAt = DateTime.Now;
+            return Save();
+        }
+
+        public bool DeleteCategory(Category category)
+        {
+            _context.Categories.Remove(category);
             return Save();
         }
     }

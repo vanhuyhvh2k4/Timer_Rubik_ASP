@@ -158,5 +158,40 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 });
             }
         }
+
+        [HttpDelete("{categoryId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult DeleteCategory([FromRoute] Guid categoryId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (!_categoryService_Admin.CategoryExists(categoryId))
+                {
+                    return NotFound("Not Found Category");
+                }
+
+                var categoryEntity = _categoryService_Admin.GetCategory(categoryId);
+
+                _categoryService_Admin.DeleteCategory(categoryEntity);
+
+                return Ok("Deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
+        }
     }
 }
