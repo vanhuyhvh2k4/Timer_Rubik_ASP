@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Authorize.Admin.Dto;
-using Timer_Rubik.WebApp.Authorize.User.Dto;
 using Timer_Rubik.WebApp.Authorize.User.Interfaces;
+using Timer_Rubik.WebApp.Dto;
 using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
@@ -10,14 +9,14 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
 {
     [ApiController]
     [Route("api/user/favorite")]
-    public class FavoriteController_U : Controller
+    public class FavoriteController_User : Controller
     {
-        private readonly IFavoriteRepository_U _favoriteRepository_U;
+        private readonly IFavoriteRepository_User _favoriteRepository_U;
         private readonly IAccountRepository _accountRepository;
         private readonly IScrambleRepository _scrambleRepository;
         private readonly IMapper _mapper;
 
-        public FavoriteController_U(IFavoriteRepository_U favoriteRepository_U, IAccountRepository accountRepository, IScrambleRepository scrambleRepository, IMapper mapper)
+        public FavoriteController_User(IFavoriteRepository_User favoriteRepository_U, IAccountRepository accountRepository, IScrambleRepository scrambleRepository, IMapper mapper)
         {
             _favoriteRepository_U = favoriteRepository_U;
             _accountRepository = accountRepository;
@@ -30,7 +29,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult CreateFavorite([FromBody] FavoriteDto_U createFavorite)
+        public IActionResult CreateFavorite([FromBody] FavoriteDto createFavorite)
         {
             try
             {

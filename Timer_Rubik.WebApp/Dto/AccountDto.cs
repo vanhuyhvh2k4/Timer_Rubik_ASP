@@ -4,6 +4,8 @@
     {
         public Guid Id { get; set; }
 
+        public Guid RuleId { get; set; }
+
         public string Name { get; set; }
 
         public string Thumbnail { get; set; }

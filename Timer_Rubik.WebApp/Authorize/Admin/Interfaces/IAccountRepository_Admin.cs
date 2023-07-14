@@ -2,7 +2,7 @@
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Interfaces
 {
-    public interface IAccountRepository_AD
+    public interface IAccountRepository_Admin
     {
         bool CreateAccount(Account account);
 

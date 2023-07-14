@@ -1,19 +1,19 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Authorize.Admin.Dto;
 using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
+using Timer_Rubik.WebApp.Dto;
 using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
 {
     [ApiController]
     [Route("api/admin/solve")]
-    public class SolveController_AD : Controller
+    public class SolveController_Admin : Controller
     {
-        private readonly ISolveRepository_AD _solveRepository_AD;
+        private readonly ISolveRepository_Admin _solveRepository_AD;
         private readonly IMapper _mapper;
 
-        public SolveController_AD(ISolveRepository_AD solveRepository_AD, IMapper mapper)
+        public SolveController_Admin(ISolveRepository_Admin solveRepository_AD, IMapper mapper)
         {
             _solveRepository_AD = solveRepository_AD;
             _mapper = mapper;
@@ -25,7 +25,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UpdateSolve([FromRoute] Guid solveId, [FromBody] SolveDto_AD updateSolve)
+        public IActionResult UpdateSolve([FromRoute] Guid solveId, [FromBody] SolveDto updateSolve)
         {
             try
             {

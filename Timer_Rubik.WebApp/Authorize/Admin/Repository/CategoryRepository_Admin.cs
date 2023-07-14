@@ -4,11 +4,11 @@ using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Repository
 {
-    public class CategoryRepository_AD : ICategoryRepository_AD
+    public class CategoryRepository_Admin : ICategoryRepository_Admin
     {
         private readonly DataContext _context;
 
-        public CategoryRepository_AD(DataContext context)
+        public CategoryRepository_Admin(DataContext context)
         {
             _context = context;
         }

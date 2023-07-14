@@ -5,11 +5,11 @@ using Timer_Rubik.WebApp.Utils;
 
 namespace Timer_Rubik.WebApp.Authorize.User.Repository
 {
-    public class AccountRepository_U : IAccountRepository_U
+    public class AccountRepository_User : IAccountRepository_User
     {
         private readonly DataContext _context;
 
-        public AccountRepository_U(DataContext context)
+        public AccountRepository_User(DataContext context)
         {
             _context = context;
         }

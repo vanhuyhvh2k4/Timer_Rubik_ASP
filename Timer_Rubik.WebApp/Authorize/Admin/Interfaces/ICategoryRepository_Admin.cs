@@ -2,7 +2,7 @@
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Interfaces
 {
-    public interface ICategoryRepository_AD
+    public interface ICategoryRepository_Admin
     {
         bool CreateCategory(Category category);
 

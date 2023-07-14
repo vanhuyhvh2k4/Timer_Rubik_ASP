@@ -1,25 +1,26 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Authorize.User.Dto;
-using Timer_Rubik.WebApp.Authorize.User.Interfaces;
+using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
 using Timer_Rubik.WebApp.Dto;
 using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
-namespace Timer_Rubik.WebApp.Authorize.User.Controllers
+namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
 {
     [ApiController]
-    [Route("api/user/account")]
-    public class AccountController_U : Controller
+    [Route("api/admin/account")]
+    public class AccountController_Admin : Controller
     {
-        private readonly IAccountRepository_U _accountRepository_U;
+        private readonly IAccountRepository_Admin _accountRepository_AD;
         private readonly IAccountRepository _accountRepository;
+        private readonly IRuleRepository _ruleRepository;
         private readonly IMapper _mapper;
 
-        public AccountController_U(IAccountRepository_U accountRepository_U, IAccountRepository accountRepository, IMapper mapper)
+        public AccountController_Admin(IAccountRepository_Admin accountRepository_AD, IAccountRepository accountRepository, IRuleRepository ruleRepository, IMapper mapper)
         {
-            _accountRepository_U = accountRepository_U;
+            _accountRepository_AD = accountRepository_AD;
             _accountRepository = accountRepository;
+            _ruleRepository = ruleRepository;
             _mapper = mapper;
         }
 
@@ -39,7 +40,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
 
                 var entityAccount = _accountRepository
                                         .GetAccounts()
-                                        .Where(ac => ac.Email == createAccount.Email)
+                                        .Where(ac => ac.Email.Trim().ToUpper() == createAccount.Email.Trim().ToUpper())
                                         .FirstOrDefault();
 
                 if (entityAccount != null)
@@ -49,7 +50,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
 
                 var accountMap = _mapper.Map<Account>(createAccount);
 
-                _accountRepository_U.CreateAccount(accountMap);
+                _accountRepository_AD.CreateAccount(accountMap);
 
                 return Ok("Created successfully");
             }
@@ -67,8 +68,9 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UpdateAccount([FromRoute] Guid accountId, [FromBody] AccountDto_U updateAccount)
+        public IActionResult UpdateAccount([FromRoute] Guid accountId, [FromBody] AccountDto updateAccount)
         {
             try
             {
@@ -82,14 +84,26 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                     return BadRequest("Id is not match");
                 }
 
+                var oldAccount = _accountRepository.GetAccount(accountId);
+                    
                 if (!_accountRepository.AccountExists(accountId))
                 {
                     return NotFound("Not Found Account");
                 }
 
+                if (_accountRepository.GetAccount(updateAccount.Email) != null && oldAccount.Email.Trim().ToUpper() != updateAccount.Email.Trim().ToUpper())
+                {
+                    return Conflict("Email already exists");
+                }
+
+                if (!_ruleRepository.RuleExists(updateAccount.RuleId))
+                {
+                    return NotFound("Not Found Rule");
+                }
+
                 var accountMap = _mapper.Map<Account>(updateAccount);
 
-                _accountRepository_U.UpdateAccount(accountMap);
+                _accountRepository_AD.UpdateAccount(accountMap);
 
                 return Ok("Updated successfully");
             } catch (Exception ex)

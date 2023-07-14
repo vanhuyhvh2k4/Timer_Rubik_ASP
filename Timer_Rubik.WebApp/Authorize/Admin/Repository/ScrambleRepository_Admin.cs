@@ -4,11 +4,11 @@ using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Repository
 {
-    public class ScrambleRepository_AD : IScrambleRepository_AD
+    public class ScrambleRepository_Admin : IScrambleRepository_Admin
     {
         private readonly DataContext _context;
 
-        public ScrambleRepository_AD(DataContext context)
+        public ScrambleRepository_Admin(DataContext context)
         {
             _context = context;
         }

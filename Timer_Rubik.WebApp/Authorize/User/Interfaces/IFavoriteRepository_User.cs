@@ -2,7 +2,7 @@
 
 namespace Timer_Rubik.WebApp.Authorize.User.Interfaces
 {
-    public interface IFavoriteRepository_U
+    public interface IFavoriteRepository_User
     {
         bool CreateFavorite(Favorite favorite);
 

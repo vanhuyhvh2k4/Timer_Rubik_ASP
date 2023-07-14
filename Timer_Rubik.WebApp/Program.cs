@@ -30,13 +30,13 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ISolveRepository, SolveRepository>();
 builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
 
-builder.Services.AddScoped<IAccountRepository_AD, AccountRepository_AD>();
-builder.Services.AddScoped<ICategoryRepository_AD, CategoryRepository_AD>();
-builder.Services.AddScoped<IScrambleRepository_AD, ScrambleRepository_AD>();
-builder.Services.AddScoped<ISolveRepository_AD, SolveRepository_AD>();
+builder.Services.AddScoped<IAccountRepository_Admin, AccountRepository_Admin>();
+builder.Services.AddScoped<ICategoryRepository_Admin, CategoryRepository_Admin>();
+builder.Services.AddScoped<IScrambleRepository_Admin, ScrambleRepository_Admin>();
+builder.Services.AddScoped<ISolveRepository_Admin, SolveRepository_Admin>();
 
-builder.Services.AddScoped<IFavoriteRepository_U, FavoriteRepository_U>();
-builder.Services.AddScoped<IAccountRepository_U, AccountRepository_U>();
+builder.Services.AddScoped<IFavoriteRepository_User, FavoriteRepository_User>();
+builder.Services.AddScoped<IAccountRepository_User, AccountRepository_User>();
 
 // Register auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

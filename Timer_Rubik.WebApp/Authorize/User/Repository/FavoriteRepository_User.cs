@@ -4,11 +4,11 @@ using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Authorize.User.Repository
 {
-    public class FavoriteRepository_U : IFavoriteRepository_U
+    public class FavoriteRepository_User : IFavoriteRepository_User
     {
         private readonly DataContext _context;
 
-        public FavoriteRepository_U(DataContext context)
+        public FavoriteRepository_User(DataContext context)
         {
             _context = context;
         }

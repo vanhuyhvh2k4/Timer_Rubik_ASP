@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Authorize.Admin.Dto;
 using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
+using Timer_Rubik.WebApp.Dto;
 using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
@@ -9,14 +9,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
 {
     [ApiController]
     [Route("api/admin/scramble")]
-    public class ScrambleController_AD : Controller
+    public class ScrambleController_Admin : Controller
     {
-        private readonly IScrambleRepository_AD _scrambleRepository_AD;
+        private readonly IScrambleRepository_Admin _scrambleRepository_AD;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
 
-        public ScrambleController_AD(IScrambleRepository_AD scrambleRepository_AD, ICategoryRepository categoryRepository, IAccountRepository accountRepository, IMapper mapper)
+        public ScrambleController_Admin(IScrambleRepository_Admin scrambleRepository_AD, ICategoryRepository categoryRepository, IAccountRepository accountRepository, IMapper mapper)
         {
             _scrambleRepository_AD = scrambleRepository_AD;
             _categoryRepository = categoryRepository;
@@ -30,7 +30,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UpdateScramble([FromRoute] Guid scrambleId, [FromBody] ScrambleDto_AD updateScramble)
+        public IActionResult UpdateScramble([FromRoute] Guid scrambleId, [FromBody] ScrambleDto updateScramble)
         {
             try
             {

@@ -1,23 +1,21 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Authorize.Admin.Dto;
 using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
-using Timer_Rubik.WebApp.Authorize.Admin.Repository;
+using Timer_Rubik.WebApp.Dto;
 using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
-using Timer_Rubik.WebApp.Repository;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
 {
     [ApiController]
     [Route("api/admin/category")]
-    public class CategoryController_AD : Controller
+    public class CategoryController_Admin : Controller
     {
-        private readonly ICategoryRepository_AD _categoryRepository_AD;
+        private readonly ICategoryRepository_Admin _categoryRepository_AD;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public CategoryController_AD(ICategoryRepository_AD categoryRepository_AD, ICategoryRepository categoryRepository, IMapper mapper)
+        public CategoryController_Admin(ICategoryRepository_Admin categoryRepository_AD, ICategoryRepository categoryRepository, IMapper mapper)
         {
             _categoryRepository_AD = categoryRepository_AD;
             _categoryRepository = categoryRepository;
@@ -29,7 +27,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult CreateCategory([FromBody] CategoryDto_AD createCategory)
+        public IActionResult CreateCategory([FromBody] CategoryDto createCategory)
         {
             try
             {
@@ -69,7 +67,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UpdateCategory([FromRoute] Guid categoryId, [FromBody] CategoryDto_AD updateCategory)
+        public IActionResult UpdateCategory([FromRoute] Guid categoryId, [FromBody] CategoryDto updateCategory)
         {
             try
             {

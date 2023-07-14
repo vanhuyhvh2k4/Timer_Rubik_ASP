@@ -4,11 +4,11 @@ using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Repository
 {
-    public class SolveRepository_AD : ISolveRepository_AD
+    public class SolveRepository_Admin : ISolveRepository_Admin
     {
         private readonly DataContext _context;
 
-        public SolveRepository_AD(DataContext context)
+        public SolveRepository_Admin(DataContext context)
         {
             _context = context;
         }

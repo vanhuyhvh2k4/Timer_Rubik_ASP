@@ -2,9 +2,9 @@
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Interfaces
 {
-    public interface IScrambleRepository_AD
+    public interface ISolveRepository_Admin
     {
-        bool UpdateScramble(Scramble scramble);
+        bool UpdateSolve(Solve solve);
 
         bool Save();
     }

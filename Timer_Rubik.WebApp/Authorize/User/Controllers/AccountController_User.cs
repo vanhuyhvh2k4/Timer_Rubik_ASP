@@ -1,26 +1,24 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Authorize.Admin.Dto;
-using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
+using Timer_Rubik.WebApp.Authorize.User.Interfaces;
+using Timer_Rubik.WebApp.Dto;
 using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
-namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
+namespace Timer_Rubik.WebApp.Authorize.User.Controllers
 {
     [ApiController]
-    [Route("api/admin/account")]
-    public class AccountController_AD : Controller
+    [Route("api/user/account")]
+    public class AccountController_User : Controller
     {
-        private readonly IAccountRepository_AD _accountRepository_AD;
+        private readonly IAccountRepository_User _accountRepository_U;
         private readonly IAccountRepository _accountRepository;
-        private readonly IRuleRepository _ruleRepository;
         private readonly IMapper _mapper;
 
-        public AccountController_AD(IAccountRepository_AD accountRepository_AD, IAccountRepository accountRepository, IRuleRepository ruleRepository, IMapper mapper)
+        public AccountController_User(IAccountRepository_User accountRepository_U, IAccountRepository accountRepository, IMapper mapper)
         {
-            _accountRepository_AD = accountRepository_AD;
+            _accountRepository_U = accountRepository_U;
             _accountRepository = accountRepository;
-            _ruleRepository = ruleRepository;
             _mapper = mapper;
         }
 
@@ -29,7 +27,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult CreateAccount([FromBody] AccountDto_AD createAccount)
+        public IActionResult CreateAccount([FromBody] AccountDto createAccount)
         {
             try
             {
@@ -40,7 +38,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
 
                 var entityAccount = _accountRepository
                                         .GetAccounts()
-                                        .Where(ac => ac.Email.Trim().ToUpper() == createAccount.Email.Trim().ToUpper())
+                                        .Where(ac => ac.Email == createAccount.Email)
                                         .FirstOrDefault();
 
                 if (entityAccount != null)
@@ -50,7 +48,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
 
                 var accountMap = _mapper.Map<Account>(createAccount);
 
-                _accountRepository_AD.CreateAccount(accountMap);
+                _accountRepository_U.CreateAccount(accountMap);
 
                 return Ok("Created successfully");
             }
@@ -68,9 +66,8 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UpdateAccount([FromRoute] Guid accountId, [FromBody] AccountDto_AD updateAccount)
+        public IActionResult UpdateAccount([FromRoute] Guid accountId, [FromBody] AccountDto updateAccount)
         {
             try
             {
@@ -84,26 +81,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest("Id is not match");
                 }
 
-                var oldAccount = _accountRepository.GetAccount(accountId);
-                    
                 if (!_accountRepository.AccountExists(accountId))
                 {
                     return NotFound("Not Found Account");
                 }
 
-                if (_accountRepository.GetAccount(updateAccount.Email) != null && oldAccount.Email.Trim().ToUpper() != updateAccount.Email.Trim().ToUpper())
-                {
-                    return Conflict("Email already exists");
-                }
-
-                if (!_ruleRepository.RuleExists(updateAccount.RuleId))
-                {
-                    return NotFound("Not Found Rule");
-                }
-
                 var accountMap = _mapper.Map<Account>(updateAccount);
 
-                _accountRepository_AD.UpdateAccount(accountMap);
+                _accountRepository_U.UpdateAccount(accountMap);
 
                 return Ok("Updated successfully");
             } catch (Exception ex)
