@@ -37,6 +37,16 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Helper
 
             CreateMap<Scramble, UpdateScrambleDTO_Admin>();
             CreateMap<UpdateScrambleDTO_Admin, Scramble>();
+
+            //Solve
+            CreateMap<Solve, GetSolveDTO_Admin>();
+            CreateMap<GetSolveDTO_Admin, Solve>();
+
+            CreateMap<Solve, CreateSolveDTO_Admin>();
+            CreateMap<CreateSolveDTO_Admin, Solve>();
+
+            CreateMap<Solve, UpdateSolveDTO_Admin>();
+            CreateMap<UpdateSolveDTO_Admin, Solve>();
         }
     }
 }
