@@ -11,5 +11,9 @@
         public string Algorithm { get; set; }
 
         public string Thumbnail { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
     }
 }
