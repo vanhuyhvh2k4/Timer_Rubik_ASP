@@ -95,12 +95,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var entityAccount = _accountRepository_Admin
-                                        .GetAccounts()
-                                        .Where(ac => ac.Email.Trim().ToUpper() == createAccount.Email.Trim().ToUpper())
-                                        .FirstOrDefault();
-
-                if (entityAccount != null)
+                if (_accountRepository_Admin.GetAccount(createAccount.Email) != null)
                 {
                     return Conflict("Email Already Exists");
                 }

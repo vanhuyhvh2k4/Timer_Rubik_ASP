@@ -24,6 +24,7 @@ builder.Services.AddScoped<IAccountService_Admin, AccountService_Admin>();
 builder.Services.AddScoped<ICategoryService_Admin, CategoryService_Admin>();
 builder.Services.AddScoped<IScrambleService_Admin, ScrambleService_Admin>();
 builder.Services.AddScoped<ISolveService_Admin, SolveService_Admin>();
+builder.Services.AddScoped<IFavoriteService_Admin, FavoriteService_Admin>();
 
 // Register auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
