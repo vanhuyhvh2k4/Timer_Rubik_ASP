@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Timer_Rubik.WebApp.Authorize.Admin.DTO;
 using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
-using Timer_Rubik.WebApp.Dto;
 using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
@@ -27,7 +27,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var categories = _mapper.Map<List<CategoryDto>>(_categoryRepository_Admin.GetCategories());
+                var categories = _mapper.Map<List<GetCategoryDTO_Admin>>(_categoryRepository_Admin.GetCategories());
 
                 if (categories.Count == 0)
                 {
@@ -60,7 +60,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var category = _mapper.Map<CategoryDto>(_categoryRepository_Admin.GetCategory(categoryId));
+                var category = _mapper.Map<GetCategoryDTO_Admin>(_categoryRepository_Admin.GetCategory(categoryId));
 
                 if (category == null)
                 {
@@ -84,7 +84,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult CreateCategory([FromBody] CategoryDto createCategory)
+        public IActionResult CreateCategory([FromBody] CreateCategoryDTO_Admin createCategory)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UpdateCategory([FromRoute] Guid categoryId, [FromBody] CategoryDto updateCategory)
+        public IActionResult UpdateCategory([FromRoute] Guid categoryId, [FromBody] UpdateCategoryDTO_Admin updateCategory)
         {
             try
             {

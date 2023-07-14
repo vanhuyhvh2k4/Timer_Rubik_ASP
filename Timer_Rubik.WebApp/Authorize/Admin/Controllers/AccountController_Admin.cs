@@ -28,19 +28,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var accounts = _accountRepository_Admin
-                                .GetAccounts()
-                                .Select(account => new
-                                {
-                                    id = account.Id,
-                                    ruleId = account.RuleId,
-                                    name = account.Name,
-                                    thumbnail = account.Thumbnail,
-                                    email = account.Email,
-                                    createdAt = account.CreatedAt,
-                                    updatedAt = account.UpdatedAt,
-                                })
-                                .ToList();
+                var accounts = _mapper.Map<List<GetAccountDTO_Admin>>(_accountRepository_Admin.GetAccounts());
 
                 if (accounts.Count == 0)
                 {
@@ -74,26 +62,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var account = _mapper.Map<AccountDto>(_accountRepository_Admin.GetAccount(accountId));
+                var account = _mapper.Map<GetAccountDTO_Admin>(_accountRepository_Admin.GetAccount(accountId));
 
                 if (account == null)
                 {
                     return NotFound("Not Found Account");
-                } else
-                {
-                    var accountRes = new
-                    {
-                        id = account.Id,
-                        ruleId = account.RuleId,
-                        name = account.Name,
-                        thumbnail = account.Thumbnail,
-                        email = account.Email,
-                        createdAt = account.CreatedAt,
-                        updatedAt = account.UpdatedAt,
-                    };
-                    return Ok(accountRes);
                 }
 
+                return Ok(account);
             }
             catch (Exception ex)
             {
