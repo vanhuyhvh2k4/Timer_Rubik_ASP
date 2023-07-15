@@ -13,9 +13,9 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
 
-        public CategoryController_Admin(ICategoryService categoryRepository, IMapper mapper)
+        public CategoryController_Admin(ICategoryService categoryService, IMapper mapper)
         {
-            _categoryService = categoryRepository;
+            _categoryService = categoryService;
             _mapper = mapper;
         }
 

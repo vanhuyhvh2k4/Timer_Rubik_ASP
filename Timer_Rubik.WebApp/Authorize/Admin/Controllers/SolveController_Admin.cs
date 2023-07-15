@@ -10,14 +10,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/solve")]
     public class SolveController_Admin : Controller
     {
-        private readonly ISolveService _solveRepository;
-        private readonly IScrambleService _scrambleRepository;
+        private readonly ISolveService _solveSevice;
+        private readonly IScrambleService _scrambleService;
         private readonly IMapper _mapper;
 
-        public SolveController_Admin(ISolveService solveRepository, IScrambleService scrambleRepository, IMapper mapper)
+        public SolveController_Admin(ISolveService solveSevice, IScrambleService scrambleService, IMapper mapper)
         {
-            _solveRepository = solveRepository;
-            _scrambleRepository = scrambleRepository;
+            _solveSevice = solveSevice;
+            _scrambleService = scrambleService;
             _mapper = mapper;
         }
 
@@ -29,7 +29,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var solves = _mapper.Map<List<GetSolveDTO_Admin>>(_solveRepository.GetSolves());
+                var solves = _mapper.Map<List<GetSolveDTO_Admin>>(_solveSevice.GetSolves());
 
                 if (solves.Count == 0)
                 {
@@ -62,7 +62,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<GetSolveDTO_Admin>(_solveRepository.GetSolve(solveId));
+                var scramble = _mapper.Map<GetSolveDTO_Admin>(_solveSevice.GetSolve(solveId));
 
                 if (scramble == null)
                 {
@@ -95,7 +95,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<GetSolveDTO_Admin>(_solveRepository.GetSolveOfScramble(scrambleId));
+                var scramble = _mapper.Map<GetSolveDTO_Admin>(_solveSevice.GetSolveOfScramble(scrambleId));
 
                 if (scramble == null)
                 {
@@ -127,14 +127,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_scrambleRepository.ScrambleExists(createSolve.ScrambleId))
+                if (!_scrambleService.ScrambleExists(createSolve.ScrambleId))
                 {
                     return NotFound("Not Found Scramble");
                 }
 
                 var solveMap = _mapper.Map<Solve>(createSolve);
 
-                _solveRepository.CreateSolve(solveMap);
+                _solveSevice.CreateSolve(solveMap);
 
                 return Ok("Created successfully");
             }
@@ -167,14 +167,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest("Id is not match");
                 }
 
-                if (!_solveRepository.SolveExists(solveId))
+                if (!_solveSevice.SolveExists(solveId))
                 {
                     return NotFound("Not Found Solve");
                 }
 
                 var solveMap = _mapper.Map<Solve>(updateSolve);
 
-                _solveRepository.UpdateSolve(solveMap);
+                _solveSevice.UpdateSolve(solveMap);
 
                 return Ok("Updated successfully");
             } catch (Exception ex)
@@ -201,14 +201,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_solveRepository.SolveExists(solveId))
+                if (!_solveSevice.SolveExists(solveId))
                 {
                     return NotFound("Not Found Solve");
                 }
 
-                var solveEntity = _solveRepository.GetSolve(solveId);
+                var solveEntity = _solveSevice.GetSolve(solveId);
 
-                _solveRepository.DeleteSolve(solveEntity);
+                _solveSevice.DeleteSolve(solveEntity);
 
                 return Ok("Deleted successfully");
             }
