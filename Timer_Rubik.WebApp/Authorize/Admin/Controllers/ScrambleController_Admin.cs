@@ -32,7 +32,29 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var scrambles = _mapper.Map<List<GetScrambleDTO_Admin>>(_scrambleRepository_Admin.GetScrambles());
+                var scrambles = _scrambleRepository_Admin
+                                    .GetScrambles()
+                                    .Select(scramble => new
+                                    {
+                                        Id = scramble.Id,
+                                        Category = new 
+                                        {
+                                            Id = scramble.CategoryId,
+                                            Name = scramble.Category.Name
+                                        },
+                                        Account = new 
+                                        {
+                                            Id = scramble.AccountId,
+                                            Name = scramble.Account.Name,
+                                            Thumbnail = scramble.Account.Thumbnail,
+                                            Email = scramble.Account.Email
+                                        },
+                                        Algorithm = scramble.Algorithm,
+                                        Thumbnail = scramble.Thumbnail,
+                                        CreatedAt = scramble.CreatedAt,
+                                        UpdatedAt = scramble.UpdatedAt,
+                                    })
+                                    .ToList();
 
                 if (scrambles.Count == 0)
                 {
@@ -65,14 +87,36 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<GetScrambleDTO_Admin>(_scrambleRepository_Admin.GetScramble(scrambleId));
+                var scramble = _scrambleRepository_Admin
+                                    .GetScramble(scrambleId);
 
                 if (scramble == null)
                 {
                     return NotFound("Not Found Scramble");
+                } else
+                {
+                    var scrambleRes = new
+                    {
+                        Id = scramble.Id,
+                        Category = new
+                        {
+                            Id = scramble.CategoryId,
+                            Name = scramble.Category.Name
+                        },
+                        Account = new
+                        {
+                            Id = scramble.AccountId,
+                            Name = scramble.Account.Name,
+                            Thumbnail = scramble.Account.Thumbnail,
+                            Email = scramble.Account.Email
+                        },
+                        Algorithm = scramble.Algorithm,
+                        Thumbnail = scramble.Thumbnail,
+                        CreatedAt = scramble.CreatedAt,
+                        UpdatedAt = scramble.UpdatedAt,
+                    };
+                    return Ok(scrambleRes);
                 }
-
-                return Ok(scramble);
             }
             catch (Exception ex)
             {
@@ -99,7 +143,29 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<List<GetScrambleDTO_Admin>>(_scrambleRepository_Admin.GetScramblesOfAccount(accountId));
+                var scramble = _scrambleRepository_Admin
+                                   .GetScramblesOfAccount(accountId)
+                                   .Select(scramble => new
+                                   {
+                                       Id = scramble.Id,
+                                       Category = new
+                                       {
+                                           Id = scramble.CategoryId,
+                                           Name = scramble.Category.Name
+                                       },
+                                       Account = new
+                                       {
+                                           Id = scramble.AccountId,
+                                           Name = scramble.Account.Name,
+                                           Thumbnail = scramble.Account.Thumbnail,
+                                           Email = scramble.Account.Email
+                                       },
+                                       Algorithm = scramble.Algorithm,
+                                       Thumbnail = scramble.Thumbnail,
+                                       CreatedAt = scramble.CreatedAt,
+                                       UpdatedAt = scramble.UpdatedAt,
+                                   })
+                                   .ToList();
 
                 if (scramble.Count == 0)
                 {
@@ -132,7 +198,29 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<List<GetScrambleDTO_Admin>>(_scrambleRepository_Admin.GetScrambleByCategory(categoryId));
+                var scramble = _scrambleRepository_Admin
+                                    .GetScrambleByCategory(categoryId)
+                                    .Select(scramble => new
+                                    {
+                                        Id = scramble.Id,
+                                        Category = new
+                                        {
+                                            Id = scramble.CategoryId,
+                                            Name = scramble.Category.Name
+                                        },
+                                        Account = new
+                                        {
+                                            Id = scramble.AccountId,
+                                            Name = scramble.Account.Name,
+                                            Thumbnail = scramble.Account.Thumbnail,
+                                            Email = scramble.Account.Email
+                                        },
+                                        Algorithm = scramble.Algorithm,
+                                        Thumbnail = scramble.Thumbnail,
+                                        CreatedAt = scramble.CreatedAt,
+                                        UpdatedAt = scramble.UpdatedAt,
+                                    })
+                                    .ToList();
 
                 if (scramble.Count == 0)
                 {
