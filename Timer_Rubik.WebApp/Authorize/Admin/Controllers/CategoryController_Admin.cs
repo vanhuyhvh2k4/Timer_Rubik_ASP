@@ -113,7 +113,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
             }
         }
 
-        [HttpPut("{categoryId}")]
+        [HttpPatch("{categoryId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
