@@ -44,6 +44,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Services
                     .Where(scramble => scramble.Id == scrambleId)
                     .Include(scramble => scramble.Account)
                     .Include(scramble => scramble.Category)
+                    .Include(scramble => scramble.Solve)
                     .FirstOrDefault();
         }
 
@@ -53,6 +54,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Services
                     .Where(scramble => scramble.CategoryId == categoryId)
                     .Include(scramble => scramble.Account)
                     .Include(scramble => scramble.Category)
+                    .Include(scramble => scramble.Solve)
                     .OrderBy(scramble => scramble.Id)
                     .ToList();
         }
@@ -62,6 +64,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Services
             return _context.Scrambles
                 .OrderBy(scramble => scramble.Id)
                 .Include(scramble => scramble.Account)
+                .Include(scramble => scramble.Solve)
                 .Include(scramble => scramble.Category)
                 .ToList();
         }
@@ -72,6 +75,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Services
                         .Where(scramble => scramble.AccountId == accountId)
                         .Include(scramble => scramble.Account)
                         .Include(scramble => scramble.Category)
+                        .Include(scramble => scramble.Solve)
                         .OrderBy(scramble => scramble.Id)
                         .ToList();
         }
