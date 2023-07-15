@@ -141,7 +141,30 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var favorites = _mapper.Map<List<GetFavoriteDTO_Admin>>(_favoriteService_Admin.GetFavoritesOfAccount(accountId));
+                var favorites = _favoriteService_Admin
+                                    .GetFavoritesOfAccount(accountId)
+                                     .Select(fav => new
+                                     {
+                                         Id = fav.Id,
+                                         Account = new
+                                         {
+                                             Id = fav.AccountId,
+                                             Name = fav.Account.Name,
+                                             Thumbnail = fav.Account.Thumbnail,
+                                             Email = fav.Account.Email
+                                         },
+                                         Scramble = new
+                                         {
+                                             Id = fav.ScrambleId,
+                                             Algorithm = fav.Scramble.Algorithm,
+                                             Thumbnail = fav.Scramble.Thumbnail,
+                                             Category = fav.Scramble.Category.Name
+                                         },
+                                         Time = fav.Time,
+                                         CreatedAt = fav.CreatedAt,
+                                         UpdatedAt = fav.UpdatedAt,
+                                     })
+                                    .ToList(); ;
 
                 if (favorites.Count == 0)
                 {
@@ -174,7 +197,30 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var favorites = _mapper.Map<List<GetFavoriteDTO_Admin>>(_favoriteService_Admin.GetFavoritesByScramble(scrambleId));
+                var favorites = _favoriteService_Admin
+                                    .GetFavoritesByScramble(scrambleId)
+                                     .Select(fav => new
+                                     {
+                                         Id = fav.Id,
+                                         Account = new
+                                         {
+                                             Id = fav.AccountId,
+                                             Name = fav.Account.Name,
+                                             Thumbnail = fav.Account.Thumbnail,
+                                             Email = fav.Account.Email
+                                         },
+                                         Scramble = new
+                                         {
+                                             Id = fav.ScrambleId,
+                                             Algorithm = fav.Scramble.Algorithm,
+                                             Thumbnail = fav.Scramble.Thumbnail,
+                                             Category = fav.Scramble.Category.Name
+                                         },
+                                         Time = fav.Time,
+                                         CreatedAt = fav.CreatedAt,
+                                         UpdatedAt = fav.UpdatedAt,
+                                     })
+                                    .ToList(); ;
 
                 if (favorites.Count == 0)
                 {

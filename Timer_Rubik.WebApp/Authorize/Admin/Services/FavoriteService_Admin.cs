@@ -64,12 +64,24 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Services
 
         public ICollection<Favorite> GetFavoritesByScramble(Guid scrambleId)
         {
-            return _context.Favorites.Where(fav => fav.ScrambleId == scrambleId).OrderBy(fav => fav.Id).ToList();
+            return _context.Favorites
+                    .Where(fav => fav.ScrambleId == scrambleId)
+                    .Include(fav => fav.Account)
+                    .Include(fav => fav.Scramble)
+                    .Include(fav => fav.Scramble.Category)
+                    .OrderBy(fav => fav.Id)
+                    .ToList();
         }
 
         public ICollection<Favorite> GetFavoritesOfAccount(Guid accountId)
         {
-            return _context.Favorites.Where(fav => fav.AccountId == accountId).OrderBy(fav => fav.Id).ToList();
+            return _context.Favorites
+                        .Where(fav => fav.AccountId == accountId)
+                        .Include(fav => fav.Account)
+                        .Include(fav => fav.Scramble)
+                        .Include(fav => fav.Scramble.Category)
+                        .OrderBy(fav => fav.Id)
+                        .ToList();
         }
 
         public bool Save()
