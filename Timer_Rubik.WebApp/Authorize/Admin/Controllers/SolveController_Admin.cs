@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Authorize.Admin.DTO;
-using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
+using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
@@ -10,14 +10,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/solve")]
     public class SolveController_Admin : Controller
     {
-        private readonly ISolveService_Admin _solveRepository_Admin;
-        private readonly IScrambleService_Admin _scrambleRepository_Admin;
+        private readonly ISolveService _solveRepository;
+        private readonly IScrambleService _scrambleRepository;
         private readonly IMapper _mapper;
 
-        public SolveController_Admin(ISolveService_Admin solveRepository_Admin, IScrambleService_Admin scrambleRepository_Admin, IMapper mapper)
+        public SolveController_Admin(ISolveService solveRepository, IScrambleService scrambleRepository, IMapper mapper)
         {
-            _solveRepository_Admin = solveRepository_Admin;
-            _scrambleRepository_Admin = scrambleRepository_Admin;
+            _solveRepository = solveRepository;
+            _scrambleRepository = scrambleRepository;
             _mapper = mapper;
         }
 
@@ -29,7 +29,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var solves = _mapper.Map<List<GetSolveDTO_Admin>>(_solveRepository_Admin.GetSolves());
+                var solves = _mapper.Map<List<GetSolveDTO_Admin>>(_solveRepository.GetSolves());
 
                 if (solves.Count == 0)
                 {
@@ -62,7 +62,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<GetSolveDTO_Admin>(_solveRepository_Admin.GetSolve(solveId));
+                var scramble = _mapper.Map<GetSolveDTO_Admin>(_solveRepository.GetSolve(solveId));
 
                 if (scramble == null)
                 {
@@ -95,7 +95,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<GetSolveDTO_Admin>(_solveRepository_Admin.GetSolveOfScramble(scrambleId));
+                var scramble = _mapper.Map<GetSolveDTO_Admin>(_solveRepository.GetSolveOfScramble(scrambleId));
 
                 if (scramble == null)
                 {
@@ -127,14 +127,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_scrambleRepository_Admin.ScrambleExists(createSolve.ScrambleId))
+                if (!_scrambleRepository.ScrambleExists(createSolve.ScrambleId))
                 {
                     return NotFound("Not Found Scramble");
                 }
 
                 var solveMap = _mapper.Map<Solve>(createSolve);
 
-                _solveRepository_Admin.CreateSolve(solveMap);
+                _solveRepository.CreateSolve(solveMap);
 
                 return Ok("Created successfully");
             }
@@ -167,14 +167,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest("Id is not match");
                 }
 
-                if (!_solveRepository_Admin.SolveExists(solveId))
+                if (!_solveRepository.SolveExists(solveId))
                 {
                     return NotFound("Not Found Solve");
                 }
 
                 var solveMap = _mapper.Map<Solve>(updateSolve);
 
-                _solveRepository_Admin.UpdateSolve(solveMap);
+                _solveRepository.UpdateSolve(solveMap);
 
                 return Ok("Updated successfully");
             } catch (Exception ex)
@@ -201,14 +201,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_solveRepository_Admin.SolveExists(solveId))
+                if (!_solveRepository.SolveExists(solveId))
                 {
                     return NotFound("Not Found Solve");
                 }
 
-                var solveEntity = _solveRepository_Admin.GetSolve(solveId);
+                var solveEntity = _solveRepository.GetSolve(solveId);
 
-                _solveRepository_Admin.DeleteSolve(solveEntity);
+                _solveRepository.DeleteSolve(solveEntity);
 
                 return Ok("Deleted successfully");
             }

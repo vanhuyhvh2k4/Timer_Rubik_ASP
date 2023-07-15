@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Authorize.Admin.DTO;
-using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
-using Timer_Rubik.WebApp.Authorize.Admin.Services;
+using Timer_Rubik.WebApp.Interfaces;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
 {
@@ -10,12 +9,12 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/rule")]
     public class RuleController_Admin : Controller
     {
-        private readonly IRuleService_Admin _ruleService_Admin;
+        private readonly IRuleService _ruleService;
         private readonly IMapper _mapper;
 
-        public RuleController_Admin(IRuleService_Admin ruleService_Admin, IMapper mapper)
+        public RuleController_Admin(IRuleService ruleService, IMapper mapper)
         {
-            _ruleService_Admin = ruleService_Admin;
+            _ruleService = ruleService;
             _mapper = mapper;
         }
 
@@ -27,7 +26,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var rules = _mapper.Map<List<GetRuleDTO_Admin>>(_ruleService_Admin.GetRules());
+                var rules = _mapper.Map<List<GetRuleDTO_Admin>>(_ruleService.GetRules());
 
                 if (rules.Count == 0)
                 {
@@ -60,7 +59,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var rule = _mapper.Map<GetRuleDTO_Admin>(_ruleService_Admin.GetRule(ruleId));
+                var rule = _mapper.Map<GetRuleDTO_Admin>(_ruleService.GetRule(ruleId));
 
                 if (rule == null)
                 {

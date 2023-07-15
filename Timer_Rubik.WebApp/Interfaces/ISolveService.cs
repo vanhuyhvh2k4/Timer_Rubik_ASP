@@ -1,8 +1,8 @@
 ﻿using Timer_Rubik.WebApp.Models;
 
-namespace Timer_Rubik.WebApp.Authorize.Admin.Interfaces
+namespace Timer_Rubik.WebApp.Interfaces
 {
-    public interface ISolveService_Admin
+    public interface ISolveService
     {
         ICollection<Solve> GetSolves();
 

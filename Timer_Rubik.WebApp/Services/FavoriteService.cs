@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
 using Timer_Rubik.WebApp.Data;
+using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
-namespace Timer_Rubik.WebApp.Authorize.Admin.Services
+namespace Timer_Rubik.WebApp.Services
 {
-    public class FavoriteService_Admin : IFavoriteService_Admin
+    public class FavoriteService : IFavoriteService
     {
         private readonly DataContext _context;
 
-        public FavoriteService_Admin(DataContext context)
+        public FavoriteService(DataContext context)
         {
             _context = context;
         }

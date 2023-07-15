@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
 using Timer_Rubik.WebApp.Data;
+using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
-namespace Timer_Rubik.WebApp.Authorize.Admin.Services
+namespace Timer_Rubik.WebApp.Services
 {
-    public class ScrambleService_Admin : IScrambleService_Admin
+    public class ScrambleService : IScrambleService
     {
         private readonly DataContext _context;
 
-        public ScrambleService_Admin(DataContext context)
+        public ScrambleService(DataContext context)
         {
             _context = context;
         }

@@ -1,14 +1,14 @@
-﻿using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
-using Timer_Rubik.WebApp.Data;
+﻿using Timer_Rubik.WebApp.Data;
+using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
-namespace Timer_Rubik.WebApp.Authorize.Admin.Services
+namespace Timer_Rubik.WebApp.Services
 {
-    public class SolveService_Admin : ISolveService_Admin
+    public class SolveService : ISolveService
     {
         private readonly DataContext _context;
 
-        public SolveService_Admin(DataContext context)
+        public SolveService(DataContext context)
         {
             _context = context;
         }
@@ -63,7 +63,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Services
             updateSolve.UpdatedAt = DateTime.Now;
 
             return Save();
-            
+
         }
 
         public bool DeleteSolve(Solve solve)

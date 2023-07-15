@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Authorize.Admin.DTO;
-using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
+using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
@@ -10,16 +10,16 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/favorite")]
     public class FavoriteController_Admin : Controller
     {
-        private readonly IFavoriteService_Admin _favoriteService_Admin;
-        private readonly IAccountService_Admin _accountService_Admin;
-        private readonly IScrambleService_Admin _scrambleService_Admin;
+        private readonly IFavoriteService _favoriteService;
+        private readonly IAccountService _accountService;
+        private readonly IScrambleService _scrambleService;
         private readonly IMapper _mapper;
 
-        public FavoriteController_Admin(IFavoriteService_Admin favoriteService_Admin, IAccountService_Admin accountService_Admin, IScrambleService_Admin scrambleService_Admin, IMapper mapper)
+        public FavoriteController_Admin(IFavoriteService favoriteService, IAccountService accountService, IScrambleService scrambleService, IMapper mapper)
         {
-            _favoriteService_Admin = favoriteService_Admin;
-            _accountService_Admin = accountService_Admin;
-            _scrambleService_Admin = scrambleService_Admin;
+            _favoriteService = favoriteService;
+            _accountService = accountService;
+            _scrambleService = scrambleService;
             _mapper = mapper;
         }
 
@@ -31,7 +31,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var favorites = _favoriteService_Admin
+                var favorites = _favoriteService
                                     .GetFavorites()
                                     .Select(fav => new 
                                     {
@@ -85,7 +85,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var favorite = _favoriteService_Admin.GetFavorite(favoriteId);
+                var favorite = _favoriteService.GetFavorite(favoriteId);
 
                 if (favorite == null)
                 {
@@ -141,7 +141,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var favorites = _favoriteService_Admin
+                var favorites = _favoriteService
                                     .GetFavoritesOfAccount(accountId)
                                      .Select(fav => new
                                      {
@@ -197,7 +197,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var favorites = _favoriteService_Admin
+                var favorites = _favoriteService
                                     .GetFavoritesByScramble(scrambleId)
                                      .Select(fav => new
                                      {
@@ -253,19 +253,19 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_accountService_Admin.AccountExists(createFavorite.AccountId))
+                if (!_accountService.AccountExists(createFavorite.AccountId))
                 {
                     return NotFound("Not Found Account");
                 }
 
-                if (!_scrambleService_Admin.ScrambleExists(createFavorite.ScrambleId))
+                if (!_scrambleService.ScrambleExists(createFavorite.ScrambleId))
                 {
                     return NotFound("Not Found Scramble");
                 }
 
                 var favoriteMap = _mapper.Map<Favorite>(createFavorite);
 
-                _favoriteService_Admin.CreateFavorite(favoriteMap);
+                _favoriteService.CreateFavorite(favoriteMap);
 
                 return Ok("Created successfully");
             }
@@ -298,24 +298,24 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest("Id is not match");
                 }
 
-                if (!_favoriteService_Admin.FavoriteExists(favoriteId))
+                if (!_favoriteService.FavoriteExists(favoriteId))
                 {
                     return NotFound("Not Found Favorite");
                 }
                 
-                if (!_accountService_Admin.AccountExists(updateFavorite.AccountId))
+                if (!_accountService.AccountExists(updateFavorite.AccountId))
                 {
                     return NotFound("Not Found Account");
                 }
                 
-                if (!_scrambleService_Admin.ScrambleExists(updateFavorite.ScrambleId))
+                if (!_scrambleService.ScrambleExists(updateFavorite.ScrambleId))
                 {
                     return NotFound("Not Found Scramble");
                 }
 
                 var favoriteMap = _mapper.Map<Favorite>(updateFavorite);
 
-                _favoriteService_Admin.UpdateFavorite(favoriteMap);
+                _favoriteService.UpdateFavorite(favoriteMap);
 
                 return Ok("Updated successfully");
             }
@@ -343,14 +343,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_favoriteService_Admin.FavoriteExists(favoriteId))
+                if (!_favoriteService.FavoriteExists(favoriteId))
                 {
                     return NotFound("Not Found Favorite");
                 }
 
-                var favoriteEntity= _favoriteService_Admin.GetFavorite(favoriteId);
+                var favoriteEntity= _favoriteService.GetFavorite(favoriteId);
 
-                _favoriteService_Admin.DeleteFavorite(favoriteEntity);
+                _favoriteService.DeleteFavorite(favoriteEntity);
 
                 return Ok("Deleted successfully");
             }
