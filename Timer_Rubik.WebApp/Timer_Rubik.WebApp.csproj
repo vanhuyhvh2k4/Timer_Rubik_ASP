@@ -23,7 +23,6 @@
   <ItemGroup>
     <Folder Include="Authorize\Anonymous\" />
     <Folder Include="Authorize\General\DTO\" />
-    <Folder Include="Authorize\General\Services\" />
     <Folder Include="Authorize\User\" />
   </ItemGroup>
 
