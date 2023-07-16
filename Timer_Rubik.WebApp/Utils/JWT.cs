@@ -17,7 +17,7 @@ namespace Timer_Rubik.WebApp.Utils
 
             // Create the token
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("timer-rubik-secret-access-token");
+            var key = Encoding.UTF8.GetBytes("timer-rubik-secret-access-token");
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),

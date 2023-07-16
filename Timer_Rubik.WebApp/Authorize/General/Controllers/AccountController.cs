@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Authorize.General.DTO;
 using Timer_Rubik.WebApp.Interfaces;
