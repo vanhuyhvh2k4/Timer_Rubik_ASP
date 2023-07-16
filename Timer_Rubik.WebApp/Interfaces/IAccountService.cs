@@ -14,6 +14,8 @@ namespace Timer_Rubik.WebApp.Interfaces
 
         bool CreateAccount(Account account);
 
+        bool RegisterAccount(Account account);
+
         bool Save();
 
         bool UpdateAccount(Account account);

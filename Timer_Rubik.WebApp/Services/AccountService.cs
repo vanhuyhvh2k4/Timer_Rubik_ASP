@@ -80,5 +80,25 @@ namespace Timer_Rubik.WebApp.Services
             _context.Accounts.Remove(account);
             return Save();
         }
+
+        public bool RegisterAccount(Account account)
+        {
+            var hashedPassword = Password.HashPassword(account.Password);
+
+            var newAccount = new Account()
+            {
+                Id = new Guid(),
+                Name = account.Name,
+                Email = account.Email,
+                Thumbnail = account.Thumbnail,
+                Password = hashedPassword,
+                RuleId = Guid.Parse("4e4d22d4-1fc2-11ee-8407-a02bb82e10f9"),
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.MinValue,
+            };
+
+            _context.Accounts.Add(newAccount);
+            return Save();
+        }
     }
 }

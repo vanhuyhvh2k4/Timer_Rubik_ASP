@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Authorize.General.DTO;
 using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Models;
 using Timer_Rubik.WebApp.Utils;
 
 namespace Timer_Rubik.WebApp.Authorize.General.Controllers
@@ -10,13 +12,15 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
+        private readonly IMapper _mapper;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, IMapper mapper)
         {
             _accountService = accountService;
+            _mapper = mapper;
         }
 
-        [HttpPost]
+        [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -56,6 +60,40 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                 };
 
                 return Ok(response);
+            } catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult Register([FromBody] RegisterRequest registerRequest)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (_accountService.GetAccount(registerRequest.Email) != null)
+                {
+                    return Conflict("Email already exist");
+                }
+
+                var accountMap = _mapper.Map<Account>(registerRequest);
+
+                _accountService.RegisterAccount(accountMap);
+
+                return Ok("Created successfully");
             } catch (Exception ex)
             {
                 return StatusCode(500, new
