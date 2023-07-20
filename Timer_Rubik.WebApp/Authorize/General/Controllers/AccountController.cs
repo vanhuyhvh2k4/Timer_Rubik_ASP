@@ -52,12 +52,9 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
 
                 var accessToken = JWT.GenerateAccessToken(accountEntity.Id.ToString(), accountEntity.RuleId.ToString());
 
-                var refreshToken = JWT.GenerateRefreshToken(accountEntity.Id.ToString(), accountEntity.RuleId.ToString());
-
                 var response = new
                 {
                     accessToken = accessToken,
-                    refreshToken = refreshToken,
                 };
 
                 return Ok(response);
