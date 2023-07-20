@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Timer_Rubik.WebApp.Data;
 using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Middlewares;
 using Timer_Rubik.WebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -64,6 +65,11 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseMiddleware<AdminTokenMiddleware>();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.Run();
