@@ -112,5 +112,15 @@ namespace Timer_Rubik.WebApp.Services
             updateAccount.UpdatedAt = DateTime.Now;
             return Save();
         }
+
+        public bool ChangePassword(Guid accountId, string newPassword)
+        {
+            var updateAccount = _context.Accounts.Where(ac => ac.Id == accountId).FirstOrDefault();
+            var hashedPassword = Password.HashPassword(newPassword);
+
+            updateAccount.Password = hashedPassword;
+            updateAccount.UpdatedAt = DateTime.Now;
+            return Save();
+        }
     }
 }

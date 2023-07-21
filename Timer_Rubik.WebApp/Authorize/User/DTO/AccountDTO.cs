@@ -41,4 +41,9 @@
 
         public string Password { get; set; }
     }
+
+    public class SendEmailDTO
+    {
+        public string Email { get; set; }
+    }
 }

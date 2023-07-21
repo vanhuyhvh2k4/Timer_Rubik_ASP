@@ -23,5 +23,7 @@ namespace Timer_Rubik.WebApp.Interfaces
         bool UpdateAccount_User(Account account);
 
         bool DeleteAccount(Account account);
+
+        bool ChangePassword(Guid accountId, string newPassword);
     }
 }

@@ -212,12 +212,43 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
             }
         }
 
-        [HttpPost("sendMail")]
-        public IActionResult SendMail()
+        [HttpPost("forgot")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult SendMail([FromBody] SendEmailDTO emailDTO)
         {
-            _emailService.SendEmail("vanhuyhvh2k4@gmail.com", "Test Email", "this is my test");
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            return Ok();
+                if (_accountService.GetAccount(emailDTO.Email) == null)
+                {
+                    return NotFound("Not Found Email");
+                }
+
+                var account = _accountService.GetAccount(emailDTO.Email.Trim());
+
+                string randomPassword = Password.GenerateRandomPassword(6);
+
+                _accountService.ChangePassword(account.Id, randomPassword);
+
+                _emailService.SendEmail(emailDTO.Email, "Reset Password", $"New Password: {randomPassword}");
+
+                return Ok("Email send");
+            } catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
+
         }
     }
 }
