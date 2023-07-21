@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Attributes;
 using Timer_Rubik.WebApp.Authorize.General.DTO;
 using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Middlewares;
@@ -102,19 +100,6 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                     Message = ex.Message,
                 });
             }
-        }
-
-        [HttpGet]
-        public IActionResult Test()
-        {
-            return Ok("test");
-        }
-
-        [HttpGet("/test")]
-        [AdminToken]
-        public IActionResult Test_1()
-        {
-            return Ok("test_1");
         }
     }
 }

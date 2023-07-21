@@ -11,7 +11,7 @@ namespace Timer_Rubik.WebApp.Utils
         {
             var claims = new[]
             {
-                new Claim("userId", userId),
+                new Claim("UserId", userId),
                 new Claim("RuleId", ruleId),
             };
 
