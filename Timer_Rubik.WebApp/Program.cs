@@ -23,6 +23,7 @@ builder.Services.AddDbContext<DataContext>(options =>
         new MySqlServerVersion(new Version(10, 4, 25))));
 
 //Register Interface
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();

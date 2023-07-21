@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Authorize.Admin.DTO;
+using MimeKit;
+using MimeKit.Text;
 using Timer_Rubik.WebApp.Authorize.User.DTO;
 using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
@@ -13,11 +16,13 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
     public class AccountController_User : Controller
     {
         private readonly IAccountService _accountService;
+        private readonly IEmailService _emailService;
         private readonly IMapper _mapper;
 
-        public AccountController_User(IAccountService accountService, IMapper mapper)
+        public AccountController_User(IAccountService accountService, IEmailService emailService, IMapper mapper)
         {
             _accountService = accountService;
+            _emailService = emailService;
             _mapper = mapper;
         }
 
@@ -205,6 +210,14 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                     Message = ex.Message,
                 });
             }
+        }
+
+        [HttpPost("sendMail")]
+        public IActionResult SendMail()
+        {
+            _emailService.SendEmail("vanhuyhvh2k4@gmail.com", "Test Email", "this is my test");
+
+            return Ok();
         }
     }
 }
