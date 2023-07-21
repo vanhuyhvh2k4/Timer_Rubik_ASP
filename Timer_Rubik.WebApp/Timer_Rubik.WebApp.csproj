@@ -22,8 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Authorize\Anonymous\" />
-    <Folder Include="Authorize\General\DTO\" />
-    <Folder Include="Authorize\User\" />
   </ItemGroup>
 
 </Project>
