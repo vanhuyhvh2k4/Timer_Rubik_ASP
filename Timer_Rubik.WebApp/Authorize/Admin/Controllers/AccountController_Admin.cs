@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Authorize.Admin.DTO;
-using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
-using Timer_Rubik.WebApp.Dto;
+using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
@@ -11,12 +10,12 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/account")]
     public class AccountController_Admin : Controller
     {
-        private readonly IAccountService_Admin _accountRepository_Admin;
+        private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
 
-        public AccountController_Admin(IAccountService_Admin accountRepository_Admin, IMapper mapper)
+        public AccountController_Admin(IAccountService accountService, IMapper mapper)
         {
-            _accountRepository_Admin = accountRepository_Admin;
+            _accountService = accountService;
             _mapper = mapper;
         }
 
@@ -28,7 +27,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var accounts = _mapper.Map<List<GetAccountDTO_Admin>>(_accountRepository_Admin.GetAccounts());
+                var accounts = _mapper.Map<List<GetAccountDTO_Admin>>(_accountService.GetAccounts());
 
                 if (accounts.Count == 0)
                 {
@@ -62,7 +61,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var account = _mapper.Map<GetAccountDTO_Admin>(_accountRepository_Admin.GetAccount(accountId));
+                var account = _mapper.Map<GetAccountDTO_Admin>(_accountService.GetAccount(accountId));
 
                 if (account == null)
                 {
@@ -95,14 +94,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (_accountRepository_Admin.GetAccount(createAccount.Email) != null)
+                if (_accountService.GetAccount(createAccount.Email) != null)
                 {
                     return Conflict("Email Already Exists");
                 }
 
                 var accountMap = _mapper.Map<Account>(createAccount);
 
-                _accountRepository_Admin.CreateAccount(accountMap);
+                _accountService.CreateAccount(accountMap);
 
                 return Ok("Created successfully");
             }
@@ -136,21 +135,21 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest("Id is not match");
                 }
 
-                var oldAccount = _accountRepository_Admin.GetAccount(accountId);
+                var oldAccount = _accountService.GetAccount(accountId);
                     
-                if (!_accountRepository_Admin.AccountExists(accountId))
+                if (!_accountService.AccountExists(accountId))
                 {
                     return NotFound("Not Found Account");
                 }
 
-                if (_accountRepository_Admin.GetAccount(updateAccount.Email) != null && oldAccount.Email.Trim().ToUpper() != updateAccount.Email.Trim().ToUpper())
+                if (_accountService.GetAccount(updateAccount.Email) != null && oldAccount.Email.Trim().ToUpper() != updateAccount.Email.Trim().ToUpper())
                 {
                     return Conflict("Email already exists");
                 }
 
                 var accountMap = _mapper.Map<Account>(updateAccount);
 
-                _accountRepository_Admin.UpdateAccount(accountMap);
+                _accountService.UpdateAccount(accountMap);
 
                 return Ok("Updated successfully");
             } catch (Exception ex)
@@ -177,14 +176,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_accountRepository_Admin.AccountExists(accountId))
+                if (!_accountService.AccountExists(accountId))
                 {
                     return NotFound("Not Found Account");
                 }
 
-                var accountEntity = _accountRepository_Admin.GetAccount(accountId);
+                var accountEntity = _accountService.GetAccount(accountId);
 
-                _accountRepository_Admin.DeleteAccount(accountEntity);
+                _accountService.DeleteAccount(accountEntity);
 
                 return Ok("Deleted successfully");
             } catch (Exception ex)

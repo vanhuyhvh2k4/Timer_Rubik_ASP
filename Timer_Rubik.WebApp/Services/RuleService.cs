@@ -1,14 +1,14 @@
-﻿using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
-using Timer_Rubik.WebApp.Data;
+﻿using Timer_Rubik.WebApp.Data;
+using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
-namespace Timer_Rubik.WebApp.Authorize.Admin.Services
+namespace Timer_Rubik.WebApp.Services
 {
-    public class RuleService_Admin : IRuleService_Admin
+    public class RuleService : IRuleService
     {
         private readonly DataContext _context;
 
-        public RuleService_Admin(DataContext context)
+        public RuleService(DataContext context)
         {
             _context = context;
         }

@@ -1,8 +1,12 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using System.Text.Json.Serialization;
-using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
-using Timer_Rubik.WebApp.Authorize.Admin.Services;
 using Timer_Rubik.WebApp.Data;
+using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Middlewares;
+using Timer_Rubik.WebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,18 +24,31 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 //Register Interface
 
-builder.Services.AddScoped<IAccountService_Admin, AccountService_Admin>();
-builder.Services.AddScoped<ICategoryService_Admin, CategoryService_Admin>();
-builder.Services.AddScoped<IScrambleService_Admin, ScrambleService_Admin>();
-builder.Services.AddScoped<ISolveService_Admin, SolveService_Admin>();
-builder.Services.AddScoped<IFavoriteService_Admin, FavoriteService_Admin>();
-builder.Services.AddScoped<IRuleService_Admin, RuleService_Admin>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IScrambleService, ScrambleService>();
+builder.Services.AddScoped<ISolveService, SolveService>();
+builder.Services.AddScoped<IFavoriteService, FavoriteService>();
+builder.Services.AddScoped<IRuleService, RuleService>();
 
 // Register auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Ignore Cycles
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("timer-rubik-secret-access-token"))
+                };
+            });
 
 var app = builder.Build();
 
@@ -42,10 +59,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseMiddleware<AdminTokenMiddleware>();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.Run();

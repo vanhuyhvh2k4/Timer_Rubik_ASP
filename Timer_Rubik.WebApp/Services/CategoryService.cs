@@ -1,15 +1,15 @@
 ﻿using System.Security.Principal;
-using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
 using Timer_Rubik.WebApp.Data;
+using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
-namespace Timer_Rubik.WebApp.Authorize.Admin.Services
+namespace Timer_Rubik.WebApp.Services
 {
-    public class CategoryService_Admin : ICategoryService_Admin
+    public class CategoryService : ICategoryService
     {
         private readonly DataContext _context;
 
-        public CategoryService_Admin(DataContext context)
+        public CategoryService(DataContext context)
         {
             _context = context;
         }

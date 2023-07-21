@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Authorize.Admin.DTO;
-using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
-using Timer_Rubik.WebApp.Dto;
+using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
@@ -11,16 +10,16 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/scramble")]
     public class ScrambleController_Admin : Controller
     {
-        private readonly IScrambleService_Admin _scrambleRepository_Admin;
-        private readonly IAccountService_Admin _accountRepository_Admin;
-        private readonly ICategoryService_Admin _categoryRepository_Admin;
+        private readonly IScrambleService _scrambleService;
+        private readonly IAccountService _accountService;
+        private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
 
-        public ScrambleController_Admin(IScrambleService_Admin scrambleRepository_Admin, IAccountService_Admin accountRepository_Admin, ICategoryService_Admin categoryRepository_Admin, IMapper mapper)
+        public ScrambleController_Admin(IScrambleService scrambleService, IAccountService accountService, ICategoryService categoryService, IMapper mapper)
         {
-            _scrambleRepository_Admin = scrambleRepository_Admin;
-            _accountRepository_Admin = accountRepository_Admin;
-            _categoryRepository_Admin = categoryRepository_Admin;
+            _scrambleService = scrambleService;
+            _accountService = accountService;
+            _categoryService = categoryService;
             _mapper = mapper;
         }
 
@@ -32,7 +31,30 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var scrambles = _mapper.Map<List<GetScrambleDTO_Admin>>(_scrambleRepository_Admin.GetScrambles());
+                var scrambles = _scrambleService
+                                    .GetScrambles()
+                                    .Select(scramble => new
+                                    {
+                                        Id = scramble.Id,
+                                        Category = new 
+                                        {
+                                            Id = scramble.CategoryId,
+                                            Name = scramble.Category.Name
+                                        },
+                                        Account = new 
+                                        {
+                                            Id = scramble.AccountId,
+                                            Name = scramble.Account.Name,
+                                            Thumbnail = scramble.Account.Thumbnail,
+                                            Email = scramble.Account.Email
+                                        },
+                                        Solve = scramble.Solve.Answer,
+                                        Algorithm = scramble.Algorithm,
+                                        Thumbnail = scramble.Thumbnail,
+                                        CreatedAt = scramble.CreatedAt,
+                                        UpdatedAt = scramble.UpdatedAt,
+                                    })
+                                    .ToList();
 
                 if (scrambles.Count == 0)
                 {
@@ -65,14 +87,37 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<GetScrambleDTO_Admin>(_scrambleRepository_Admin.GetScramble(scrambleId));
+                var scramble = _scrambleService
+                                    .GetScramble(scrambleId);
 
                 if (scramble == null)
                 {
                     return NotFound("Not Found Scramble");
+                } else
+                {
+                    var scrambleRes = new
+                    {
+                        Id = scramble.Id,
+                        Category = new
+                        {
+                            Id = scramble.CategoryId,
+                            Name = scramble.Category.Name
+                        },
+                        Account = new
+                        {
+                            Id = scramble.AccountId,
+                            Name = scramble.Account.Name,
+                            Thumbnail = scramble.Account.Thumbnail,
+                            Email = scramble.Account.Email
+                        },
+                        Solve = scramble.Solve.Answer,
+                        Algorithm = scramble.Algorithm,
+                        Thumbnail = scramble.Thumbnail,
+                        CreatedAt = scramble.CreatedAt,
+                        UpdatedAt = scramble.UpdatedAt,
+                    };
+                    return Ok(scrambleRes);
                 }
-
-                return Ok(scramble);
             }
             catch (Exception ex)
             {
@@ -99,7 +144,30 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<List<GetScrambleDTO_Admin>>(_scrambleRepository_Admin.GetScramblesOfAccount(accountId));
+                var scramble = _scrambleService
+                                   .GetScramblesOfAccount(accountId)
+                                   .Select(scramble => new
+                                   {
+                                       Id = scramble.Id,
+                                       Category = new
+                                       {
+                                           Id = scramble.CategoryId,
+                                           Name = scramble.Category.Name
+                                       },
+                                       Account = new
+                                       {
+                                           Id = scramble.AccountId,
+                                           Name = scramble.Account.Name,
+                                           Thumbnail = scramble.Account.Thumbnail,
+                                           Email = scramble.Account.Email
+                                       },
+                                       Solve = scramble.Solve.Answer,
+                                       Algorithm = scramble.Algorithm,
+                                       Thumbnail = scramble.Thumbnail,
+                                       CreatedAt = scramble.CreatedAt,
+                                       UpdatedAt = scramble.UpdatedAt,
+                                   })
+                                   .ToList();
 
                 if (scramble.Count == 0)
                 {
@@ -132,7 +200,30 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<List<GetScrambleDTO_Admin>>(_scrambleRepository_Admin.GetScrambleByCategory(categoryId));
+                var scramble = _scrambleService
+                                    .GetScrambleByCategory(categoryId)
+                                    .Select(scramble => new
+                                    {
+                                        Id = scramble.Id,
+                                        Category = new
+                                        {
+                                            Id = scramble.CategoryId,
+                                            Name = scramble.Category.Name
+                                        },
+                                        Account = new
+                                        {
+                                            Id = scramble.AccountId,
+                                            Name = scramble.Account.Name,
+                                            Thumbnail = scramble.Account.Thumbnail,
+                                            Email = scramble.Account.Email
+                                        },
+                                        Solve = scramble.Solve.Answer,
+                                        Algorithm = scramble.Algorithm,
+                                        Thumbnail = scramble.Thumbnail,
+                                        CreatedAt = scramble.CreatedAt,
+                                        UpdatedAt = scramble.UpdatedAt,
+                                    })
+                                    .ToList();
 
                 if (scramble.Count == 0)
                 {
@@ -165,19 +256,19 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_accountRepository_Admin.AccountExists(createScramble.AccountId))
+                if (!_accountService.AccountExists(createScramble.AccountId))
                 {
                     return NotFound("Account is not exists");
                 }
 
-                if (!_categoryRepository_Admin.CategoryExists(createScramble.CategoryId))
+                if (!_categoryService.CategoryExists(createScramble.CategoryId))
                 {
                     return NotFound("Category is not exists");
                 }
 
                 var scrambleMap = _mapper.Map<Scramble>(createScramble);
 
-                _scrambleRepository_Admin.CreateScramble(scrambleMap);
+                _scrambleService.CreateScramble(scrambleMap);
 
                 return Ok("Created successfully");
             }
@@ -211,19 +302,19 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest("Id is not match");
                 }
 
-                if (!_categoryRepository_Admin.CategoryExists(updateScramble.CategoryId))
+                if (!_categoryService.CategoryExists(updateScramble.CategoryId))
                 {
                     return NotFound("Not Found Category");
                 }
                 
-                if (!_accountRepository_Admin.AccountExists(updateScramble.AccountId))
+                if (!_accountService.AccountExists(updateScramble.AccountId))
                 {
                     return NotFound("Not Found Account");
                 }
 
                 var categoryMap = _mapper.Map<Scramble>(updateScramble);
 
-                _scrambleRepository_Admin.UpdateScramble(categoryMap);
+                _scrambleService.UpdateScramble(categoryMap);
 
                 return Ok("Updated successfully");
             } catch (Exception ex)
@@ -250,14 +341,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_scrambleRepository_Admin.ScrambleExists(scrambleId))
+                if (!_scrambleService.ScrambleExists(scrambleId))
                 {
                     return NotFound("Not Found Scramble");
                 }
 
-                var scrambleEntity = _scrambleRepository_Admin.GetScramble(scrambleId);
+                var scrambleEntity = _scrambleService.GetScramble(scrambleId);
 
-                _scrambleRepository_Admin.DeleteScramble(scrambleEntity);
+                _scrambleService.DeleteScramble(scrambleEntity);
 
                 return Ok("Deleted successfully");
             }

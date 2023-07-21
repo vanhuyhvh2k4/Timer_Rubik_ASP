@@ -1,14 +1,15 @@
-﻿using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
 using Timer_Rubik.WebApp.Data;
+using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
-namespace Timer_Rubik.WebApp.Authorize.Admin.Services
+namespace Timer_Rubik.WebApp.Services
 {
-    public class FavoriteService_Admin : IFavoriteService_Admin
+    public class FavoriteService : IFavoriteService
     {
         private readonly DataContext _context;
 
-        public FavoriteService_Admin(DataContext context)
+        public FavoriteService(DataContext context)
         {
             _context = context;
         }
@@ -43,22 +44,44 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Services
 
         public Favorite GetFavorite(Guid favoriteId)
         {
-            return _context.Favorites.Find(favoriteId);
+            return _context.Favorites
+                    .Where(fav => fav.Id == favoriteId)
+                    .Include(fav => fav.Account)
+                    .Include(fav => fav.Scramble)
+                    .Include(fav => fav.Scramble.Category)
+                    .FirstOrDefault();
         }
 
         public ICollection<Favorite> GetFavorites()
         {
-            return _context.Favorites.OrderBy(fav => fav.Id).ToList();
+            return _context.Favorites
+                .OrderBy(fav => fav.Id)
+                .Include(fav => fav.Account)
+                .Include(fav => fav.Scramble)
+                .Include(fav => fav.Scramble.Category)
+                .ToList();
         }
 
         public ICollection<Favorite> GetFavoritesByScramble(Guid scrambleId)
         {
-            return _context.Favorites.Where(fav => fav.ScrambleId == scrambleId).OrderBy(fav => fav.Id).ToList();
+            return _context.Favorites
+                    .Where(fav => fav.ScrambleId == scrambleId)
+                    .Include(fav => fav.Account)
+                    .Include(fav => fav.Scramble)
+                    .Include(fav => fav.Scramble.Category)
+                    .OrderBy(fav => fav.Id)
+                    .ToList();
         }
 
         public ICollection<Favorite> GetFavoritesOfAccount(Guid accountId)
         {
-            return _context.Favorites.Where(fav => fav.AccountId == accountId).OrderBy(fav => fav.Id).ToList();
+            return _context.Favorites
+                        .Where(fav => fav.AccountId == accountId)
+                        .Include(fav => fav.Account)
+                        .Include(fav => fav.Scramble)
+                        .Include(fav => fav.Scramble.Category)
+                        .OrderBy(fav => fav.Id)
+                        .ToList();
         }
 
         public bool Save()

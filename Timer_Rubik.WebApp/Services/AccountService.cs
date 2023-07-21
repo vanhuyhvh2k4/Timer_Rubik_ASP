@@ -1,15 +1,15 @@
-﻿using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
-using Timer_Rubik.WebApp.Data;
+﻿using Timer_Rubik.WebApp.Data;
+using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 using Timer_Rubik.WebApp.Utils;
 
-namespace Timer_Rubik.WebApp.Authorize.Admin.Services
+namespace Timer_Rubik.WebApp.Services
 {
-    public class AccountService_Admin : IAccountService_Admin
+    public class AccountService : IAccountService
     {
         private readonly DataContext _context;
 
-        public AccountService_Admin(DataContext context)
+        public AccountService(DataContext context)
         {
             _context = context;
         }
@@ -78,6 +78,26 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Services
         public bool DeleteAccount(Account account)
         {
             _context.Accounts.Remove(account);
+            return Save();
+        }
+
+        public bool RegisterAccount(Account account)
+        {
+            var hashedPassword = Password.HashPassword(account.Password);
+
+            var newAccount = new Account()
+            {
+                Id = new Guid(),
+                Name = account.Name,
+                Email = account.Email,
+                Thumbnail = account.Thumbnail,
+                Password = hashedPassword,
+                RuleId = Guid.Parse("4e4d22d4-1fc2-11ee-8407-a02bb82e10f9"),
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.MinValue,
+            };
+
+            _context.Accounts.Add(newAccount);
             return Save();
         }
     }

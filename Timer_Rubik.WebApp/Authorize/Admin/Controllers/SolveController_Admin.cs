@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Authorize.Admin.DTO;
-using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
-using Timer_Rubik.WebApp.Dto;
+using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
@@ -11,14 +10,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/solve")]
     public class SolveController_Admin : Controller
     {
-        private readonly ISolveService_Admin _solveRepository_Admin;
-        private readonly IScrambleService_Admin _scrambleRepository_Admin;
+        private readonly ISolveService _solveSevice;
+        private readonly IScrambleService _scrambleService;
         private readonly IMapper _mapper;
 
-        public SolveController_Admin(ISolveService_Admin solveRepository_Admin, IScrambleService_Admin scrambleRepository_Admin, IMapper mapper)
+        public SolveController_Admin(ISolveService solveSevice, IScrambleService scrambleService, IMapper mapper)
         {
-            _solveRepository_Admin = solveRepository_Admin;
-            _scrambleRepository_Admin = scrambleRepository_Admin;
+            _solveSevice = solveSevice;
+            _scrambleService = scrambleService;
             _mapper = mapper;
         }
 
@@ -30,7 +29,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var solves = _mapper.Map<List<GetSolveDTO_Admin>>(_solveRepository_Admin.GetSolves());
+                var solves = _mapper.Map<List<GetSolveDTO_Admin>>(_solveSevice.GetSolves());
 
                 if (solves.Count == 0)
                 {
@@ -63,7 +62,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<GetSolveDTO_Admin>(_solveRepository_Admin.GetSolve(solveId));
+                var scramble = _mapper.Map<GetSolveDTO_Admin>(_solveSevice.GetSolve(solveId));
 
                 if (scramble == null)
                 {
@@ -96,7 +95,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _mapper.Map<GetSolveDTO_Admin>(_solveRepository_Admin.GetSolveOfScramble(scrambleId));
+                var scramble = _mapper.Map<GetSolveDTO_Admin>(_solveSevice.GetSolveOfScramble(scrambleId));
 
                 if (scramble == null)
                 {
@@ -128,14 +127,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_scrambleRepository_Admin.ScrambleExists(createSolve.ScrambleId))
+                if (!_scrambleService.ScrambleExists(createSolve.ScrambleId))
                 {
                     return NotFound("Not Found Scramble");
                 }
 
                 var solveMap = _mapper.Map<Solve>(createSolve);
 
-                _solveRepository_Admin.CreateSolve(solveMap);
+                _solveSevice.CreateSolve(solveMap);
 
                 return Ok("Created successfully");
             }
@@ -149,7 +148,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
             }
         }
 
-        [HttpPut("{solveId}")]
+        [HttpPatch("{solveId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -168,14 +167,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest("Id is not match");
                 }
 
-                if (!_solveRepository_Admin.SolveExists(solveId))
+                if (!_solveSevice.SolveExists(solveId))
                 {
                     return NotFound("Not Found Solve");
                 }
 
                 var solveMap = _mapper.Map<Solve>(updateSolve);
 
-                _solveRepository_Admin.UpdateSolve(solveMap);
+                _solveSevice.UpdateSolve(solveMap);
 
                 return Ok("Updated successfully");
             } catch (Exception ex)
@@ -202,14 +201,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_solveRepository_Admin.SolveExists(solveId))
+                if (!_solveSevice.SolveExists(solveId))
                 {
                     return NotFound("Not Found Solve");
                 }
 
-                var solveEntity = _solveRepository_Admin.GetSolve(solveId);
+                var solveEntity = _solveSevice.GetSolve(solveId);
 
-                _solveRepository_Admin.DeleteSolve(solveEntity);
+                _solveSevice.DeleteSolve(solveEntity);
 
                 return Ok("Deleted successfully");
             }

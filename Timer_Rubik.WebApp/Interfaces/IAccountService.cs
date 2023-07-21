@@ -1,8 +1,8 @@
 ﻿using Timer_Rubik.WebApp.Models;
 
-namespace Timer_Rubik.WebApp.Authorize.Admin.Interfaces
+namespace Timer_Rubik.WebApp.Interfaces
 {
-    public interface IAccountService_Admin
+    public interface IAccountService
     {
         ICollection<Account> GetAccounts();
 
@@ -13,6 +13,8 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Interfaces
         bool AccountExists(Guid accountId);
 
         bool CreateAccount(Account account);
+
+        bool RegisterAccount(Account account);
 
         bool Save();
 

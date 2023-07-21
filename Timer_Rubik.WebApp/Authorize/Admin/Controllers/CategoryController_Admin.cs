@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Authorize.Admin.DTO;
-using Timer_Rubik.WebApp.Authorize.Admin.Interfaces;
+using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
@@ -10,12 +10,12 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/category")]
     public class CategoryController_Admin : Controller
     {
-        private readonly ICategoryService_Admin _categoryService_Admin;
+        private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
 
-        public CategoryController_Admin(ICategoryService_Admin categoryRepository_Admin, IMapper mapper)
+        public CategoryController_Admin(ICategoryService categoryService, IMapper mapper)
         {
-            _categoryService_Admin = categoryRepository_Admin;
+            _categoryService = categoryService;
             _mapper = mapper;
         }
 
@@ -27,7 +27,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var categories = _mapper.Map<List<GetCategoryDTO_Admin>>(_categoryService_Admin.GetCategories());
+                var categories = _mapper.Map<List<GetCategoryDTO_Admin>>(_categoryService.GetCategories());
 
                 if (categories.Count == 0)
                 {
@@ -60,7 +60,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var category = _mapper.Map<GetCategoryDTO_Admin>(_categoryService_Admin.GetCategory(categoryId));
+                var category = _mapper.Map<GetCategoryDTO_Admin>(_categoryService.GetCategory(categoryId));
 
                 if (category == null)
                 {
@@ -93,14 +93,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (_categoryService_Admin.GetCategory(createCategory.Name) != null)
+                if (_categoryService.GetCategory(createCategory.Name) != null)
                 {
                     return Conflict("Name Already Exists");
                 }
 
                 var categoryMap = _mapper.Map<Category>(createCategory);
 
-                _categoryService_Admin.CreateCategory(categoryMap);
+                _categoryService.CreateCategory(categoryMap);
 
                 return Ok("Created successfully");
             } catch (Exception ex)
@@ -113,7 +113,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
             }
         }
 
-        [HttpPut("{categoryId}")]
+        [HttpPatch("{categoryId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -133,19 +133,19 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest("Id is not match");
                 }
 
-                if (!_categoryService_Admin.CategoryExists(categoryId))
+                if (!_categoryService.CategoryExists(categoryId))
                 {
                     return NotFound("Not Found Category");
                 }
 
-                if (_categoryService_Admin.GetCategory(updateCategory.Name) != null)
+                if (_categoryService.GetCategory(updateCategory.Name) != null)
                 {
                     return Conflict("Name already exists");
                 }
 
                 var categoryMap = _mapper.Map<Category>(updateCategory);
 
-                _categoryService_Admin.UpdateCategory(categoryMap);
+                _categoryService.UpdateCategory(categoryMap);
 
                 return Ok("Updated successfully");
             }
@@ -173,14 +173,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_categoryService_Admin.CategoryExists(categoryId))
+                if (!_categoryService.CategoryExists(categoryId))
                 {
                     return NotFound("Not Found Category");
                 }
 
-                var categoryEntity = _categoryService_Admin.GetCategory(categoryId);
+                var categoryEntity = _categoryService.GetCategory(categoryId);
 
-                _categoryService_Admin.DeleteCategory(categoryEntity);
+                _categoryService.DeleteCategory(categoryEntity);
 
                 return Ok("Deleted successfully");
             }
