@@ -13,6 +13,9 @@ namespace Timer_Rubik.WebApp.Authorize.User.Helper
 
             CreateMap<Account, RegisterRequest>();
             CreateMap<RegisterRequest, Account>();
+
+            CreateMap<Account, UpdateAccountDTO_User>();
+            CreateMap<UpdateAccountDTO_User, Account>();
         }
     }
 }
