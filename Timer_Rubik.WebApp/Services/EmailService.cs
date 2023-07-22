@@ -8,17 +8,29 @@ namespace Timer_Rubik.WebApp.Services
 {
     public class EmailService : IEmailService
     {
+        private readonly string host;
+        private readonly int port;
+        private readonly string username;
+        private readonly string password;
+
+        public EmailService(IConfiguration config)
+        {
+            host = config.GetSection("Mail_Host").Value!;
+            port = int.Parse(config.GetSection("Mail_Port").Value!);
+            username = config.GetSection("Mail_Username").Value!;
+            password = config.GetSection("Mail_Password").Value!;
+        }
         public void SendEmail(string toAddress, string subject, string body)
         {
             var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse("vanhuyhvh2004@gmail.com"));
+            email.From.Add(MailboxAddress.Parse(username));
             email.To.Add(MailboxAddress.Parse(toAddress));
             email.Subject = subject;
             email.Body = new TextPart(TextFormat.Html) { Text = body };
 
             using var smtp = new SmtpClient();
-            smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-            smtp.Authenticate("vanhuyhvh2004@gmail.com", "vkgsszviihylanom");
+            smtp.Connect(host, port, SecureSocketOptions.StartTls);
+            smtp.Authenticate(username, password);
             smtp.Send(email);
             smtp.Disconnect(true);
         }
