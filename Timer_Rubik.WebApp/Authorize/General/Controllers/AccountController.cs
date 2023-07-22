@@ -119,7 +119,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
             }
         }
 
-        [HttpPost("forgot")]
+        [HttpPatch("forgot")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
