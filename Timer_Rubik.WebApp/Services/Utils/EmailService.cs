@@ -1,10 +1,10 @@
 ﻿using MailKit.Security;
 using MimeKit.Text;
 using MimeKit;
-using Timer_Rubik.WebApp.Interfaces;
 using MailKit.Net.Smtp;
+using Timer_Rubik.WebApp.Interfaces.Utils;
 
-namespace Timer_Rubik.WebApp.Services
+namespace Timer_Rubik.WebApp.Services.Utils
 {
     public class EmailService : IEmailService
     {

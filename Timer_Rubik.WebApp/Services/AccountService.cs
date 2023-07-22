@@ -1,22 +1,24 @@
 ﻿using Timer_Rubik.WebApp.Data;
 using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Interfaces.Utils;
 using Timer_Rubik.WebApp.Models;
-using Timer_Rubik.WebApp.Utils;
 
 namespace Timer_Rubik.WebApp.Services
 {
     public class AccountService : IAccountService
     {
         private readonly DataContext _context;
+        private readonly IPasswordService _passwordService;
 
-        public AccountService(DataContext context)
+        public AccountService(DataContext context, IPasswordService passwordService)
         {
             _context = context;
+            _passwordService = passwordService;
         }
 
         public bool CreateAccount(Account account)
         {
-            var hashedPassword = Password.HashPassword(account.Password);
+            var hashedPassword = _passwordService.HashPassword(account.Password);
 
             var newAccount = new Account()
             {
@@ -64,7 +66,7 @@ namespace Timer_Rubik.WebApp.Services
         public bool UpdateAccount(Account account)
         {
             var updateAccount = _context.Accounts.Where(ac => ac.Id == account.Id).FirstOrDefault();
-            var hashedPassword = Password.HashPassword(account.Password);
+            var hashedPassword = _passwordService.HashPassword(account.Password);
 
             updateAccount.RuleId = account.RuleId;
             updateAccount.Name = account.Name;
@@ -83,7 +85,7 @@ namespace Timer_Rubik.WebApp.Services
 
         public bool RegisterAccount(Account account)
         {
-            var hashedPassword = Password.HashPassword(account.Password);
+            var hashedPassword = _passwordService.HashPassword(account.Password);
 
             var newAccount = new Account()
             {
@@ -104,7 +106,7 @@ namespace Timer_Rubik.WebApp.Services
         public bool UpdateAccount_User(Account account)
         {
             var updateAccount = _context.Accounts.Where(ac => ac.Id == account.Id).FirstOrDefault();
-            var hashedPassword = Password.HashPassword(account.Password);
+            var hashedPassword = _passwordService.HashPassword(account.Password);
 
             updateAccount.Name = account.Name;
             updateAccount.Thumbnail = account.Thumbnail;
@@ -116,7 +118,7 @@ namespace Timer_Rubik.WebApp.Services
         public bool ChangePassword(Guid accountId, string newPassword)
         {
             var updateAccount = _context.Accounts.Where(ac => ac.Id == accountId).FirstOrDefault();
-            var hashedPassword = Password.HashPassword(newPassword);
+            var hashedPassword = _passwordService.HashPassword(newPassword);
 
             updateAccount.Password = hashedPassword;
             updateAccount.UpdatedAt = DateTime.Now;

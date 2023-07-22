@@ -2,9 +2,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Interfaces.Utils;
 
-namespace Timer_Rubik.WebApp.Services
+namespace Timer_Rubik.WebApp.Services.Utils
 {
     public class JWTService : IJWTService
     {

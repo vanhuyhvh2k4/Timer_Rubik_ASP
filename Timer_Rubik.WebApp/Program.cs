@@ -5,8 +5,10 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Timer_Rubik.WebApp.Data;
 using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Interfaces.Utils;
 using Timer_Rubik.WebApp.Middlewares;
 using Timer_Rubik.WebApp.Services;
+using Timer_Rubik.WebApp.Services.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 //Register Interface
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IJWTService, JWTService>();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
 
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();

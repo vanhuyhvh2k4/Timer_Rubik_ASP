@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Attributes;
 using Timer_Rubik.WebApp.Authorize.User.DTO;
 using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Interfaces.Utils;
 using Timer_Rubik.WebApp.Models;
-using Timer_Rubik.WebApp.Utils;
 
 namespace Timer_Rubik.WebApp.Authorize.User.Controllers
 {
@@ -15,13 +14,15 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
         private readonly IAccountService _accountService;
         private readonly IEmailService _emailService;
         private readonly IJWTService _jWTService;
+        private readonly IPasswordService _passwordService;
         private readonly IMapper _mapper;
 
-        public AccountController_User(IAccountService accountService, IEmailService emailService, IJWTService jWTService, IMapper mapper)
+        public AccountController_User(IAccountService accountService, IEmailService emailService, IJWTService jWTService, IPasswordService passwordService, IMapper mapper)
         {
             _accountService = accountService;
             _emailService = emailService;
             _jWTService = jWTService;
+            _passwordService = passwordService;
             _mapper = mapper;
         }
 
@@ -107,7 +108,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                     return NotFound("Not Found Account");
                 }
 
-                bool isCorrectPassword = Password.VerifyPassword(loginRequest.Password.Trim(), accountEntity.Password.Trim());
+                bool isCorrectPassword = _passwordService.VerifyPassword(loginRequest.Password.Trim(), accountEntity.Password.Trim());
 
                 if (!isCorrectPassword)
                 {
@@ -232,7 +233,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
 
                 var account = _accountService.GetAccount(emailDTO.Email.Trim());
 
-                string randomPassword = Password.GenerateRandomPassword(6);
+                string randomPassword = _passwordService.GenerateRandomPassword(6);
 
                 _accountService.ChangePassword(account.Id, randomPassword);
 

@@ -1,4 +1,4 @@
-﻿namespace Timer_Rubik.WebApp.Interfaces
+﻿namespace Timer_Rubik.WebApp.Interfaces.Utils
 {
     public interface IJWTService
     {
