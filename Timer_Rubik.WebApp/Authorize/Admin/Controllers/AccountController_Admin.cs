@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Authorize.Admin.DTO;
 using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Interfaces.Utils;
 using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
@@ -11,11 +12,13 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     public class AccountController_Admin : Controller
     {
         private readonly IAccountService _accountService;
+        private readonly IEmailService _emailService;
         private readonly IMapper _mapper;
 
-        public AccountController_Admin(IAccountService accountService, IMapper mapper)
+        public AccountController_Admin(IAccountService accountService, IEmailService emailService, IMapper mapper)
         {
             _accountService = accountService;
+            _emailService = emailService;
             _mapper = mapper;
         }
 
@@ -94,6 +97,11 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
+                if (!_emailService.EmailValid(createAccount.Email))
+                {
+                    return BadRequest("Email is invalid");
+                }
+
                 if (_accountService.GetAccount(createAccount.Email) != null)
                 {
                     return Conflict("Email Already Exists");
@@ -133,6 +141,11 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 if (accountId != updateAccount.Id)
                 {
                     return BadRequest("Id is not match");
+                }
+
+                if (!_emailService.EmailValid(updateAccount.Email))
+                {
+                    return BadRequest("Email is invalid");
                 }
 
                 var oldAccount = _accountService.GetAccount(accountId);

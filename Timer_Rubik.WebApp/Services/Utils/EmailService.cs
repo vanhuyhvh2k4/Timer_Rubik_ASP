@@ -3,6 +3,7 @@ using MimeKit.Text;
 using MimeKit;
 using MailKit.Net.Smtp;
 using Timer_Rubik.WebApp.Interfaces.Utils;
+using System.Text.RegularExpressions;
 
 namespace Timer_Rubik.WebApp.Services.Utils
 {
@@ -20,6 +21,13 @@ namespace Timer_Rubik.WebApp.Services.Utils
             username = config.GetSection("Mail_Username").Value!;
             password = config.GetSection("Mail_Password").Value!;
         }
+
+        public bool EmailValid(string email)
+        {
+            string regex = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            return Regex.IsMatch(email, regex);
+        }
+
         public void SendEmail(string toAddress, string subject, string body)
         {
             var email = new MimeMessage();
