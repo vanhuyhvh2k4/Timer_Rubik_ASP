@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Authorize.User.DTO;
 using Timer_Rubik.WebApp.Interfaces;
@@ -19,7 +20,50 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
             _mapper = mapper;
         }
 
+
+        [HttpGet("{accountId}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetAccount([FromRoute] Guid accountId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var accountIdToken = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
+
+                if (accountId != accountIdToken)
+                {
+                    return BadRequest("Token and slug is not match");
+                }
+
+                var account = _mapper.Map<GetAccountDTO_User>(_accountService.GetAccount(accountId));
+
+                if (account == null)
+                {
+                    return NotFound("Not Found Account");
+                }
+
+                return Ok(account);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
+        }
+
         [HttpPut("{accountId}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -32,6 +76,13 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
+                }
+
+                var accountIdToken = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
+
+                if (accountId != accountIdToken)
+                {
+                    return BadRequest("Token and slug is not match");
                 }
 
                 if (updateAccount.Password.Length < 6)

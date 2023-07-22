@@ -162,38 +162,5 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                 });
             }
         }
-
-        [HttpGet("{accountId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetAccount([FromRoute] Guid accountId)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var account = _mapper.Map<GetAccountDTO>(_accountService.GetAccount(accountId));
-
-                if (account == null)
-                {
-                    return NotFound("Not Found Account");
-                }
-
-                return Ok(account);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Title = "Something went wrong",
-                    Message = ex.Message,
-                });
-            }
-        }
     }
 }

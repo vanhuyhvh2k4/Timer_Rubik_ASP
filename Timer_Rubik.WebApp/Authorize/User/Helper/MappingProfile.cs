@@ -8,6 +8,9 @@ namespace Timer_Rubik.WebApp.Authorize.User.Helper
     {
         public MappingProfile()
         {
+            CreateMap<Account, GetAccountDTO_User>();
+            CreateMap<GetAccountDTO_User, Account>();
+
             CreateMap<Account, UpdateAccountDTO_User>();
             CreateMap<UpdateAccountDTO_User, Account>();
 

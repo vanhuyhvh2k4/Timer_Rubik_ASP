@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Timer_Rubik.WebApp.Attributes;
 using Timer_Rubik.WebApp.Authorize.Admin.DTO;
 using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Interfaces.Utils;
@@ -23,6 +24,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         }
 
         [HttpGet]
+        [AdminToken]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -49,7 +51,42 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
             }
         }
 
+        [HttpGet("{accountId}")]
+        [AdminToken]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetAccount([FromRoute] Guid accountId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var account = _mapper.Map<GetAccountDTO_Admin>(_accountService.GetAccount(accountId));
+
+                if (account == null)
+                {
+                    return NotFound("Not Found Account");
+                }
+
+                return Ok(account);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
+        }
+
         [HttpPost]
+        [AdminToken]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -95,6 +132,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         }
 
         [HttpPut("{accountId}")]
+        [AdminToken]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -152,6 +190,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         }
 
         [HttpDelete("{accountId}")]
+        [AdminToken]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
