@@ -148,6 +148,16 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                     return BadRequest(ModelState);
                 }
 
+                if (!_emailService.EmailValid(registerRequest.Email))
+                {
+                    return BadRequest("Email is invalid");
+                }
+
+                if (registerRequest.Password.Length < 6)
+                {
+                    return BadRequest("Password at least 6 characters");
+                }
+
                 if (_accountService.GetAccount(registerRequest.Email) != null)
                 {
                     return Conflict("Email already exist");
@@ -182,6 +192,11 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
+                }
+
+                if (updateAccount.Password.Length < 6)
+                {
+                    return BadRequest("Password at least 6 characters");
                 }
 
                 if (accountId != updateAccount.Id)
