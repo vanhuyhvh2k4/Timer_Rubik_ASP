@@ -1,21 +1,22 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Timer_Rubik.WebApp.Attributes;
 using Timer_Rubik.WebApp.Interfaces;
 
-namespace Timer_Rubik.WebApp.Authorize.General.Controllers
+namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
 {
     [ApiController]
-    [Route("api/favorite")]
-    public class FavoriteController : Controller
+    [Route("api/admin/favorite")]
+    public class FavoriteController_Admin : Controller
     {
         private readonly IFavoriteService _favoriteService;
 
-        public FavoriteController(IFavoriteService favoriteService)
+        public FavoriteController_Admin(IFavoriteService favoriteService)
         {
             _favoriteService = favoriteService;
         }
 
         [HttpGet]
+        [AdminToken]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -33,6 +34,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                                             Id = fav.AccountId,
                                             fav.Account.Name,
                                             fav.Account.Thumbnail,
+                                            fav.Account.Email
                                         },
                                         Scramble = new
                                         {
@@ -65,6 +67,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
         }
 
         [HttpGet("{favoriteId}")]
+        [AdminToken]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -94,6 +97,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                             Id = favorite.AccountId,
                             favorite.Account.Name,
                             favorite.Account.Thumbnail,
+                            favorite.Account.Email
                         },
                         Scramble = new
                         {
@@ -121,6 +125,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
         }
 
         [HttpGet("account/{accountId}")]
+        [AdminToken]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -144,6 +149,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                                              Id = fav.AccountId,
                                              fav.Account.Name,
                                              fav.Account.Thumbnail,
+                                             fav.Account.Email
                                          },
                                          Scramble = new
                                          {
@@ -176,6 +182,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
         }
 
         [HttpGet("scramble/{scrambleId}")]
+        [AdminToken]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -199,6 +206,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                                              Id = fav.AccountId,
                                              fav.Account.Name,
                                              fav.Account.Thumbnail,
+                                             fav.Account.Email
                                          },
                                          Scramble = new
                                          {

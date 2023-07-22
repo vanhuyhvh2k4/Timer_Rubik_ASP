@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Authorize.User.DTO;
 using Timer_Rubik.WebApp.Interfaces;
@@ -24,6 +25,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -64,6 +66,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
         }
 
         [HttpPut("{favoriteId}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -85,6 +88,15 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                 if (!_favoriteService.FavoriteExists(favoriteId))
                 {
                     return NotFound("Not Found Favorite");
+                }
+
+                var account = _accountService.GetAccountByFavorite(favoriteId);
+
+                var userIdToken = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
+
+                if (account.Id != userIdToken)
+                {
+                    return BadRequest("Token and slug is not match");
                 }
 
                 if (!_accountService.AccountExists(updateFavorite.AccountId))
@@ -114,6 +126,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
         }
 
         [HttpDelete("{favoriteId}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -130,6 +143,15 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                 if (!_favoriteService.FavoriteExists(favoriteId))
                 {
                     return NotFound("Not Found Favorite");
+                }
+
+                var account = _accountService.GetAccountByFavorite(favoriteId);
+
+                var userIdToken = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
+
+                if (account.Id != userIdToken)
+                {
+                    return BadRequest("Token and slug is not match");
                 }
 
                 var favoriteEntity = _favoriteService.GetFavorite(favoriteId);

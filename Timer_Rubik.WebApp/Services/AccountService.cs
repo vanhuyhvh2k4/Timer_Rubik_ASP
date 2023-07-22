@@ -124,5 +124,10 @@ namespace Timer_Rubik.WebApp.Services
             updateAccount.UpdatedAt = DateTime.Now;
             return Save();
         }
+
+        public Account GetAccountByFavorite(Guid favoriteId)
+        {
+            return _context.Favorites.Where(fav => fav.Id == favoriteId).Select(fav => fav.Account).FirstOrDefault();
+        }
     }
 }

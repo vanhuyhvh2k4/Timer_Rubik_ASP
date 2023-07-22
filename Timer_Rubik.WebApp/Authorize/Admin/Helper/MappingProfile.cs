@@ -25,6 +25,10 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Helper
             CreateMap<Category, UpdateCategoryDTO_Admin>();
             CreateMap<UpdateCategoryDTO_Admin, Category>();
 
+            //Favorite
+            CreateMap<Favorite, GetFavoriteDTO_Admin>();
+            CreateMap<GetFavoriteDTO_Admin, Favorite>();
+
             //Solve
             CreateMap<Solve, GetSolveDTO_Admin>();
             CreateMap<GetSolveDTO_Admin, Solve>();
