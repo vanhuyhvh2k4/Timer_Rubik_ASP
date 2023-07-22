@@ -44,10 +44,6 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Helper
 
             CreateMap<Solve, UpdateSolveDTO_Admin>();
             CreateMap<UpdateSolveDTO_Admin, Solve>();
-
-            //Rule
-            CreateMap<Rule, GetRuleDTO_Admin>();
-            CreateMap<GetRuleDTO_Admin, Rule>();
         }
     }
 }
