@@ -8,11 +8,13 @@ namespace Timer_Rubik.WebApp.Middlewares
 {
     public class AdminTokenMiddleware
     {
+        private readonly string secret;
         private readonly RequestDelegate _next;
 
-        public AdminTokenMiddleware(RequestDelegate next)
+        public AdminTokenMiddleware(RequestDelegate next, IConfiguration config)
         {
             _next = next;
+            secret = config.GetSection("Token_Secret").Value!;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -26,7 +28,7 @@ namespace Timer_Rubik.WebApp.Middlewares
 
                     // Xác thực JWT token
                     var tokenHandler = new JwtSecurityTokenHandler();
-                    var key = Encoding.UTF8.GetBytes("timer-rubik-secret-access-token");
+                    var key = Encoding.UTF8.GetBytes(secret);
 
                     try
                     {
