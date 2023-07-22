@@ -11,24 +11,10 @@
         public string Thumbnail { get; set; }
 
         public string Email { get; set; }
-    }
 
-    public class LoginRequest
-    {
-        public string Email { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public string Password { get; set; }
-    }
-
-    public class RegisterRequest
-    {
-        public string Name { get; set; }
-
-        public string Email { get; set; }
-
-        public string Password { get; set; }
-
-        public string Thumbnail { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 
     public class UpdateAccountDTO_User
@@ -40,10 +26,5 @@
         public string Thumbnail { get; set; }
 
         public string Password { get; set; }
-    }
-
-    public class SendEmailDTO
-    {
-        public string Email { get; set; }
     }
 }

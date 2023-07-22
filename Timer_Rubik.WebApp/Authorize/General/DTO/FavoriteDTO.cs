@@ -1,6 +1,6 @@
-﻿namespace Timer_Rubik.WebApp.Authorize.Admin.DTO
+﻿namespace Timer_Rubik.WebApp.Authorize.General.DTO
 {
-    public class GetFavoriteDTO_Admin
+    public class GetFavoriteDTO
     {
         public Guid Id { get; set; }
 

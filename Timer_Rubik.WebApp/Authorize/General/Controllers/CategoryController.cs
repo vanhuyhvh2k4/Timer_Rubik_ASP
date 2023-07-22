@@ -1,20 +1,20 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Authorize.Admin.DTO;
+using Timer_Rubik.WebApp.Authorize.General.DTO;
 using Timer_Rubik.WebApp.Interfaces;
 
-namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
+namespace Timer_Rubik.WebApp.Authorize.General.Controllers
 {
     [ApiController]
-    [Route("api/admin/rule")]
-    public class RuleController_Admin : Controller
+    [Route("api/category")]
+    public class CategoryController : Controller
     {
-        private readonly IRuleService _ruleService;
+        private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
 
-        public RuleController_Admin(IRuleService ruleService, IMapper mapper)
+        public CategoryController(ICategoryService categoryService, IMapper mapper)
         {
-            _ruleService = ruleService;
+            _categoryService = categoryService;
             _mapper = mapper;
         }
 
@@ -22,18 +22,18 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetRules()
+        public IActionResult Index()
         {
             try
             {
-                var rules = _mapper.Map<List<GetRuleDTO_Admin>>(_ruleService.GetRules());
-
-                if (rules.Count == 0)
+                var categories = _mapper.Map<List<GetCategoryDTO>>(_categoryService.GetCategories());
+                
+                if (categories.Count == 0)
                 {
-                    return NotFound("Not Found Rule");
+                    return NotFound("Not Found Category");
                 }
 
-                return Ok(rules);
+                return Ok(categories);
             }
             catch (Exception ex)
             {
@@ -45,12 +45,12 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
             }
         }
 
-        [HttpGet("{ruleId}")]
+        [HttpGet("{categoryId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetRule([FromRoute] Guid ruleId)
+        public IActionResult GetCategory([FromRoute] Guid categoryId)
         {
             try
             {
@@ -59,14 +59,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var rule = _mapper.Map<GetRuleDTO_Admin>(_ruleService.GetRule(ruleId));
+                var category = _mapper.Map<GetCategoryDTO>(_categoryService.GetCategory(categoryId));
 
-                if (rule == null)
+                if (category == null)
                 {
-                    return NotFound("Not Found Rule");
+                    return NotFound("Not Found Category");
                 }
 
-                return Ok(rule);
+                return Ok(category);
             }
             catch (Exception ex)
             {

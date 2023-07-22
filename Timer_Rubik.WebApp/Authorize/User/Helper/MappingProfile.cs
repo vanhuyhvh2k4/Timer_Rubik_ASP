@@ -11,11 +11,14 @@ namespace Timer_Rubik.WebApp.Authorize.User.Helper
             CreateMap<Account, GetAccountDTO_User>();
             CreateMap<GetAccountDTO_User, Account>();
 
-            CreateMap<Account, RegisterRequest>();
-            CreateMap<RegisterRequest, Account>();
-
             CreateMap<Account, UpdateAccountDTO_User>();
             CreateMap<UpdateAccountDTO_User, Account>();
+
+            CreateMap<Favorite, CreateFavoriteDTO_User>();
+            CreateMap<CreateFavoriteDTO_User, Favorite>();
+
+            CreateMap<Favorite, UpdateFavoriteDTO_User>();
+            CreateMap<UpdateFavoriteDTO_User, Favorite>();
         }
     }
 }

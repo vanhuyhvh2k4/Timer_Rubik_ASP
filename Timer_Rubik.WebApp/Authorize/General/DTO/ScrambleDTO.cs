@@ -1,6 +1,6 @@
-﻿namespace Timer_Rubik.WebApp.Authorize.Admin.DTO
+﻿namespace Timer_Rubik.WebApp.Authorize.General.DTO
 {
-    public class GetScrambleDTO_Admin
+    public class GetScrambleDTO
     {
         public Guid Id { get; set; }
 
@@ -16,8 +16,8 @@
 
         public DateTime UpdatedAt { get; set; }
     }
-    
-    public class CreateScrambleDTO_Admin
+
+    public class CreateScrambleDTO
     {
         public Guid CategoryId { get; set; }
 
@@ -27,8 +27,8 @@
 
         public string Thumbnail { get; set; }
     }
-    
-    public class UpdateScrambleDTO_Admin
+
+    public class UpdateScrambleDTO
     {
         public Guid Id { get; set; }
 

@@ -10,6 +10,8 @@ namespace Timer_Rubik.WebApp.Interfaces
 
         Account GetAccount(string email);
 
+        Account GetAccountByFavorite(Guid favoriteId);
+
         bool AccountExists(Guid accountId);
 
         bool CreateAccount(Account account);
