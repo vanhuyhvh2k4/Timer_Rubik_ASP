@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
-using MailKit.Net.Smtp;
-using MailKit.Security;
 using Microsoft.AspNetCore.Mvc;
-using MimeKit;
-using MimeKit.Text;
+using Timer_Rubik.WebApp.Attributes;
 using Timer_Rubik.WebApp.Authorize.User.DTO;
 using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
@@ -17,12 +14,14 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly IEmailService _emailService;
+        private readonly IJWTService _jWTService;
         private readonly IMapper _mapper;
 
-        public AccountController_User(IAccountService accountService, IEmailService emailService, IMapper mapper)
+        public AccountController_User(IAccountService accountService, IEmailService emailService, IJWTService jWTService, IMapper mapper)
         {
             _accountService = accountService;
             _emailService = emailService;
+            _jWTService = jWTService;
             _mapper = mapper;
         }
 
@@ -115,7 +114,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                     return StatusCode(403, "Password is not correct");
                 }
 
-                var accessToken = JWT.GenerateAccessToken(accountEntity.Id.ToString(), accountEntity.RuleId.ToString());
+                var accessToken = _jWTService.GenerateAccessToken(accountEntity.Id.ToString(), accountEntity.RuleId.ToString());
 
                 var response = new
                 {

@@ -24,6 +24,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 //Register Interface
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IJWTService, JWTService>();
 
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
