@@ -133,6 +133,11 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                     return BadRequest(ModelState);
                 }
 
+                if (!_emailService.EmailValid(emailDTO.Email))
+                {
+                    return BadRequest("Email is invalid");
+                }
+
                 if (_accountService.GetAccount(emailDTO.Email) == null)
                 {
                     return NotFound("Not Found Email");
