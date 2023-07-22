@@ -1,21 +1,21 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Authorize.Admin.DTO;
+using Timer_Rubik.WebApp.Authorize.General.DTO;
 using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
-namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
+namespace Timer_Rubik.WebApp.Authorize.General.Controllers
 {
     [ApiController]
     [Route("api/admin/favorite")]
-    public class FavoriteController_Admin : Controller
+    public class FavoriteController : Controller
     {
         private readonly IFavoriteService _favoriteService;
         private readonly IAccountService _accountService;
         private readonly IScrambleService _scrambleService;
         private readonly IMapper _mapper;
 
-        public FavoriteController_Admin(IFavoriteService favoriteService, IAccountService accountService, IScrambleService scrambleService, IMapper mapper)
+        public FavoriteController(IFavoriteService favoriteService, IAccountService accountService, IScrambleService scrambleService, IMapper mapper)
         {
             _favoriteService = favoriteService;
             _accountService = accountService;
@@ -33,24 +33,26 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
             {
                 var favorites = _favoriteService
                                     .GetFavorites()
-                                    .Select(fav => new 
+                                    .Select(fav => new
                                     {
-                                        Id = fav.Id,
-                                        Account = new {
+                                        fav.Id,
+                                        Account = new
+                                        {
                                             Id = fav.AccountId,
-                                            Name = fav.Account.Name,
-                                            Thumbnail = fav.Account.Thumbnail,
-                                            Email = fav.Account.Email
+                                            fav.Account.Name,
+                                            fav.Account.Thumbnail,
+                                            fav.Account.Email
                                         },
-                                        Scramble = new {
+                                        Scramble = new
+                                        {
                                             Id = fav.ScrambleId,
-                                            Algorithm = fav.Scramble.Algorithm,
-                                            Thumbnail = fav.Scramble.Thumbnail,
+                                            fav.Scramble.Algorithm,
+                                            fav.Scramble.Thumbnail,
                                             Category = fav.Scramble.Category.Name
                                         },
-                                        Time = fav.Time,
-                                        CreatedAt = fav.CreatedAt,
-                                        UpdatedAt = fav.UpdatedAt,
+                                        fav.Time,
+                                        fav.CreatedAt,
+                                        fav.UpdatedAt,
                                     })
                                     .ToList();
 
@@ -66,7 +68,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 return StatusCode(500, new
                 {
                     Title = "Something went wrong",
-                    Message = ex.Message,
+                    ex.Message,
                 });
             }
         }
@@ -90,28 +92,29 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 if (favorite == null)
                 {
                     return NotFound("Not Found Favorite");
-                } else
+                }
+                else
                 {
                     var favoriteRes = new
                     {
-                        Id = favorite.Id,
+                        favorite.Id,
                         Account = new
                         {
                             Id = favorite.AccountId,
-                            Name = favorite.Account.Name,
-                            Thumbnail = favorite.Account.Thumbnail,
-                            Email = favorite.Account.Email
+                            favorite.Account.Name,
+                            favorite.Account.Thumbnail,
+                            favorite.Account.Email
                         },
                         Scramble = new
                         {
                             Id = favorite.ScrambleId,
-                            Algorithm = favorite.Scramble.Algorithm,
-                            Thumbnail = favorite.Scramble.Thumbnail,
+                            favorite.Scramble.Algorithm,
+                            favorite.Scramble.Thumbnail,
                             Category = favorite.Scramble.Category.Name
                         },
-                        Time = favorite.Time,
-                        CreatedAt = favorite.CreatedAt,
-                        UpdatedAt = favorite.UpdatedAt,
+                        favorite.Time,
+                        favorite.CreatedAt,
+                        favorite.UpdatedAt,
                     };
 
                     return Ok(favoriteRes);
@@ -122,7 +125,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 return StatusCode(500, new
                 {
                     Title = "Something went wrong",
-                    Message = ex.Message,
+                    ex.Message,
                 });
             }
         }
@@ -145,24 +148,24 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                                     .GetFavoritesOfAccount(accountId)
                                      .Select(fav => new
                                      {
-                                         Id = fav.Id,
+                                         fav.Id,
                                          Account = new
                                          {
                                              Id = fav.AccountId,
-                                             Name = fav.Account.Name,
-                                             Thumbnail = fav.Account.Thumbnail,
-                                             Email = fav.Account.Email
+                                             fav.Account.Name,
+                                             fav.Account.Thumbnail,
+                                             fav.Account.Email
                                          },
                                          Scramble = new
                                          {
                                              Id = fav.ScrambleId,
-                                             Algorithm = fav.Scramble.Algorithm,
-                                             Thumbnail = fav.Scramble.Thumbnail,
+                                             fav.Scramble.Algorithm,
+                                             fav.Scramble.Thumbnail,
                                              Category = fav.Scramble.Category.Name
                                          },
-                                         Time = fav.Time,
-                                         CreatedAt = fav.CreatedAt,
-                                         UpdatedAt = fav.UpdatedAt,
+                                         fav.Time,
+                                         fav.CreatedAt,
+                                         fav.UpdatedAt,
                                      })
                                     .ToList(); ;
 
@@ -178,7 +181,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 return StatusCode(500, new
                 {
                     Title = "Something went wrong",
-                    Message = ex.Message,
+                    ex.Message,
                 });
             }
         }
@@ -201,24 +204,24 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                                     .GetFavoritesByScramble(scrambleId)
                                      .Select(fav => new
                                      {
-                                         Id = fav.Id,
+                                         fav.Id,
                                          Account = new
                                          {
                                              Id = fav.AccountId,
-                                             Name = fav.Account.Name,
-                                             Thumbnail = fav.Account.Thumbnail,
-                                             Email = fav.Account.Email
+                                             fav.Account.Name,
+                                             fav.Account.Thumbnail,
+                                             fav.Account.Email
                                          },
                                          Scramble = new
                                          {
                                              Id = fav.ScrambleId,
-                                             Algorithm = fav.Scramble.Algorithm,
-                                             Thumbnail = fav.Scramble.Thumbnail,
+                                             fav.Scramble.Algorithm,
+                                             fav.Scramble.Thumbnail,
                                              Category = fav.Scramble.Category.Name
                                          },
-                                         Time = fav.Time,
-                                         CreatedAt = fav.CreatedAt,
-                                         UpdatedAt = fav.UpdatedAt,
+                                         fav.Time,
+                                         fav.CreatedAt,
+                                         fav.UpdatedAt,
                                      })
                                     .ToList(); ;
 
@@ -234,7 +237,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 return StatusCode(500, new
                 {
                     Title = "Something went wrong",
-                    Message = ex.Message,
+                    ex.Message,
                 });
             }
         }
@@ -244,7 +247,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult CreateFavorite([FromBody] CreateFavoriteDTO_Admin createFavorite)
+        public IActionResult CreateFavorite([FromBody] CreateFavoriteDTO createFavorite)
         {
             try
             {
@@ -274,7 +277,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 return StatusCode(500, new
                 {
                     Title = "Something went wrong",
-                    Message = ex.Message,
+                    ex.Message,
                 });
             }
         }
@@ -284,7 +287,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UpdateFavorite([FromRoute] Guid favoriteId, [FromBody] UpdateFavoriteDTO_Admin updateFavorite)
+        public IActionResult UpdateFavorite([FromRoute] Guid favoriteId, [FromBody] UpdateFavoriteDTO updateFavorite)
         {
             try
             {
@@ -293,7 +296,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (favoriteId!= updateFavorite.Id)
+                if (favoriteId != updateFavorite.Id)
                 {
                     return BadRequest("Id is not match");
                 }
@@ -302,12 +305,12 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 {
                     return NotFound("Not Found Favorite");
                 }
-                
+
                 if (!_accountService.AccountExists(updateFavorite.AccountId))
                 {
                     return NotFound("Not Found Account");
                 }
-                
+
                 if (!_scrambleService.ScrambleExists(updateFavorite.ScrambleId))
                 {
                     return NotFound("Not Found Scramble");
@@ -324,7 +327,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 return StatusCode(500, new
                 {
                     Title = "Something went wrong",
-                    Message = ex.Message,
+                    ex.Message,
                 });
             }
         }
@@ -348,7 +351,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return NotFound("Not Found Favorite");
                 }
 
-                var favoriteEntity= _favoriteService.GetFavorite(favoriteId);
+                var favoriteEntity = _favoriteService.GetFavorite(favoriteId);
 
                 _favoriteService.DeleteFavorite(favoriteEntity);
 
@@ -359,7 +362,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 return StatusCode(500, new
                 {
                     Title = "Something went wrong",
-                    Message = ex.Message,
+                    ex.Message,
                 });
             }
         }

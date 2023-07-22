@@ -18,6 +18,16 @@ namespace Timer_Rubik.WebApp.Authorize.General.Helper
             //category 
             CreateMap<Category, GetCategoryDTO>();
             CreateMap<GetCategoryDTO, Category>();
+
+            //Favorite
+            CreateMap<Favorite, GetFavoriteDTO>();
+            CreateMap<GetFavoriteDTO, Favorite>();
+
+            CreateMap<Favorite, CreateFavoriteDTO>();
+            CreateMap<CreateFavoriteDTO, Favorite>();
+
+            CreateMap<Favorite, UpdateFavoriteDTO>();
+            CreateMap<UpdateFavoriteDTO, Favorite>();
         }
     }
 }
