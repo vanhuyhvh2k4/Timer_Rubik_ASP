@@ -102,6 +102,11 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest("Email is invalid");
                 }
 
+                if (createAccount.Password.Length < 6)
+                {
+                    return BadRequest("Password at least 6 characters");
+                }
+
                 if (_accountService.GetAccount(createAccount.Email) != null)
                 {
                     return Conflict("Email Already Exists");
@@ -146,6 +151,11 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 if (!_emailService.EmailValid(updateAccount.Email))
                 {
                     return BadRequest("Email is invalid");
+                }
+
+                if (updateAccount.Password.Length < 6)
+                {
+                    return BadRequest("Password at least 6 characters");
                 }
 
                 var oldAccount = _accountService.GetAccount(accountId);
