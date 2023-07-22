@@ -1,43 +1,68 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Authorize.Admin.DTO;
+using Timer_Rubik.WebApp.Authorize.General.DTO;
 using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Interfaces.Utils;
 using Timer_Rubik.WebApp.Models;
 
-namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
+namespace Timer_Rubik.WebApp.Authorize.General.Controllers
 {
     [ApiController]
-    [Route("api/admin/account")]
-    public class AccountController_Admin : Controller
+    [Route("api/account")]
+    public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
         private readonly IEmailService _emailService;
+        private readonly IJWTService _jWTService;
+        private readonly IPasswordService _passwordService;
         private readonly IMapper _mapper;
 
-        public AccountController_Admin(IAccountService accountService, IEmailService emailService, IMapper mapper)
+        public AccountController(IAccountService accountService, IEmailService emailService, IJWTService jWTService, IPasswordService passwordService, IMapper mapper)
         {
             _accountService = accountService;
             _emailService = emailService;
+            _jWTService = jWTService;
+            _passwordService = passwordService;
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetAccounts()
+        public IActionResult Login([FromBody] LoginRequest loginRequest)
         {
             try
             {
-                var accounts = _mapper.Map<List<GetAccountDTO_Admin>>(_accountService.GetAccounts());
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-                if (accounts.Count == 0)
+                var accountEntity = _accountService.GetAccount(loginRequest.Email.Trim());
+
+                if (accountEntity == null)
                 {
                     return NotFound("Not Found Account");
                 }
 
-                return Ok(accounts);
+                bool isCorrectPassword = _passwordService.VerifyPassword(loginRequest.Password.Trim(), accountEntity.Password.Trim());
+
+                if (!isCorrectPassword)
+                {
+                    return StatusCode(403, "Password is not correct");
+                }
+
+                var accessToken = _jWTService.GenerateAccessToken(accountEntity.Id.ToString(), accountEntity.RuleId.ToString());
+
+                var response = new
+                {
+                    token = accessToken,
+                };
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -49,12 +74,12 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult CreateAccount([FromBody] CreateAccountDTO_Admin createAccount)
+        public IActionResult Register([FromBody] RegisterRequest registerRequest)
         {
             try
             {
@@ -63,24 +88,24 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_emailService.EmailValid(createAccount.Email))
+                if (!_emailService.EmailValid(registerRequest.Email))
                 {
                     return BadRequest("Email is invalid");
                 }
 
-                if (createAccount.Password.Length < 6)
+                if (registerRequest.Password.Length < 6)
                 {
                     return BadRequest("Password at least 6 characters");
                 }
 
-                if (_accountService.GetAccount(createAccount.Email) != null)
+                if (_accountService.GetAccount(registerRequest.Email) != null)
                 {
-                    return Conflict("Email Already Exists");
+                    return Conflict("Email already exist");
                 }
 
-                var accountMap = _mapper.Map<Account>(createAccount);
+                var accountMap = _mapper.Map<Account>(registerRequest);
 
-                _accountService.CreateAccount(accountMap);
+                _accountService.RegisterAccount(accountMap);
 
                 return Ok("Created successfully");
             }
@@ -94,13 +119,12 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
             }
         }
 
-        [HttpPut("{accountId}")]
+        [HttpPost("forgot")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UpdateAccount([FromRoute] Guid accountId, [FromBody] UpdateAccountDTO_Admin updateAccount)
+        public IActionResult SendMail([FromBody] SendEmailDTO emailDTO)
         {
             try
             {
@@ -109,39 +133,22 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (accountId != updateAccount.Id)
+                if (_accountService.GetAccount(emailDTO.Email) == null)
                 {
-                    return BadRequest("Id is not match");
+                    return NotFound("Not Found Email");
                 }
 
-                if (!_emailService.EmailValid(updateAccount.Email))
-                {
-                    return BadRequest("Email is invalid");
-                }
+                var account = _accountService.GetAccount(emailDTO.Email.Trim());
 
-                if (updateAccount.Password.Length < 6)
-                {
-                    return BadRequest("Password at least 6 characters");
-                }
+                string randomPassword = _passwordService.GenerateRandomPassword(6);
 
-                var oldAccount = _accountService.GetAccount(accountId);
-                    
-                if (!_accountService.AccountExists(accountId))
-                {
-                    return NotFound("Not Found Account");
-                }
+                _accountService.ChangePassword(account.Id, randomPassword);
 
-                if (_accountService.GetAccount(updateAccount.Email) != null && oldAccount.Email.Trim().ToUpper() != updateAccount.Email.Trim().ToUpper())
-                {
-                    return Conflict("Email already exists");
-                }
+                _emailService.SendEmail(emailDTO.Email, "Reset Password", $"New Password: {randomPassword}");
 
-                var accountMap = _mapper.Map<Account>(updateAccount);
-
-                _accountService.UpdateAccount(accountMap);
-
-                return Ok("Updated successfully");
-            } catch (Exception ex)
+                return Ok("Email send");
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
@@ -151,12 +158,12 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
             }
         }
 
-        [HttpDelete("{accountId}")]
+        [HttpGet("{accountId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult DeleteAccount([FromRoute] Guid accountId)
+        public IActionResult GetAccount([FromRoute] Guid accountId)
         {
             try
             {
@@ -165,17 +172,16 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_accountService.AccountExists(accountId))
+                var account = _mapper.Map<GetAccountDTO>(_accountService.GetAccount(accountId));
+
+                if (account == null)
                 {
                     return NotFound("Not Found Account");
                 }
 
-                var accountEntity = _accountService.GetAccount(accountId);
-
-                _accountService.DeleteAccount(accountEntity);
-
-                return Ok("Deleted successfully");
-            } catch (Exception ex)
+                return Ok(account);
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
