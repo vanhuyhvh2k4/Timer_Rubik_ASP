@@ -16,27 +16,6 @@ namespace Timer_Rubik.WebApp.Services
             _passwordService = passwordService;
         }
 
-        public bool CreateAccount(Account account)
-        {
-            var hashedPassword = _passwordService.HashPassword(account.Password);
-
-            var newAccount = new Account()
-            {
-                Id = new Guid(),
-                Name = account.Name,
-                Email = account.Email,
-                Password = hashedPassword,
-                Thumbnail = account.Thumbnail,
-                RuleId = account.RuleId,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.MinValue,
-            };
-
-            _context.Accounts.Add(newAccount);
-
-            return Save();
-        }
-
         public bool AccountExists(Guid accountId)
         {
             return _context.Accounts.Any(account => account.Id == accountId);
@@ -44,12 +23,12 @@ namespace Timer_Rubik.WebApp.Services
 
         public Account GetAccount(Guid accountId)
         {
-            return _context.Accounts.Find(accountId);
+            return _context.Accounts.Where(ac => ac.Id == accountId).FirstOrDefault()!;
         }
 
         public Account GetAccount(string email)
         {
-            return _context.Accounts.Where(account => account.Email == email).FirstOrDefault();
+            return _context.Accounts.Where(account => account.Email == email).FirstOrDefault()!;
         }
 
         public ICollection<Account> GetAccounts()
@@ -63,15 +42,13 @@ namespace Timer_Rubik.WebApp.Services
             return saved > 0 ? true : false;
         }
 
-        public bool UpdateAccount(Account account)
+        public bool UpdateAccount(Guid accountId, Account account)
         {
-            var updateAccount = _context.Accounts.Where(ac => ac.Id == account.Id).FirstOrDefault();
+            var updateAccount = _context.Accounts.Where(ac => ac.Id == accountId).FirstOrDefault()!;
             var hashedPassword = _passwordService.HashPassword(account.Password);
 
-            updateAccount.RuleId = account.RuleId;
             updateAccount.Name = account.Name;
             updateAccount.Thumbnail = account.Thumbnail;
-            updateAccount.Email = account.Email;
             updateAccount.Password = hashedPassword;
             updateAccount.UpdatedAt = DateTime.Now;
             return Save();
@@ -103,9 +80,9 @@ namespace Timer_Rubik.WebApp.Services
             return Save();
         }
 
-        public bool UpdateAccount_User(Account account)
+        public bool UpdateAccount_User(Guid accountId, Account account)
         {
-            var updateAccount = _context.Accounts.Where(ac => ac.Id == account.Id).FirstOrDefault();
+            var updateAccount = _context.Accounts.Where(ac => ac.Id == accountId).FirstOrDefault()!;
             var hashedPassword = _passwordService.HashPassword(account.Password);
 
             updateAccount.Name = account.Name;
@@ -117,7 +94,7 @@ namespace Timer_Rubik.WebApp.Services
 
         public bool ChangePassword(Guid accountId, string newPassword)
         {
-            var updateAccount = _context.Accounts.Where(ac => ac.Id == accountId).FirstOrDefault();
+            var updateAccount = _context.Accounts.Where(ac => ac.Id == accountId).FirstOrDefault()!;
             var hashedPassword = _passwordService.HashPassword(newPassword);
 
             updateAccount.Password = hashedPassword;
@@ -127,7 +104,7 @@ namespace Timer_Rubik.WebApp.Services
 
         public Account GetAccountByFavorite(Guid favoriteId)
         {
-            return _context.Favorites.Where(fav => fav.Id == favoriteId).Select(fav => fav.Account).FirstOrDefault();
+            return _context.Favorites.Where(fav => fav.Id == favoriteId).Select(fav => fav.Account).FirstOrDefault()!;
         }
     }
 }

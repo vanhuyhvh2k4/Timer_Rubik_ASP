@@ -14,15 +14,13 @@ namespace Timer_Rubik.WebApp.Interfaces
 
         bool AccountExists(Guid accountId);
 
-        bool CreateAccount(Account account);
-
         bool RegisterAccount(Account account);
 
         bool Save();
 
-        bool UpdateAccount(Account account);
+        bool UpdateAccount(Guid accountId, Account account);
 
-        bool UpdateAccount_User(Account account);
+        bool UpdateAccount_User(Guid accountId, Account account);
 
         bool DeleteAccount(Account account);
 

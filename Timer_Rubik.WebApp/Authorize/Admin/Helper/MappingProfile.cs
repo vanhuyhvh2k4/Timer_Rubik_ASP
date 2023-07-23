@@ -12,9 +12,6 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Helper
             CreateMap<Account, GetAccountDTO_Admin>();
             CreateMap<GetAccountDTO_Admin, Account>();
 
-            CreateMap<Account, CreateAccountDTO_Admin>();
-            CreateMap<CreateAccountDTO_Admin, Account>();
-
             CreateMap<Account, UpdateAccountDTO_Admin>();
             CreateMap<UpdateAccountDTO_Admin, Account>();
 
