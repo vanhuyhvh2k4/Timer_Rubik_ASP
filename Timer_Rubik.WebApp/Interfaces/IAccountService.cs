@@ -12,6 +12,8 @@ namespace Timer_Rubik.WebApp.Interfaces
 
         Account GetAccountByFavorite(Guid favoriteId);
 
+        Account GetAccountByScramble(Guid scrambleId);
+
         bool AccountExists(Guid accountId);
 
         bool RegisterAccount(Account account);

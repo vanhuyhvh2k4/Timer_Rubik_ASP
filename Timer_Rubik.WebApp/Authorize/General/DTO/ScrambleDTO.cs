@@ -21,21 +21,6 @@
     {
         public Guid CategoryId { get; set; }
 
-        public Guid AccountId { get; set; }
-
-        public string Algorithm { get; set; }
-
-        public string Thumbnail { get; set; }
-    }
-
-    public class UpdateScrambleDTO
-    {
-        public Guid Id { get; set; }
-
-        public Guid CategoryId { get; set; }
-
-        public Guid AccountId { get; set; }
-
         public string Algorithm { get; set; }
 
         public string Thumbnail { get; set; }

@@ -22,6 +22,10 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Helper
             CreateMap<Category, UpdateCategoryDTO_Admin>();
             CreateMap<UpdateCategoryDTO_Admin, Category>();
 
+            //Scramble
+            CreateMap<Scramble, UpdateScrambleDTO_Admin>();
+            CreateMap<UpdateScrambleDTO_Admin, Scramble>();
+
             //Favorite
             CreateMap<Favorite, GetFavoriteDTO_Admin>();
             CreateMap<GetFavoriteDTO_Admin, Favorite>();

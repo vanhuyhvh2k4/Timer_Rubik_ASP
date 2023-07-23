@@ -1,22 +1,22 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Attributes;
-using Timer_Rubik.WebApp.Authorize.Admin.DTO;
+using Timer_Rubik.WebApp.Authorize.User.DTO;
 using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
-namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
+namespace Timer_Rubik.WebApp.Authorize.User.Controllers
 {
     [ApiController]
-    [Route("api/admin/scramble")]
-    public class ScrambleController_Admin : Controller
+    [Route("api/user/scramble")]
+    public class ScrambleController_User : Controller
     {
         private readonly IScrambleService _scrambleService;
         private readonly ICategoryService _categoryService;
         private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
 
-        public ScrambleController_Admin(IScrambleService scrambleService, ICategoryService categoryService, IAccountService accountService, IMapper mapper)
+        public ScrambleController_User(IScrambleService scrambleService, ICategoryService categoryService, IAccountService accountService, IMapper mapper)
         {
             _scrambleService = scrambleService;
             _categoryService = categoryService;
@@ -24,65 +24,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        [AdminToken]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetScrambles()
-        {
-            try
-            {
-                var scrambles = _scrambleService
-                                    .GetScrambles()
-                                    .Select(scramble => new
-                                    {
-                                        Id = scramble.Id,
-                                        Category = new
-                                        {
-                                            Id = scramble.CategoryId,
-                                            Name = scramble.Category.Name
-                                        },
-                                        Account = new
-                                        {
-                                            Id = scramble.AccountId,
-                                            Name = scramble.Account.Name,
-                                            Thumbnail = scramble.Account.Thumbnail,
-                                            Email = scramble.Account.Email
-                                        },
-                                        Solve = scramble.Solve?.Answer,
-                                        Algorithm = scramble.Algorithm,
-                                        Thumbnail = scramble.Thumbnail,
-                                        CreatedAt = scramble.CreatedAt,
-                                        UpdatedAt = scramble.UpdatedAt,
-                                    })
-                                    .ToList();
-
-                if (scrambles.Count == 0)
-                {
-                    return NotFound("Not Found Scramble");
-                }
-
-                return Ok(scrambles);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Title = "Something went wrong",
-                    Message = ex.Message,
-                });
-            }
-        }
-
         [HttpPut("{scrambleId}")]
-        [AdminToken]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UpdateScramble([FromRoute] Guid scrambleId, [FromBody] UpdateScrambleDTO_Admin updateScramble)
+        public IActionResult UpdateScramble([FromRoute] Guid scrambleId, [FromBody] UpdateScrambleDTO_User updateScramble)
         {
             try
             {
@@ -94,6 +43,20 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 if (!_categoryService.CategoryExists(updateScramble.CategoryId))
                 {
                     return NotFound("Not Found Category");
+                }
+
+                if (!_scrambleService.ScrambleExists(scrambleId))
+                {
+                    return NotFound("Not Found Scramble");
+                }
+
+                var ownerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(cl => cl.Type == "UserId")!.Value);
+
+                var accountId = _accountService.GetAccountByScramble(scrambleId).Id;
+
+                if (ownerId != accountId)
+                {
+                    return BadRequest("Id is not match");
                 }
 
                 var categoryMap = _mapper.Map<Scramble>(updateScramble);
@@ -113,7 +76,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         }
 
         [HttpDelete("{scrambleId}")]
-        [AdminToken]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -122,6 +85,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
+
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
@@ -130,6 +94,15 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 if (!_scrambleService.ScrambleExists(scrambleId))
                 {
                     return NotFound("Not Found Scramble");
+                }
+
+                var ownerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(cl => cl.Type == "UserId")!.Value);
+
+                var accountId = _accountService.GetAccountByScramble(scrambleId).Id;
+
+                if (ownerId != accountId)
+                {
+                    return BadRequest("Id is not match");
                 }
 
                 var scrambleEntity = _scrambleService.GetScramble(scrambleId);

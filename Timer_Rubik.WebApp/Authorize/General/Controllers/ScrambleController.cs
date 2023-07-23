@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Authorize.General.DTO;
 using Timer_Rubik.WebApp.Interfaces;
@@ -14,13 +15,15 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
         private readonly IScrambleService _scrambleService;
         private readonly IAccountService _accountService;
         private readonly ICategoryService _categoryService;
+        private readonly ISolveService _solveService;
         private readonly IMapper _mapper;
 
-        public ScrambleController(IScrambleService scrambleService, IAccountService accountService, ICategoryService categoryService, IMapper mapper)
+        public ScrambleController(IScrambleService scrambleService, IAccountService accountService, ICategoryService categoryService, ISolveService solveService, IMapper mapper)
         {
             _scrambleService = scrambleService;
             _accountService = accountService;
             _categoryService = categoryService;
+            _solveService = solveService;
             _mapper = mapper;
         }
 
@@ -53,9 +56,8 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                                            Id = scramble.AccountId,
                                            Name = scramble.Account.Name,
                                            Thumbnail = scramble.Account.Thumbnail,
-                                           Email = scramble.Account.Email
                                        },
-                                       Solve = scramble.Solve.Answer,
+                                       Solve = scramble.Solve?.Answer,
                                        Algorithm = scramble.Algorithm,
                                        Thumbnail = scramble.Thumbnail,
                                        CreatedAt = scramble.CreatedAt,
@@ -75,7 +77,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                 return StatusCode(500, new
                 {
                     Title = "Something went wrong",
-                    Message = ex.Message,
+                    Message = ex,
                 });
             }
         }
@@ -109,9 +111,8 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                                             Id = scramble.AccountId,
                                             Name = scramble.Account.Name,
                                             Thumbnail = scramble.Account.Thumbnail,
-                                            Email = scramble.Account.Email
                                         },
-                                        Solve = scramble.Solve.Answer,
+                                        Solve = scramble.Solve?.Answer,
                                         Algorithm = scramble.Algorithm,
                                         Thumbnail = scramble.Thumbnail,
                                         CreatedAt = scramble.CreatedAt,
@@ -172,9 +173,8 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                             Id = scramble.AccountId,
                             Name = scramble.Account.Name,
                             Thumbnail = scramble.Account.Thumbnail,
-                            Email = scramble.Account.Email
                         },
-                        Solve = scramble.Solve.Answer,
+                        Solve = scramble.Solve?.Answer,
                         Algorithm = scramble.Algorithm,
                         Thumbnail = scramble.Thumbnail,
                         CreatedAt = scramble.CreatedAt,
@@ -194,6 +194,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -202,14 +203,11 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
         {
             try
             {
+                var ownerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(cl => cl.Type == "UserId")!.Value);
+
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
-                }
-
-                if (!_accountService.AccountExists(createScramble.AccountId))
-                {
-                    return NotFound("Account is not exists");
                 }
 
                 if (!_categoryService.CategoryExists(createScramble.CategoryId))
@@ -219,90 +217,9 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
 
                 var scrambleMap = _mapper.Map<Scramble>(createScramble);
 
-                _scrambleService.CreateScramble(scrambleMap);
+                _scrambleService.CreateScramble(ownerId, scrambleMap);
 
                 return Ok("Created successfully");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Title = "Something went wrong",
-                    Message = ex.Message,
-                });
-            }
-        }
-
-        [HttpPut("{scrambleId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UpdateScramble([FromRoute] Guid scrambleId, [FromBody] UpdateScrambleDTO updateScramble)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                if (scrambleId != updateScramble.Id)
-                {
-                    return BadRequest("Id is not match");
-                }
-
-                if (!_categoryService.CategoryExists(updateScramble.CategoryId))
-                {
-                    return NotFound("Not Found Category");
-                }
-
-                if (!_accountService.AccountExists(updateScramble.AccountId))
-                {
-                    return NotFound("Not Found Account");
-                }
-
-                var categoryMap = _mapper.Map<Scramble>(updateScramble);
-
-                _scrambleService.UpdateScramble(categoryMap);
-
-                return Ok("Updated successfully");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Title = "Something went wrong",
-                    Message = ex.Message,
-                });
-            }
-        }
-
-        [HttpDelete("{scrambleId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult DeleteScramble([FromRoute] Guid scrambleId)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                if (!_scrambleService.ScrambleExists(scrambleId))
-                {
-                    return NotFound("Not Found Scramble");
-                }
-
-                var scrambleEntity = _scrambleService.GetScramble(scrambleId);
-
-                _scrambleService.DeleteScramble(scrambleEntity);
-
-                return Ok("Deleted successfully");
             }
             catch (Exception ex)
             {

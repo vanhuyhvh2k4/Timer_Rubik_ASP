@@ -140,13 +140,6 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var owerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(cl => cl.Type == "UserId")!.Value);
-
-                if (owerId == accountId)
-                {
-                    return BadRequest("You cannot remove your self");
-                }
-
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
@@ -155,6 +148,13 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 if (!_accountService.AccountExists(accountId))
                 {
                     return NotFound("Not Found Account");
+                }
+
+                var owerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(cl => cl.Type == "UserId")!.Value);
+
+                if (owerId == accountId)
+                {
+                    return BadRequest("You cannot remove your self");
                 }
 
                 var accountEntity = _accountService.GetAccount(accountId);

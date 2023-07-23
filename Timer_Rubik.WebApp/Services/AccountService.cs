@@ -106,5 +106,10 @@ namespace Timer_Rubik.WebApp.Services
         {
             return _context.Favorites.Where(fav => fav.Id == favoriteId).Select(fav => fav.Account).FirstOrDefault()!;
         }
+
+        public Account GetAccountByScramble(Guid scrambleId)
+        {
+            return _context.Scrambles.Where(sc => sc.Id == scrambleId).Select(sc => sc.Account).FirstOrDefault()!;
+        }
     }
 }
