@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Authorize.General.DTO;
 using Timer_Rubik.WebApp.Interfaces;
@@ -19,39 +20,6 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
             _solveSevice = solveSevice;
             _scrambleService = scrambleService;
             _mapper = mapper;
-        }
-
-        [HttpGet("{solveId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetSolve([FromRoute] Guid solveId)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var scramble = _mapper.Map<GetSolveDTO>(_solveSevice.GetSolve(solveId));
-
-                if (scramble == null)
-                {
-                    return NotFound("Not Found Solve");
-                }
-
-                return Ok(scramble);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Title = "Something went wrong",
-                    Message = ex.Message,
-                });
-            }
         }
 
         [HttpGet("scramble/{scrambleId}")]
@@ -88,6 +56,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -122,6 +91,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
         }
 
         [HttpPatch("{solveId}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -135,11 +105,6 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (solveId != updateSolve.Id)
-                {
-                    return BadRequest("Id is not match");
-                }
-
                 if (!_solveSevice.SolveExists(solveId))
                 {
                     return NotFound("Not Found Solve");
@@ -147,7 +112,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
 
                 var solveMap = _mapper.Map<Solve>(updateSolve);
 
-                _solveSevice.UpdateSolve(solveMap);
+                _solveSevice.UpdateSolve(solveId, solveMap);
 
                 return Ok("Updated successfully");
             }
@@ -162,6 +127,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
         }
 
         [HttpDelete("{solveId}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -195,6 +161,5 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                 });
             }
         }
-
     }
 }

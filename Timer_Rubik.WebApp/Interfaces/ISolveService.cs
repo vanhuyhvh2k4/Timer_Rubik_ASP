@@ -14,7 +14,7 @@ namespace Timer_Rubik.WebApp.Interfaces
 
         bool CreateSolve(Solve solve);
 
-        bool UpdateSolve(Solve solve);
+        bool UpdateSolve(Guid solveId, Solve solve);
 
         bool Save();
 
