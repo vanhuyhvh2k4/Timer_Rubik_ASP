@@ -7,8 +7,6 @@
     
     public class UpdateCategoryDTO_Admin
     {
-        public Guid Id { get; set; }
-
         public string Name { get; set; }
     }
 }

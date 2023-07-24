@@ -16,7 +16,7 @@ namespace Timer_Rubik.WebApp.Interfaces
 
         bool Save();
 
-        bool UpdateCategory(Category category);
+        bool UpdateCategory(Guid categoryId, Category category);
 
         bool DeleteCategory(Category category);
     }
