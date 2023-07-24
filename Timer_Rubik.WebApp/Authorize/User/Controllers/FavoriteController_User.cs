@@ -24,13 +24,13 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost]
+        [HttpGet("{favoriteId}")]
         [Authorize]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult CreateFavorite([FromBody] CreateFavoriteDTO_User createFavorite)
+        public IActionResult GetFavorite([FromRoute] Guid favoriteId)
         {
             try
             {
@@ -39,21 +39,43 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_accountService.AccountExists(createFavorite.AccountId))
+                var favorite = _favoriteService.GetFavorite(favoriteId);
+
+                if (favorite == null)
                 {
-                    return NotFound("Not Found Account");
+                    return NotFound("Not Found Favorite");
                 }
 
-                if (!_scrambleService.ScrambleExists(createFavorite.ScrambleId))
+                var account = _accountService.GetAccountByFavorite(favoriteId);
+
+                Guid ownerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
+
+                if (account.Id != ownerId)
                 {
-                    return NotFound("Not Found Scramble");
+                    return BadRequest("Id is not match");
                 }
+                var favoriteRes = new
+                {
+                    favorite.Id,
+                    Account = new
+                    {
+                        Id = favorite.AccountId,
+                        favorite.Account.Name,
+                        favorite.Account.Thumbnail,
+                    },
+                    Scramble = new
+                    {
+                        Id = favorite.ScrambleId,
+                        favorite.Scramble.Algorithm,
+                        favorite.Scramble.Thumbnail,
+                        Category = favorite.Scramble.Category.Name
+                    },
+                    favorite.Time,
+                    favorite.CreatedAt,
+                    favorite.UpdatedAt,
+                };
 
-                var favoriteMap = _mapper.Map<Favorite>(createFavorite);
-
-                _favoriteService.CreateFavorite(favoriteMap);
-
-                return Ok("Created successfully");
+                return Ok(favoriteRes);
             }
             catch (Exception ex)
             {
@@ -65,55 +87,104 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
             }
         }
 
-        [HttpPut("{favoriteId}")]
+
+        [HttpGet("account/{accountId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UpdateFavorite([FromRoute] Guid favoriteId, [FromBody] UpdateFavoriteDTO_User updateFavorite)
+        public IActionResult GetFavoritesOfAccount([FromRoute] Guid accountId)
         {
             try
             {
+                Guid ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
+
+                if (accountId != ownerId)
+                {
+                    return BadRequest("Id is not match");
+                }
+
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
 
-                if (favoriteId != updateFavorite.Id)
-                {
-                    return BadRequest("Id is not match");
-                }
+                var favorites = _favoriteService
+                                    .GetFavoritesOfAccount(accountId)
+                                     .Select(fav => new
+                                     {
+                                         fav.Id,
+                                         Account = new
+                                         {
+                                             Id = fav.AccountId,
+                                             fav.Account.Name,
+                                             fav.Account.Thumbnail,
+                                         },
+                                         Scramble = new
+                                         {
+                                             Id = fav.ScrambleId,
+                                             fav.Scramble.Algorithm,
+                                             fav.Scramble.Thumbnail,
+                                             Category = fav.Scramble.Category.Name
+                                         },
+                                         fav.Time,
+                                         fav.CreatedAt,
+                                         fav.UpdatedAt,
+                                     })
+                                    .ToList(); ;
 
-                if (!_favoriteService.FavoriteExists(favoriteId))
+                if (favorites.Count == 0)
                 {
                     return NotFound("Not Found Favorite");
                 }
 
-                var account = _accountService.GetAccountByFavorite(favoriteId);
-
-                var userIdToken = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
-
-                if (account.Id != userIdToken)
+                return Ok(favorites);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
                 {
-                    return BadRequest("Token and slug is not match");
+                    Title = "Something went wrong",
+                    ex.Message,
+                });
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult CreateFavorite([FromBody] CreateFavoriteDTO_User createFavorite)
+        {
+            try
+            {
+                Guid ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
                 }
 
-                if (!_accountService.AccountExists(updateFavorite.AccountId))
-                {
-                    return NotFound("Not Found Account");
-                }
-
-                if (!_scrambleService.ScrambleExists(updateFavorite.ScrambleId))
+                if (!_scrambleService.ScrambleExists(createFavorite.ScrambleId))
                 {
                     return NotFound("Not Found Scramble");
                 }
 
-                var favoriteMap = _mapper.Map<Favorite>(updateFavorite);
+                var favoriteEntity = _favoriteService.GetFavoritesOfAccount(ownerId).Where(fav => fav.ScrambleId == createFavorite.ScrambleId);
 
-                _favoriteService.UpdateFavorite(favoriteMap);
+                if (favoriteEntity != null)
+                {
+                    return Conflict("Favorite already exist");
+                }
 
-                return Ok("Updated successfully");
+                var favoriteMap = _mapper.Map<Favorite>(createFavorite);
+
+                _favoriteService.CreateFavorite(ownerId, favoriteMap);
+
+                return Ok("Created successfully");
             }
             catch (Exception ex)
             {
@@ -147,11 +218,11 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
 
                 var account = _accountService.GetAccountByFavorite(favoriteId);
 
-                var userIdToken = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
+                Guid ownerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
 
-                if (account.Id != userIdToken)
+                if (account.Id != ownerId)
                 {
-                    return BadRequest("Token and slug is not match");
+                    return BadRequest("Id is not match");
                 }
 
                 var favoriteEntity = _favoriteService.GetFavorite(favoriteId);

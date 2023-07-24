@@ -14,12 +14,12 @@ namespace Timer_Rubik.WebApp.Services
             _context = context;
         }
 
-        public bool CreateScramble(Scramble scramble)
+        public bool CreateScramble(Guid accountId, Scramble scramble)
         {
             var newScramble = new Scramble()
             {
                 Id = new Guid(),
-                AccountId = scramble.AccountId,
+                AccountId = accountId,
                 CategoryId = scramble.CategoryId,
                 Algorithm = scramble.Algorithm,
                 Thumbnail = scramble.Thumbnail,
@@ -45,7 +45,7 @@ namespace Timer_Rubik.WebApp.Services
                     .Include(scramble => scramble.Account)
                     .Include(scramble => scramble.Category)
                     .Include(scramble => scramble.Solve)
-                    .FirstOrDefault();
+                    .FirstOrDefault()!;
         }
 
         public ICollection<Scramble> GetScrambleByCategory(Guid categoryId)
@@ -91,12 +91,11 @@ namespace Timer_Rubik.WebApp.Services
             return _context.Scrambles.Any(scramble => scramble.Id == scrambleId);
         }
 
-        public bool UpdateScramble(Scramble scramble)
+        public bool UpdateScramble(Guid scrambleId, Scramble scramble)
         {
-            var updateScramble = _context.Scrambles.Where(scram => scram.Id == scramble.Id).FirstOrDefault();
+            var updateScramble = _context.Scrambles.Where(scram => scram.Id == scrambleId).FirstOrDefault()!;
 
             updateScramble.CategoryId = scramble.CategoryId;
-            updateScramble.AccountId = scramble.AccountId;
             updateScramble.Algorithm = scramble.Algorithm;
             updateScramble.Thumbnail = scramble.Thumbnail;
             updateScramble.UpdatedAt = DateTime.Now;

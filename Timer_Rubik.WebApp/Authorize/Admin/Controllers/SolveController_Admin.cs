@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Timer_Rubik.WebApp.Attributes;
 using Timer_Rubik.WebApp.Authorize.Admin.DTO;
 using Timer_Rubik.WebApp.Interfaces;
 
@@ -19,6 +20,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         }
 
         [HttpGet]
+        [AdminToken]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

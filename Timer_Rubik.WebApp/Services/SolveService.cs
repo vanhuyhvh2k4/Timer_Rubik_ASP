@@ -31,12 +31,12 @@ namespace Timer_Rubik.WebApp.Services
 
         public Solve GetSolve(Guid solveId)
         {
-            return _context.Solves.Find(solveId);
+            return _context.Solves.Find(solveId)!;
         }
 
         public Solve GetSolveOfScramble(Guid scrambleId)
         {
-            return _context.Solves.Where(solve => solve.ScrambleId == scrambleId).FirstOrDefault();
+            return _context.Solves.Where(solve => solve.ScrambleId == scrambleId).FirstOrDefault()!;
         }
 
         public ICollection<Solve> GetSolves()
@@ -55,9 +55,9 @@ namespace Timer_Rubik.WebApp.Services
             return saved > 0 ? true : false;
         }
 
-        public bool UpdateSolve(Solve solve)
+        public bool UpdateSolve(Guid solveId, Solve solve)
         {
-            var updateSolve = _context.Solves.Where(sol => sol.Id == solve.Id).FirstOrDefault();
+            var updateSolve = _context.Solves.Where(sol => sol.Id == solveId).FirstOrDefault()!;
 
             updateSolve.Answer = solve.Answer;
             updateSolve.UpdatedAt = DateTime.Now;

@@ -1,5 +1,4 @@
-﻿using System.Security.Principal;
-using Timer_Rubik.WebApp.Data;
+﻿using Timer_Rubik.WebApp.Data;
 using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
@@ -26,12 +25,12 @@ namespace Timer_Rubik.WebApp.Services
 
         public Category GetCategory(Guid categoryId)
         {
-            return _context.Categories.Find(categoryId);
+            return _context.Categories.Find(categoryId)!;
         }
 
         public Category GetCategory(string categoryName)
         {
-            return _context.Categories.Where(cate => cate.Name == categoryName).FirstOrDefault();
+            return _context.Categories.Where(cate => cate.Name == categoryName).FirstOrDefault()!;
         }
 
         public bool CreateCategory(Category category)
@@ -55,9 +54,9 @@ namespace Timer_Rubik.WebApp.Services
             return saved > 0 ? true : false;
         }
 
-        public bool UpdateCategory(Category category)
+        public bool UpdateCategory(Guid categoryId, Category category)
         {
-            var updateCategory = _context.Categories.Where(cate => cate.Id == category.Id).FirstOrDefault();
+            var updateCategory = _context.Categories.Where(cate => cate.Id == categoryId).FirstOrDefault()!;
 
             updateCategory.Name = category.Name;
             updateCategory.UpdatedAt = DateTime.Now;

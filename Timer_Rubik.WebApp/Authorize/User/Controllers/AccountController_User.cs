@@ -36,18 +36,18 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var accountIdToken = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
-
-                if (accountId != accountIdToken)
-                {
-                    return BadRequest("Token and slug is not match");
-                }
-
                 var account = _mapper.Map<GetAccountDTO_User>(_accountService.GetAccount(accountId));
 
                 if (account == null)
                 {
                     return NotFound("Not Found Account");
+                }
+
+                var ownerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
+
+                if (accountId != ownerId)
+                {
+                    return BadRequest("Id is not match");
                 }
 
                 return Ok(account);
@@ -78,33 +78,26 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var accountIdToken = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
-
-                if (accountId != accountIdToken)
-                {
-                    return BadRequest("Token and slug is not match");
-                }
-
                 if (updateAccount.Password.Length < 6)
                 {
                     return BadRequest("Password at least 6 characters");
                 }
-
-                if (accountId != updateAccount.Id)
-                {
-                    return BadRequest("Id is not match");
-                }
-
-                var oldAccount = _accountService.GetAccount(accountId);
 
                 if (!_accountService.AccountExists(accountId))
                 {
                     return NotFound("Not Found Account");
                 }
 
+                var ownerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
+
+                if (accountId != ownerId)
+                {
+                    return BadRequest("Id is not match");
+                }
+
                 var accountMap = _mapper.Map<Account>(updateAccount);
 
-                _accountService.UpdateAccount_User(accountMap);
+                _accountService.UpdateAccount_User(accountId, accountMap);
 
                 return Ok("Updated successfully");
             }

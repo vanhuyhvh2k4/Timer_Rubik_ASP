@@ -14,9 +14,9 @@ namespace Timer_Rubik.WebApp.Interfaces
 
         ICollection<Scramble> GetScrambleByCategory(Guid categoryId);
 
-        bool CreateScramble(Scramble scramble);
+        bool CreateScramble(Guid accountId, Scramble scramble);
 
-        bool UpdateScramble(Scramble scramble);
+        bool UpdateScramble(Guid scrambleId, Scramble scramble);
 
         bool Save();
 

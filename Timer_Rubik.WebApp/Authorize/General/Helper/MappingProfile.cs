@@ -27,9 +27,6 @@ namespace Timer_Rubik.WebApp.Authorize.General.Helper
             CreateMap<Scramble, CreateScrambleDTO>();
             CreateMap<CreateScrambleDTO, Scramble>();
 
-            CreateMap<Scramble, UpdateScrambleDTO>();
-            CreateMap<UpdateScrambleDTO, Scramble>();
-
             //Solve
             CreateMap<Solve, GetSolveDTO>();
             CreateMap<GetSolveDTO, Solve>();

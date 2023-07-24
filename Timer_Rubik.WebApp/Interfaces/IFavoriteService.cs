@@ -14,7 +14,7 @@ namespace Timer_Rubik.WebApp.Interfaces
 
         ICollection<Favorite> GetFavoritesByScramble(Guid scrambleId);
 
-        bool CreateFavorite(Favorite favorite);
+        bool CreateFavorite(Guid accountId, Favorite favorite);
 
         bool UpdateFavorite(Favorite favorite);
 

@@ -32,7 +32,9 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var accounts = _mapper.Map<List<GetAccountDTO_Admin>>(_accountService.GetAccounts());
+                var owerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(cl => cl.Type == "UserId")!.Value);
+
+                var accounts = _mapper.Map<List<GetAccountDTO_Admin>>(_accountService.GetAccounts().Where(ac => ac.Id != owerId));
 
                 if (accounts.Count == 0)
                 {
@@ -85,52 +87,6 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
             }
         }
 
-        [HttpPost]
-        [AdminToken]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult CreateAccount([FromBody] CreateAccountDTO_Admin createAccount)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                if (!_emailService.EmailValid(createAccount.Email))
-                {
-                    return BadRequest("Email is invalid");
-                }
-
-                if (createAccount.Password.Length < 6)
-                {
-                    return BadRequest("Password at least 6 characters");
-                }
-
-                if (_accountService.GetAccount(createAccount.Email) != null)
-                {
-                    return Conflict("Email Already Exists");
-                }
-
-                var accountMap = _mapper.Map<Account>(createAccount);
-
-                _accountService.CreateAccount(accountMap);
-
-                return Ok("Created successfully");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Title = "Something went wrong",
-                    Message = ex.Message,
-                });
-            }
-        }
-
         [HttpPut("{accountId}")]
         [AdminToken]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -147,16 +103,6 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (accountId != updateAccount.Id)
-                {
-                    return BadRequest("Id is not match");
-                }
-
-                if (!_emailService.EmailValid(updateAccount.Email))
-                {
-                    return BadRequest("Email is invalid");
-                }
-
                 if (updateAccount.Password.Length < 6)
                 {
                     return BadRequest("Password at least 6 characters");
@@ -169,14 +115,9 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return NotFound("Not Found Account");
                 }
 
-                if (_accountService.GetAccount(updateAccount.Email) != null && oldAccount.Email.Trim().ToUpper() != updateAccount.Email.Trim().ToUpper())
-                {
-                    return Conflict("Email already exists");
-                }
-
                 var accountMap = _mapper.Map<Account>(updateAccount);
 
-                _accountService.UpdateAccount(accountMap);
+                _accountService.UpdateAccount(accountId, accountMap);
 
                 return Ok("Updated successfully");
             } catch (Exception ex)
@@ -207,6 +148,13 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 if (!_accountService.AccountExists(accountId))
                 {
                     return NotFound("Not Found Account");
+                }
+
+                var owerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(cl => cl.Type == "UserId")!.Value);
+
+                if (owerId == accountId)
+                {
+                    return BadRequest("You cannot remove your self");
                 }
 
                 var accountEntity = _accountService.GetAccount(accountId);

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Timer_Rubik.WebApp.Attributes;
 using Timer_Rubik.WebApp.Authorize.Admin.DTO;
 using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
@@ -20,6 +21,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         }
 
         [HttpPost]
+        [AdminToken]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -68,11 +70,6 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (categoryId != updateCategory.Id)
-                {
-                    return BadRequest("Id is not match");
-                }
-
                 if (!_categoryService.CategoryExists(categoryId))
                 {
                     return NotFound("Not Found Category");
@@ -85,7 +82,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
 
                 var categoryMap = _mapper.Map<Category>(updateCategory);
 
-                _categoryService.UpdateCategory(categoryMap);
+                _categoryService.UpdateCategory(categoryId, categoryMap);
 
                 return Ok("Updated successfully");
             }
@@ -100,6 +97,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         }
 
         [HttpDelete("{categoryId}")]
+        [AdminToken]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
