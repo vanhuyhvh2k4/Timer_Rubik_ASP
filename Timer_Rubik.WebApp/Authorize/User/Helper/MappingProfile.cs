@@ -19,9 +19,6 @@ namespace Timer_Rubik.WebApp.Authorize.User.Helper
             CreateMap<Favorite, CreateFavoriteDTO_User>();
             CreateMap<CreateFavoriteDTO_User, Favorite>();
 
-            CreateMap<Favorite, UpdateFavoriteDTO_User>();
-            CreateMap<UpdateFavoriteDTO_User, Favorite>();
-
             //Scramble
             CreateMap<Scramble, UpdateScrambleDTO_User>();
             CreateMap<UpdateScrambleDTO_User, Scramble>();

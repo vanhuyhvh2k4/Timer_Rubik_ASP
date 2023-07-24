@@ -14,12 +14,12 @@ namespace Timer_Rubik.WebApp.Services
             _context = context;
         }
 
-        public bool CreateFavorite(Favorite favorite)
+        public bool CreateFavorite(Guid accountId, Favorite favorite)
         {
             var newFavorite = new Favorite()
             {
                 Id = new Guid(),
-                AccountId = favorite.AccountId,
+                AccountId = accountId,
                 ScrambleId = favorite.ScrambleId,
                 Time = favorite.Time,
                 CreatedAt = DateTime.Now,

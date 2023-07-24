@@ -87,32 +87,30 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 {
                     return NotFound("Not Found Favorite");
                 }
-                else
-                {
-                    var favoriteRes = new
-                    {
-                        favorite.Id,
-                        Account = new
-                        {
-                            Id = favorite.AccountId,
-                            favorite.Account.Name,
-                            favorite.Account.Thumbnail,
-                            favorite.Account.Email
-                        },
-                        Scramble = new
-                        {
-                            Id = favorite.ScrambleId,
-                            favorite.Scramble.Algorithm,
-                            favorite.Scramble.Thumbnail,
-                            Category = favorite.Scramble.Category.Name
-                        },
-                        favorite.Time,
-                        favorite.CreatedAt,
-                        favorite.UpdatedAt,
-                    };
 
-                    return Ok(favoriteRes);
-                }
+                var favoriteRes = new
+                {
+                    favorite.Id,
+                    Account = new
+                    {
+                        Id = favorite.AccountId,
+                        favorite.Account.Name,
+                        favorite.Account.Thumbnail,
+                        favorite.Account.Email
+                    },
+                    Scramble = new
+                    {
+                        Id = favorite.ScrambleId,
+                        favorite.Scramble.Algorithm,
+                        favorite.Scramble.Thumbnail,
+                        Category = favorite.Scramble.Category.Name
+                    },
+                    favorite.Time,
+                    favorite.CreatedAt,
+                    favorite.UpdatedAt,
+                };
+
+                return Ok(favoriteRes);
             }
             catch (Exception ex)
             {
@@ -141,63 +139,6 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
 
                 var favorites = _favoriteService
                                     .GetFavoritesOfAccount(accountId)
-                                     .Select(fav => new
-                                     {
-                                         fav.Id,
-                                         Account = new
-                                         {
-                                             Id = fav.AccountId,
-                                             fav.Account.Name,
-                                             fav.Account.Thumbnail,
-                                             fav.Account.Email
-                                         },
-                                         Scramble = new
-                                         {
-                                             Id = fav.ScrambleId,
-                                             fav.Scramble.Algorithm,
-                                             fav.Scramble.Thumbnail,
-                                             Category = fav.Scramble.Category.Name
-                                         },
-                                         fav.Time,
-                                         fav.CreatedAt,
-                                         fav.UpdatedAt,
-                                     })
-                                    .ToList(); ;
-
-                if (favorites.Count == 0)
-                {
-                    return NotFound("Not Found Favorite");
-                }
-
-                return Ok(favorites);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Title = "Something went wrong",
-                    ex.Message,
-                });
-            }
-        }
-
-        [HttpGet("scramble/{scrambleId}")]
-        [AdminToken]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetFavoritesByScramble([FromRoute] Guid scrambleId)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var favorites = _favoriteService
-                                    .GetFavoritesByScramble(scrambleId)
                                      .Select(fav => new
                                      {
                                          fav.Id,
