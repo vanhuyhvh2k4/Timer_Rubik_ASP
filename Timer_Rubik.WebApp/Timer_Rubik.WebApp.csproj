@@ -22,9 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Authorize\User\Controllers\" />
-    <Folder Include="Authorize\User\DTO\" />
-    <Folder Include="Authorize\User\Helper\" />
     <Folder Include="Controllers\AdminController\" />
     <Folder Include="DTO\Admin\" />
     <Folder Include="Helper\Admin\" />
