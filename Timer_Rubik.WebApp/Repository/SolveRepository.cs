@@ -4,11 +4,11 @@ using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Services
 {
-    public class SolveService : ISolveService
+    public class SolveRepository : ISolveRepository
     {
         private readonly DataContext _context;
 
-        public SolveService(DataContext context)
+        public SolveRepository(DataContext context)
         {
             _context = context;
         }

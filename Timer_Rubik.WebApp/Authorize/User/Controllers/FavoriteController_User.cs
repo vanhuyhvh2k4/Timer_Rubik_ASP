@@ -11,16 +11,16 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
     [Route("api/user/favorite")]
     public class FavoriteController_User : Controller
     {
-        private readonly IFavoriteService _favoriteService;
-        private readonly IAccountService _accountService;
-        private readonly IScrambleService _scrambleService;
+        private readonly IFavoriteRepository _favoriteRepository;
+        private readonly IAccountRepository _accountRepository;
+        private readonly IScrambleRepository _scrambleRepository;
         private readonly IMapper _mapper;
 
-        public FavoriteController_User(IFavoriteService favoriteService, IAccountService accountService, IScrambleService scrambleService, IMapper mapper)
+        public FavoriteController_User(IFavoriteRepository favoriteRepository, IAccountRepository accountRepository, IScrambleRepository scrambleRepository, IMapper mapper)
         {
-            _favoriteService = favoriteService;
-            _accountService = accountService;
-            _scrambleService = scrambleService;
+            _favoriteRepository = favoriteRepository;
+            _accountRepository = accountRepository;
+            _scrambleRepository = scrambleRepository;
             _mapper = mapper;
         }
 
@@ -39,14 +39,14 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var favorite = _favoriteService.GetFavorite(favoriteId);
+                var favorite = _favoriteRepository.GetFavorite(favoriteId);
 
                 if (favorite == null)
                 {
                     return NotFound("Not Found Favorite");
                 }
 
-                var account = _accountService.GetAccountByFavorite(favoriteId);
+                var account = _accountRepository.GetAccountByFavorite(favoriteId);
 
                 Guid ownerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
 
@@ -110,7 +110,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var favorites = _favoriteService
+                var favorites = _favoriteRepository
                                     .GetFavoritesOfAccount(accountId)
                                      .Select(fav => new
                                      {
@@ -168,12 +168,12 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_scrambleService.ScrambleExists(createFavorite.ScrambleId))
+                if (!_scrambleRepository.ScrambleExists(createFavorite.ScrambleId))
                 {
                     return NotFound("Not Found Scramble");
                 }
 
-                var favoriteEntity = _favoriteService.GetFavoritesOfAccount(ownerId).Where(fav => fav.ScrambleId == createFavorite.ScrambleId);
+                var favoriteEntity = _favoriteRepository.GetFavoritesOfAccount(ownerId).Where(fav => fav.ScrambleId == createFavorite.ScrambleId);
 
                 if (favoriteEntity != null)
                 {
@@ -182,7 +182,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
 
                 var favoriteMap = _mapper.Map<Favorite>(createFavorite);
 
-                _favoriteService.CreateFavorite(ownerId, favoriteMap);
+                _favoriteRepository.CreateFavorite(ownerId, favoriteMap);
 
                 return Ok("Created successfully");
             }
@@ -211,12 +211,12 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_favoriteService.FavoriteExists(favoriteId))
+                if (!_favoriteRepository.FavoriteExists(favoriteId))
                 {
                     return NotFound("Not Found Favorite");
                 }
 
-                var account = _accountService.GetAccountByFavorite(favoriteId);
+                var account = _accountRepository.GetAccountByFavorite(favoriteId);
 
                 Guid ownerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
 
@@ -225,9 +225,9 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                     return BadRequest("Id is not match");
                 }
 
-                var favoriteEntity = _favoriteService.GetFavorite(favoriteId);
+                var favoriteEntity = _favoriteRepository.GetFavorite(favoriteId);
 
-                _favoriteService.DeleteFavorite(favoriteEntity);
+                _favoriteRepository.DeleteFavorite(favoriteEntity);
 
                 return Ok("Deleted successfully");
             }

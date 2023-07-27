@@ -2,7 +2,7 @@
 
 namespace Timer_Rubik.WebApp.Interfaces
 {
-    public interface ISolveService
+    public interface ISolveRepository
     {
         ICollection<Solve> GetSolves();
 

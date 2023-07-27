@@ -5,11 +5,11 @@ using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Services
 {
-    public class FavoriteService : IFavoriteService
+    public class FavoriteRepository : IFavoriteRepository
     {
         private readonly DataContext _context;
 
-        public FavoriteService(DataContext context)
+        public FavoriteRepository(DataContext context)
         {
             _context = context;
         }

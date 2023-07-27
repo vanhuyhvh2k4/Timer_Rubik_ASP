@@ -10,12 +10,12 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/solve")]
     public class SolveController_Admin : Controller
     {
-        private readonly ISolveService _solveSevice;
+        private readonly ISolveRepository _solveRepository;
         private readonly IMapper _mapper;
 
-        public SolveController_Admin(ISolveService solveSevice, IMapper mapper)
+        public SolveController_Admin(ISolveRepository solveRepository, IMapper mapper)
         {
-            _solveSevice = solveSevice;
+            _solveRepository = solveRepository;
             _mapper = mapper;
         }
 
@@ -28,7 +28,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var solves = _mapper.Map<List<GetSolveDTO_Admin>>(_solveSevice.GetSolves());
+                var solves = _mapper.Map<List<GetSolveDTO_Admin>>(_solveRepository.GetSolves());
 
                 if (solves.Count == 0)
                 {

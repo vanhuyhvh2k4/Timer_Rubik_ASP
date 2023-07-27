@@ -5,11 +5,11 @@ using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Services
 {
-    public class ScrambleService : IScrambleService
+    public class ScrambleRepository : IScrambleRepository
     {
         private readonly DataContext _context;
 
-        public ScrambleService(DataContext context)
+        public ScrambleRepository(DataContext context)
         {
             _context = context;
         }

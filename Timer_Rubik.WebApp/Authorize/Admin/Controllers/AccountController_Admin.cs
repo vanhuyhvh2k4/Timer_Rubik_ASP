@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Attributes;
 using Timer_Rubik.WebApp.Authorize.Admin.DTO;
 using Timer_Rubik.WebApp.Interfaces;
-using Timer_Rubik.WebApp.Interfaces.Utils;
 using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
@@ -12,14 +11,12 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/account")]
     public class AccountController_Admin : Controller
     {
-        private readonly IAccountService _accountService;
-        private readonly IEmailService _emailService;
+        private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
 
-        public AccountController_Admin(IAccountService accountService, IEmailService emailService, IMapper mapper)
+        public AccountController_Admin(IAccountRepository accountRepository, IMapper mapper)
         {
-            _accountService = accountService;
-            _emailService = emailService;
+            _accountRepository = accountRepository;
             _mapper = mapper;
         }
 
@@ -34,7 +31,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
             {
                 var owerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(cl => cl.Type == "UserId")!.Value);
 
-                var accounts = _mapper.Map<List<GetAccountDTO_Admin>>(_accountService.GetAccounts().Where(ac => ac.Id != owerId));
+                var accounts = _mapper.Map<List<GetAccountDTO_Admin>>(_accountRepository.GetAccounts().Where(ac => ac.Id != owerId));
 
                 if (accounts.Count == 0)
                 {
@@ -68,7 +65,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var account = _mapper.Map<GetAccountDTO_Admin>(_accountService.GetAccount(accountId));
+                var account = _mapper.Map<GetAccountDTO_Admin>(_accountRepository.GetAccount(accountId));
 
                 if (account == null)
                 {
@@ -108,16 +105,16 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest("Password at least 6 characters");
                 }
 
-                var oldAccount = _accountService.GetAccount(accountId);
+                var oldAccount = _accountRepository.GetAccount(accountId);
                     
-                if (!_accountService.AccountExists(accountId))
+                if (!_accountRepository.AccountExists(accountId))
                 {
                     return NotFound("Not Found Account");
                 }
 
                 var accountMap = _mapper.Map<Account>(updateAccount);
 
-                _accountService.UpdateAccount(accountId, accountMap);
+                _accountRepository.UpdateAccount(accountId, accountMap);
 
                 return Ok("Updated successfully");
             } catch (Exception ex)
@@ -145,7 +142,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_accountService.AccountExists(accountId))
+                if (!_accountRepository.AccountExists(accountId))
                 {
                     return NotFound("Not Found Account");
                 }
@@ -157,9 +154,9 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest("You cannot remove your self");
                 }
 
-                var accountEntity = _accountService.GetAccount(accountId);
+                var accountEntity = _accountRepository.GetAccount(accountId);
 
-                _accountService.DeleteAccount(accountEntity);
+                _accountRepository.DeleteAccount(accountEntity);
 
                 return Ok("Deleted successfully");
             } catch (Exception ex)

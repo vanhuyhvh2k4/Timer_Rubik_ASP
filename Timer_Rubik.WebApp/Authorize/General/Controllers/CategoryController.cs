@@ -9,12 +9,12 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
     [Route("api/category")]
     public class CategoryController : Controller
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public CategoryController(ICategoryService categoryService, IMapper mapper)
+        public CategoryController(ICategoryRepository categoryRepository, IMapper mapper)
         {
-            _categoryService = categoryService;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
@@ -26,7 +26,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
         {
             try
             {
-                var categories = _mapper.Map<List<GetCategoryDTO>>(_categoryService.GetCategories());
+                var categories = _mapper.Map<List<GetCategoryDTO>>(_categoryRepository.GetCategories());
                 
                 if (categories.Count == 0)
                 {
@@ -59,7 +59,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var category = _mapper.Map<GetCategoryDTO>(_categoryService.GetCategory(categoryId));
+                var category = _mapper.Map<GetCategoryDTO>(_categoryRepository.GetCategory(categoryId));
 
                 if (category == null)
                 {

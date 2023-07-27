@@ -29,12 +29,12 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IJWTService, JWTService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 
-builder.Services.AddScoped<IAccountService, AccountService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IScrambleService, ScrambleService>();
-builder.Services.AddScoped<ISolveService, SolveService>();
-builder.Services.AddScoped<IFavoriteService, FavoriteService>();
-builder.Services.AddScoped<IRuleService, RuleService>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IScrambleRepository, ScrambleRepository>();
+builder.Services.AddScoped<ISolveRepository, SolveRepository>();
+builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+builder.Services.AddScoped<IRuleRepository, RuleRepository>();
 
 // Register auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

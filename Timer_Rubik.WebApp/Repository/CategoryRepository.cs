@@ -4,11 +4,11 @@ using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Services
 {
-    public class CategoryService : ICategoryService
+    public class CategoryRepository : ICategoryRepository
     {
         private readonly DataContext _context;
 
-        public CategoryService(DataContext context)
+        public CategoryRepository(DataContext context)
         {
             _context = context;
         }

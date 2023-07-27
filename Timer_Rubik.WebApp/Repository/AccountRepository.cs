@@ -5,12 +5,12 @@ using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Services
 {
-    public class AccountService : IAccountService
+    public class AccountRepository : IAccountRepository
     {
         private readonly DataContext _context;
         private readonly IPasswordService _passwordService;
 
-        public AccountService(DataContext context, IPasswordService passwordService)
+        public AccountRepository(DataContext context, IPasswordService passwordService)
         {
             _context = context;
             _passwordService = passwordService;

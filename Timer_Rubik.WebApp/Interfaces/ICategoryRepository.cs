@@ -2,7 +2,7 @@
 
 namespace Timer_Rubik.WebApp.Interfaces
 {
-    public interface ICategoryService
+    public interface ICategoryRepository
     {
         ICollection<Category> GetCategories();
 

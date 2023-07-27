@@ -2,7 +2,7 @@
 
 namespace Timer_Rubik.WebApp.Interfaces
 {
-    public interface IScrambleService
+    public interface IScrambleRepository
     {
         ICollection<Scramble> GetScrambles();
 

@@ -2,7 +2,7 @@
 
 namespace Timer_Rubik.WebApp.Interfaces
 {
-    public interface IRuleService
+    public interface IRuleRepository
     {
         ICollection<Rule> GetRules();
 

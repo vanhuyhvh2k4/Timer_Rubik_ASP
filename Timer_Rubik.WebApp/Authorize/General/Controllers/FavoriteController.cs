@@ -7,11 +7,11 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
     [Route("api/favorite")]
     public class FavoriteController : Controller
     {
-        private readonly IFavoriteService _favoriteService;
+        private readonly IFavoriteRepository _favoriteRepository;
 
-        public FavoriteController(IFavoriteService favoriteService)
+        public FavoriteController(IFavoriteRepository favoriteRepository)
         {
-            _favoriteService = favoriteService;
+            _favoriteRepository = favoriteRepository;
         }
 
         [HttpGet("scramble/{scrambleId}")]
@@ -28,7 +28,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var favorites = _favoriteService
+                var favorites = _favoriteRepository
                                     .GetFavoritesByScramble(scrambleId)
                                      .Select(fav => new
                                      {

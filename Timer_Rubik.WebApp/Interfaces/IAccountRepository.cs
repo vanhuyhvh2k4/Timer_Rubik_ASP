@@ -2,7 +2,7 @@
 
 namespace Timer_Rubik.WebApp.Interfaces
 {
-    public interface IAccountService
+    public interface IAccountRepository
     {
         ICollection<Account> GetAccounts();
 

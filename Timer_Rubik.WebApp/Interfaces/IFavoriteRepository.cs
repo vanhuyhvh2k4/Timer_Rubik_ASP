@@ -2,7 +2,7 @@
 
 namespace Timer_Rubik.WebApp.Interfaces
 {
-    public interface IFavoriteService
+    public interface IFavoriteRepository
     {
         ICollection<Favorite> GetFavorites();
 

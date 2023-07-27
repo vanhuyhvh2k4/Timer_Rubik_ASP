@@ -11,12 +11,12 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
     [Route("api/user/account")]
     public class AccountController_User : Controller
     {
-        private readonly IAccountService _accountService;
+        private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
 
-        public AccountController_User(IAccountService accountService, IMapper mapper)
+        public AccountController_User(IAccountRepository accountRepository, IMapper mapper)
         {
-            _accountService = accountService;
+            _accountRepository = accountRepository;
             _mapper = mapper;
         }
 
@@ -36,7 +36,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var account = _mapper.Map<GetAccountDTO_User>(_accountService.GetAccount(accountId));
+                var account = _mapper.Map<GetAccountDTO_User>(_accountRepository.GetAccount(accountId));
 
                 if (account == null)
                 {
@@ -83,7 +83,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                     return BadRequest("Password at least 6 characters");
                 }
 
-                if (!_accountService.AccountExists(accountId))
+                if (!_accountRepository.AccountExists(accountId))
                 {
                     return NotFound("Not Found Account");
                 }
@@ -97,7 +97,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
 
                 var accountMap = _mapper.Map<Account>(updateAccount);
 
-                _accountService.UpdateAccount_User(accountId, accountMap);
+                _accountRepository.UpdateAccount_User(accountId, accountMap);
 
                 return Ok("Updated successfully");
             }

@@ -11,15 +11,15 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
     [Route("api/account")]
     public class AccountController : Controller
     {
-        private readonly IAccountService _accountService;
+        private readonly IAccountRepository _accountRepository;
         private readonly IEmailService _emailService;
         private readonly IJWTService _jWTService;
         private readonly IPasswordService _passwordService;
         private readonly IMapper _mapper;
 
-        public AccountController(IAccountService accountService, IEmailService emailService, IJWTService jWTService, IPasswordService passwordService, IMapper mapper)
+        public AccountController(IAccountRepository accountRepository, IEmailService emailService, IJWTService jWTService, IPasswordService passwordService, IMapper mapper)
         {
-            _accountService = accountService;
+            _accountRepository = accountRepository;
             _emailService = emailService;
             _jWTService = jWTService;
             _passwordService = passwordService;
@@ -41,7 +41,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var accountEntity = _accountService.GetAccount(loginRequest.Email.Trim());
+                var accountEntity = _accountRepository.GetAccount(loginRequest.Email.Trim());
 
                 if (accountEntity == null)
                 {
@@ -98,14 +98,14 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                     return BadRequest("Password at least 6 characters");
                 }
 
-                if (_accountService.GetAccount(registerRequest.Email) != null)
+                if (_accountRepository.GetAccount(registerRequest.Email) != null)
                 {
                     return Conflict("Email already exist");
                 }
 
                 var accountMap = _mapper.Map<Account>(registerRequest);
 
-                _accountService.RegisterAccount(accountMap);
+                _accountRepository.RegisterAccount(accountMap);
 
                 return Ok("Created successfully");
             }
@@ -138,16 +138,16 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                     return BadRequest("Email is invalid");
                 }
 
-                if (_accountService.GetAccount(emailDTO.Email) == null)
+                if (_accountRepository.GetAccount(emailDTO.Email) == null)
                 {
                     return NotFound("Not Found Email");
                 }
 
-                var account = _accountService.GetAccount(emailDTO.Email.Trim());
+                var account = _accountRepository.GetAccount(emailDTO.Email.Trim());
 
                 string randomPassword = _passwordService.GenerateRandomPassword(6);
 
-                _accountService.ChangePassword(account.Id, randomPassword);
+                _accountRepository.ChangePassword(account.Id, randomPassword);
 
                 _emailService.SendEmail(emailDTO.Email, "Reset Password", $"New Password: {randomPassword}");
 
