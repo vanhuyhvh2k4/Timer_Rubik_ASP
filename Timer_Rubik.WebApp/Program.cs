@@ -32,6 +32,7 @@ builder.Services.AddScoped<IJWTUtils, JWTUtils>();
 builder.Services.AddScoped<IPasswordUtils, PasswordUtils>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();

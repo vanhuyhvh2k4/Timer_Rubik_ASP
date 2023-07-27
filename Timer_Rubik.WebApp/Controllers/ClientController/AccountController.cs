@@ -1,10 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Interfaces.Utils;
+﻿using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.DTO.Client;
-using Timer_Rubik.WebApp.Models;
 using Microsoft.AspNetCore.Authorization;
-using Timer_Rubik.WebApp.Interfaces.Repository;
 using Timer_Rubik.WebApp.Interfaces.Services;
 
 namespace Timer_Rubik.WebApp.Controllers.ClientController
@@ -14,20 +10,12 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
     public class AccountController : Controller
     {
         private readonly IAuthService _authService;
-        private readonly IAccountRepository _accountRepository;
-        private readonly IEmailUtils _emailUtils;
-        private readonly IJWTUtils _jWTUtils;
-        private readonly IPasswordUtils _passwordUtils;
-        private readonly IMapper _mapper;
+        private readonly IAccountService _accountService;
 
-        public AccountController(IAuthService authService, IAccountRepository accountRepository, IEmailUtils emailUtils, IJWTUtils jWTUtils, IPasswordUtils passwordUtils, IMapper mapper)
+        public AccountController(IAuthService authService, IAccountService accountService)
         {
             _authService = authService;
-            _accountRepository = accountRepository;
-            _emailUtils = emailUtils;
-            _jWTUtils = jWTUtils;
-            _passwordUtils = passwordUtils;
-            _mapper = mapper;
+            _accountService = accountService;
         }
 
         [HttpPost("login")]
@@ -81,7 +69,7 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
             {
                 return StatusCode(500, new
                 {
-                    Title = "Something went wrong",
+                    Status = 500,
                     Message = ex.Message,
                 });
             }
@@ -109,7 +97,7 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
             {
                 return StatusCode(500, new
                 {
-                    Title = "Something went wrong",
+                    Status = 500,
                     Message = ex.Message,
                 });
             }
@@ -130,13 +118,6 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return BadRequest(ModelState);
                 }
 
-                var account = _mapper.Map<GetAccountDTO>(_accountRepository.GetAccount(accountId));
-
-                if (account == null)
-                {
-                    return NotFound("Not Found Account");
-                }
-
                 var ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
 
                 if (accountId != ownerId)
@@ -144,13 +125,15 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return BadRequest("Id is not match");
                 }
 
-                return Ok(account);
+                var response = _accountService.GetAccount(accountId);
+
+                return StatusCode(response.Status, response);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
-                    Title = "Something went wrong",
+                    Status = 500,
                     Message = ex.Message,
                 });
             }
@@ -172,16 +155,6 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return BadRequest(ModelState);
                 }
 
-                if (updateAccount.Password.Length < 6)
-                {
-                    return BadRequest("Password at least 6 characters");
-                }
-
-                if (!_accountRepository.AccountExists(accountId))
-                {
-                    return NotFound("Not Found Account");
-                }
-
                 var ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
 
                 if (accountId != ownerId)
@@ -189,17 +162,15 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return BadRequest("Id is not match");
                 }
 
-                var accountMap = _mapper.Map<Account>(updateAccount);
+                var response = _accountService.UpdateAccount(accountId, updateAccount);
 
-                _accountRepository.UpdateAccount_User(accountId, accountMap);
-
-                return Ok("Updated successfully");
+                return StatusCode(response.Status, response);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
-                    Title = "Something went wrong",
+                    Status = 500,
                     Message = ex.Message,
                 });
             }
