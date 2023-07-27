@@ -19,11 +19,6 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
         }
 
         [HttpPost("login")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Login([FromBody] LoginRequestDTO loginRequest)
         {
             try
@@ -48,10 +43,6 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
         }
 
         [HttpPost("register")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Register([FromBody] RegisterRequestDTO registerRequest)
         {
             try
@@ -76,10 +67,6 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
         }
 
         [HttpPatch("forgot")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult SendMail([FromBody] ForgotPasswordDTO forgotPassword)
         {
             try
@@ -105,10 +92,6 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
 
         [HttpGet("{accountId}")]
         [Authorize]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetAccount([FromRoute] Guid accountId)
         {
             try
@@ -141,11 +124,6 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
 
         [HttpPut("{accountId}")]
         [Authorize]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult UpdateAccount([FromRoute] Guid accountId, [FromBody] UpdateAccountDTO updateAccount)
         {
             try
