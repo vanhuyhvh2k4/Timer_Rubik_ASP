@@ -1,18 +1,18 @@
 ﻿namespace Timer_Rubik.WebApp.DTO.Client
 {
-    public class LoginRequest
+    public class LoginRequestDTO
     {
         public string Email { get; set; }
 
         public string Password { get; set; }
     }
 
-    public class LoginResponse
+    public class LoginResponseDTO
     {
         public string Token { get; set; }
     }
 
-    public class RegisterRequest
+    public class RegisterRequestDTO
     {
         public string Name { get; set; }
 
@@ -23,7 +23,7 @@
         public string Thumbnail { get; set; }
     }
 
-    public class SendEmailDTO
+    public class ForgotPasswordDTO
     {
         public string Email { get; set; }
     }

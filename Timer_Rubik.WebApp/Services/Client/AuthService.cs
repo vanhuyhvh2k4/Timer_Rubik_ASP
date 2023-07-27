@@ -24,7 +24,7 @@ namespace Timer_Rubik.WebApp.Services.Client
             _mapper = mapper;
         }
 
-        public APIResponseDTO<LoginResponse> Login(LoginRequest loginRequest)
+        public APIResponseDTO<LoginResponseDTO> Login(LoginRequestDTO loginRequest)
         {
             var accountEntity = _accountRepository.GetAccount(loginRequest.Email.Trim());
 
@@ -32,11 +32,11 @@ namespace Timer_Rubik.WebApp.Services.Client
 
             if (!isCorrectPassword || accountEntity == null)
             {
-                return new APIResponseDTO<LoginResponse>
+                return new APIResponseDTO<LoginResponseDTO>
                 {
                     Status = 403,
                     Message = "Username or Password is not correct",
-                    Data = new LoginResponse
+                    Data = new LoginResponseDTO
                     {
                         Token =null
                     }
@@ -45,18 +45,18 @@ namespace Timer_Rubik.WebApp.Services.Client
 
             var accessToken = _jWTUtils.GenerateAccessToken(accountEntity.Id.ToString(), accountEntity.RuleId.ToString());
 
-            return new APIResponseDTO<LoginResponse>
+            return new APIResponseDTO<LoginResponseDTO>
             {
                 Status = 200,
                 Message = "Success",
-                Data = new LoginResponse
+                Data = new LoginResponseDTO
                 {
                     Token = accessToken
                 }
             }; 
         }
 
-        public APIResponseDTO<string> Register(RegisterRequest registerRequest)
+        public APIResponseDTO<string> Register(RegisterRequestDTO registerRequest)
         {
             if (!_emailUtils.EmailValid(registerRequest.Email.Trim()))
             {
@@ -93,6 +93,41 @@ namespace Timer_Rubik.WebApp.Services.Client
             {
                 Status = 200,
                 Message = "Created successful"
+            };
+        }
+
+        public APIResponseDTO<string> Forgot(ForgotPasswordDTO forgotPassword)
+        {
+            if (!_emailUtils.EmailValid(forgotPassword.Email.Trim()))
+            {
+                return new APIResponseDTO<string>
+                {
+                    Status = 400,
+                    Message = "Email is invalid"
+                };
+            }
+
+            if (_accountRepository.GetAccount(forgotPassword.Email.Trim()) == null)
+            {
+                return new APIResponseDTO<string>
+                {
+                    Status = 404,
+                    Message = "Not found email"
+                };
+            }
+
+            var account = _accountRepository.GetAccount(forgotPassword.Email.Trim());
+
+            string randomPassword = _passwordUtils.GenerateRandomPassword(6);
+
+            _accountRepository.ChangePassword(account.Id, randomPassword);
+
+            _emailUtils.SendEmail(forgotPassword.Email, "Reset Password", $"New Password: {randomPassword}");
+
+            return new APIResponseDTO<string>
+            {
+                Status = 200,
+                Message = "Email send"
             };
         }
     }

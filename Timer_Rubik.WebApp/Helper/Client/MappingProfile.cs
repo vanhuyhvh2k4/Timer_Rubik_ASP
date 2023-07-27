@@ -9,8 +9,8 @@ namespace Timer_Rubik.WebApp.Helper.Client
         public MappingProfile()
         {
             //account
-            CreateMap<Account, RegisterRequest>();
-            CreateMap<RegisterRequest, Account>();
+            CreateMap<Account, RegisterRequestDTO>();
+            CreateMap<RegisterRequestDTO, Account>();
 
             CreateMap<Account, GetAccountDTO>();
             CreateMap<GetAccountDTO, Account>();

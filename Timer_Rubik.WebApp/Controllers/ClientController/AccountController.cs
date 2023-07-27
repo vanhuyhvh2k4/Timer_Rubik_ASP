@@ -36,7 +36,7 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult Login([FromBody] LoginRequest loginRequest)
+        public IActionResult Login([FromBody] LoginRequestDTO loginRequest)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult Register([FromBody] RegisterRequest registerRequest)
+        public IActionResult Register([FromBody] RegisterRequestDTO registerRequest)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult SendMail([FromBody] SendEmailDTO emailDTO)
+        public IActionResult SendMail([FromBody] ForgotPasswordDTO forgotPassword)
         {
             try
             {
@@ -101,25 +101,9 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return BadRequest(ModelState);
                 }
 
-                if (!_emailUtils.EmailValid(emailDTO.Email))
-                {
-                    return BadRequest("Email is invalid");
-                }
+                var response = _authService.Forgot(forgotPassword);
 
-                if (_accountRepository.GetAccount(emailDTO.Email) == null)
-                {
-                    return NotFound("Not Found Email");
-                }
-
-                var account = _accountRepository.GetAccount(emailDTO.Email.Trim());
-
-                string randomPassword = _passwordUtils.GenerateRandomPassword(6);
-
-                _accountRepository.ChangePassword(account.Id, randomPassword);
-
-                _emailUtils.SendEmail(emailDTO.Email, "Reset Password", $"New Password: {randomPassword}");
-
-                return Ok("Email send");
+                return StatusCode(response.Status, response);
             }
             catch (Exception ex)
             {

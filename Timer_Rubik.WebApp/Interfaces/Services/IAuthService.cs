@@ -4,8 +4,10 @@ namespace Timer_Rubik.WebApp.Interfaces.Services
 {
     public interface IAuthService
     {
-        APIResponseDTO<LoginResponse> Login(LoginRequest loginRequest);
+        APIResponseDTO<LoginResponseDTO> Login(LoginRequestDTO loginRequest);
 
-        APIResponseDTO<string> Register(RegisterRequest registerRequest);
+        APIResponseDTO<string> Register(RegisterRequestDTO registerRequest);
+
+        APIResponseDTO<string> Forgot(ForgotPasswordDTO forgotPassword);
     }
 }
