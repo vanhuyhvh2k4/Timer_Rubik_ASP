@@ -45,7 +45,7 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return BadRequest(ModelState);
                 }
 
-                var response = _authService.Login(loginRequest.Email.Trim(), loginRequest.Password.Trim());
+                var response = _authService.Login(loginRequest);
 
                 return StatusCode(response.Status, response);
             }
@@ -73,26 +73,9 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return BadRequest(ModelState);
                 }
 
-                if (!_emailUtils.EmailValid(registerRequest.Email))
-                {
-                    return BadRequest("Email is invalid");
-                }
+                var response = _authService.Register(registerRequest);
 
-                if (registerRequest.Password.Length < 6)
-                {
-                    return BadRequest("Password at least 6 characters");
-                }
-
-                if (_accountRepository.GetAccount(registerRequest.Email) != null)
-                {
-                    return Conflict("Email already exist");
-                }
-
-                var accountMap = _mapper.Map<Account>(registerRequest);
-
-                _accountRepository.RegisterAccount(accountMap);
-
-                return Ok("Created successfully");
+                return StatusCode(response.Status, response);
             }
             catch (Exception ex)
             {
