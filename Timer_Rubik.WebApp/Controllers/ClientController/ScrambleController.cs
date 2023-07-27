@@ -56,6 +56,7 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                                         },
                                         Algorithm = scramble.Algorithm,
                                         Thumbnail = scramble.Thumbnail,
+                                        Solve = scramble.Solve,
                                         CreatedAt = scramble.CreatedAt,
                                         UpdatedAt = scramble.UpdatedAt,
                                     })
@@ -110,6 +111,7 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                                        },
                                        Algorithm = scramble.Algorithm,
                                        Thumbnail = scramble.Thumbnail,
+                                       Solve = scramble.Solve,
                                        CreatedAt = scramble.CreatedAt,
                                        UpdatedAt = scramble.UpdatedAt,
                                    })
@@ -172,6 +174,7 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                         },
                         Algorithm = scramble.Algorithm,
                         Thumbnail = scramble.Thumbnail,
+                        Solve = scramble.Solve,
                         CreatedAt = scramble.CreatedAt,
                         UpdatedAt = scramble.UpdatedAt,
                     };

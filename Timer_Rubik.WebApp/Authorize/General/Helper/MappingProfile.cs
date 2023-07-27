@@ -8,11 +8,6 @@ namespace Timer_Rubik.WebApp.Authorize.General.Helper
     {
         public MappingProfile()
         {
-
-            //category 
-            CreateMap<Category, GetCategoryDTO>();
-            CreateMap<GetCategoryDTO, Category>();
-
             //Favorite
             CreateMap<Favorite, GetFavoriteDTO>();
             CreateMap<GetFavoriteDTO, Favorite>();

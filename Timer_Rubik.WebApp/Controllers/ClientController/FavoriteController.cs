@@ -1,22 +1,22 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Authorize.User.DTO;
+using Timer_Rubik.WebApp.DTO.Client;
 using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Models;
 
-namespace Timer_Rubik.WebApp.Authorize.User.Controllers
+namespace Timer_Rubik.WebApp.Controllers.ClientController
 {
     [ApiController]
-    [Route("api/user/favorite")]
-    public class FavoriteController_User : Controller
+    [Route("api/favorite")]
+    public class FavoriteController : Controller
     {
         private readonly IFavoriteRepository _favoriteRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IScrambleRepository _scrambleRepository;
         private readonly IMapper _mapper;
 
-        public FavoriteController_User(IFavoriteRepository favoriteRepository, IAccountRepository accountRepository, IScrambleRepository scrambleRepository, IMapper mapper)
+        public FavoriteController(IFavoriteRepository favoriteRepository, IAccountRepository accountRepository, IScrambleRepository scrambleRepository, IMapper mapper)
         {
             _favoriteRepository = favoriteRepository;
             _accountRepository = accountRepository;
@@ -24,13 +24,12 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{favoriteId}")]
-        [Authorize]
+        [HttpGet("scramble/{scrambleId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetFavorite([FromRoute] Guid favoriteId)
+        public IActionResult GetFavoritesByScramble([FromRoute] Guid scrambleId)
         {
             try
             {
@@ -39,43 +38,36 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var favorite = _favoriteRepository.GetFavorite(favoriteId);
+                var favorites = _favoriteRepository
+                                    .GetFavoritesByScramble(scrambleId)
+                                     .Select(fav => new
+                                     {
+                                         fav.Id,
+                                         Account = new
+                                         {
+                                             Id = fav.AccountId,
+                                             fav.Account.Name,
+                                             fav.Account.Thumbnail,
+                                         },
+                                         Scramble = new
+                                         {
+                                             Id = fav.ScrambleId,
+                                             fav.Scramble.Algorithm,
+                                             fav.Scramble.Thumbnail,
+                                             Category = fav.Scramble.Category.Name
+                                         },
+                                         fav.Time,
+                                         fav.CreatedAt,
+                                         fav.UpdatedAt,
+                                     })
+                                    .ToList(); ;
 
-                if (favorite == null)
+                if (favorites.Count == 0)
                 {
                     return NotFound("Not Found Favorite");
                 }
 
-                var account = _accountRepository.GetAccountByFavorite(favoriteId);
-
-                Guid ownerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
-
-                if (account.Id != ownerId)
-                {
-                    return BadRequest("Id is not match");
-                }
-                var favoriteRes = new
-                {
-                    favorite.Id,
-                    Account = new
-                    {
-                        Id = favorite.AccountId,
-                        favorite.Account.Name,
-                        favorite.Account.Thumbnail,
-                    },
-                    Scramble = new
-                    {
-                        Id = favorite.ScrambleId,
-                        favorite.Scramble.Algorithm,
-                        favorite.Scramble.Thumbnail,
-                        Category = favorite.Scramble.Category.Name
-                    },
-                    favorite.Time,
-                    favorite.CreatedAt,
-                    favorite.UpdatedAt,
-                };
-
-                return Ok(favoriteRes);
+                return Ok(favorites);
             }
             catch (Exception ex)
             {
@@ -86,7 +78,6 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
                 });
             }
         }
-
 
         [HttpGet("account/{accountId}")]
         [Authorize]
@@ -151,13 +142,76 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
             }
         }
 
+        [HttpGet("{favoriteId}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetFavorite([FromRoute] Guid favoriteId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var favorite = _favoriteRepository.GetFavorite(favoriteId);
+
+                if (favorite == null)
+                {
+                    return NotFound("Not Found Favorite");
+                }
+
+                var account = _accountRepository.GetAccountByFavorite(favoriteId);
+
+                var ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
+
+                if (account.Id != ownerId)
+                {
+                    return BadRequest("Id is not match");
+                }
+                var favoriteRes = new
+                {
+                    favorite.Id,
+                    Account = new
+                    {
+                        Id = favorite.AccountId,
+                        favorite.Account.Name,
+                        favorite.Account.Thumbnail,
+                    },
+                    Scramble = new
+                    {
+                        Id = favorite.ScrambleId,
+                        favorite.Scramble.Algorithm,
+                        favorite.Scramble.Thumbnail,
+                        Category = favorite.Scramble.Category.Name
+                    },
+                    favorite.Time,
+                    favorite.CreatedAt,
+                    favorite.UpdatedAt,
+                };
+
+                return Ok(favoriteRes);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    ex.Message,
+                });
+            }
+        }
+
         [HttpPost]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult CreateFavorite([FromBody] CreateFavoriteDTO_User createFavorite)
+        public IActionResult CreateFavorite([FromBody] CreateFavoriteDTO createFavorite)
         {
             try
             {
@@ -218,7 +272,7 @@ namespace Timer_Rubik.WebApp.Authorize.User.Controllers
 
                 var account = _accountRepository.GetAccountByFavorite(favoriteId);
 
-                Guid ownerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
+                var ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
 
                 if (account.Id != ownerId)
                 {

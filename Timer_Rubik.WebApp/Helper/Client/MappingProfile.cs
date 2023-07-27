@@ -24,6 +24,14 @@ namespace Timer_Rubik.WebApp.Helper.Client
 
             CreateMap<Scramble, UpdateScrambleDTO>();
             CreateMap<UpdateScrambleDTO, Scramble>();
+
+            //category
+            CreateMap<Category, GetCategoryDTO>();
+            CreateMap<GetCategoryDTO, Category>();
+
+            //Favorite
+            CreateMap<Favorite, CreateFavoriteDTO>();
+            CreateMap<CreateFavoriteDTO, Favorite>();
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Authorize.General.DTO;
+using Timer_Rubik.WebApp.DTO.Client;
 using Timer_Rubik.WebApp.Interfaces;
 
-namespace Timer_Rubik.WebApp.Authorize.General.Controllers
+namespace Timer_Rubik.WebApp.Controllers.ClientController
 {
     [ApiController]
     [Route("api/category")]
@@ -27,7 +27,7 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
             try
             {
                 var categories = _mapper.Map<List<GetCategoryDTO>>(_categoryRepository.GetCategories());
-                
+
                 if (categories.Count == 0)
                 {
                     return NotFound("Not Found Category");

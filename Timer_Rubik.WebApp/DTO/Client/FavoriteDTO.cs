@@ -1,6 +1,6 @@
-﻿namespace Timer_Rubik.WebApp.Authorize.User.DTO
+﻿namespace Timer_Rubik.WebApp.DTO.Client
 {
-    public class CreateFavoriteDTO_User
+    public class CreateFavoriteDTO
     {
         public Guid ScrambleId { get; set; }
 
