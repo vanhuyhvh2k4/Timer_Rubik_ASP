@@ -7,11 +7,6 @@
         public string Password { get; set; }
     }
 
-    public class LoginResponseDTO
-    {
-        public string Token { get; set; }
-    }
-
     public class RegisterRequestDTO
     {
         public string Name { get; set; }

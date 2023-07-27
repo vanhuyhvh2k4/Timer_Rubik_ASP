@@ -24,7 +24,7 @@ namespace Timer_Rubik.WebApp.Services.Client
             _mapper = mapper;
         }
 
-        public APIResponseDTO<LoginResponseDTO> Login(LoginRequestDTO loginRequest)
+        public APIResponseDTO<string> Login(LoginRequestDTO loginRequest)
         {
             var accountEntity = _accountRepository.GetAccount(loginRequest.Email.Trim());
 
@@ -32,28 +32,21 @@ namespace Timer_Rubik.WebApp.Services.Client
 
             if (!isCorrectPassword || accountEntity == null)
             {
-                return new APIResponseDTO<LoginResponseDTO>
+                return new APIResponseDTO<string>
                 {
                     Status = 403,
                     Message = "Username or Password is not correct",
-                    Data = new LoginResponseDTO
-                    {
-                        Token =null
-                    }
                 };
             }
 
             var accessToken = _jWTUtils.GenerateAccessToken(accountEntity.Id.ToString(), accountEntity.RuleId.ToString());
 
-            return new APIResponseDTO<LoginResponseDTO>
+            return new APIResponseDTO<string>
             {
                 Status = 200,
                 Message = "Success",
-                Data = new LoginResponseDTO
-                {
-                    Token = accessToken
-                }
-            }; 
+                Data = accessToken
+            };
         }
 
         public APIResponseDTO<string> Register(RegisterRequestDTO registerRequest)
@@ -70,7 +63,7 @@ namespace Timer_Rubik.WebApp.Services.Client
             if (registerRequest.Password.Trim().Length < 6)
             {
                 return new APIResponseDTO<string>
-                { 
+                {
                     Status = 400,
                     Message = "Password at least 6 characters"
                 };
