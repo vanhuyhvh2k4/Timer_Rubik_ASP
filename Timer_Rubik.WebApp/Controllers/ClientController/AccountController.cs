@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Timer_Rubik.WebApp.Authorize.General.DTO;
-using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.Interfaces.Utils;
+using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.DTO.Client;
 using Timer_Rubik.WebApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
-namespace Timer_Rubik.WebApp.Authorize.General.Controllers
+namespace Timer_Rubik.WebApp.Controllers.ClientController
 {
     [ApiController]
     [Route("api/account")]
@@ -152,6 +153,96 @@ namespace Timer_Rubik.WebApp.Authorize.General.Controllers
                 _emailService.SendEmail(emailDTO.Email, "Reset Password", $"New Password: {randomPassword}");
 
                 return Ok("Email send");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpGet("{accountId}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GetAccount([FromRoute] Guid accountId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var account = _mapper.Map<GetAccountDTO>(_accountRepository.GetAccount(accountId));
+
+                if (account == null)
+                {
+                    return NotFound("Not Found Account");
+                }
+
+                var ownerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
+
+                if (accountId != ownerId)
+                {
+                    return BadRequest("Id is not match");
+                }
+
+                return Ok(account);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Title = "Something went wrong",
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpPut("{accountId}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult UpdateAccount([FromRoute] Guid accountId, [FromBody] UpdateAccountDTO updateAccount)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (updateAccount.Password.Length < 6)
+                {
+                    return BadRequest("Password at least 6 characters");
+                }
+
+                if (!_accountRepository.AccountExists(accountId))
+                {
+                    return NotFound("Not Found Account");
+                }
+
+                var ownerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
+
+                if (accountId != ownerId)
+                {
+                    return BadRequest("Id is not match");
+                }
+
+                var accountMap = _mapper.Map<Account>(updateAccount);
+
+                _accountRepository.UpdateAccount_User(accountId, accountMap);
+
+                return Ok("Updated successfully");
             }
             catch (Exception ex)
             {

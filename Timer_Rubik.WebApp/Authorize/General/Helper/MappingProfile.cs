@@ -8,9 +8,6 @@ namespace Timer_Rubik.WebApp.Authorize.General.Helper
     {
         public MappingProfile()
         {
-            //account
-            CreateMap<Account, RegisterRequest>();
-            CreateMap<RegisterRequest, Account>();
 
             //category 
             CreateMap<Category, GetCategoryDTO>();

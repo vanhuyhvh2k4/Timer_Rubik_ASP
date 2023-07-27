@@ -1,4 +1,4 @@
-﻿namespace Timer_Rubik.WebApp.Authorize.General.DTO
+﻿namespace Timer_Rubik.WebApp.DTO.Client
 {
     public class LoginRequest
     {
@@ -21,5 +21,25 @@
     public class SendEmailDTO
     {
         public string Email { get; set; }
+    }
+
+    public class GetAccountDTO
+    {
+        public Guid Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Thumbnail { get; set; }
+
+        public string Email { get; set; }
+    }
+
+    public class UpdateAccountDTO
+    {
+        public string Name { get; set; }
+
+        public string Thumbnail { get; set; }
+
+        public string Password { get; set; }
     }
 }
