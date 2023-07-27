@@ -7,6 +7,15 @@
         public string Password { get; set; }
     }
 
+    public class LoginResponse
+    {
+        public int Status { get; set; }
+
+        public string Message { get; set; }
+
+        public string? Token { get; set; }
+    }
+
     public class RegisterRequest
     {
         public string Name { get; set; }

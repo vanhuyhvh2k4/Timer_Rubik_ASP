@@ -5,6 +5,7 @@ using Timer_Rubik.WebApp.DTO.Client;
 using Timer_Rubik.WebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Timer_Rubik.WebApp.Interfaces.Repository;
+using Timer_Rubik.WebApp.Interfaces.Services;
 
 namespace Timer_Rubik.WebApp.Controllers.ClientController
 {
@@ -12,14 +13,16 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
     [Route("api/account")]
     public class AccountController : Controller
     {
+        private readonly IAuthService _authService;
         private readonly IAccountRepository _accountRepository;
         private readonly IEmailUtils _emailUtils;
         private readonly IJWTUtils _jWTUtils;
         private readonly IPasswordUtils _passwordUtils;
         private readonly IMapper _mapper;
 
-        public AccountController(IAccountRepository accountRepository, IEmailUtils emailUtils, IJWTUtils jWTUtils, IPasswordUtils passwordUtils, IMapper mapper)
+        public AccountController(IAuthService authService, IAccountRepository accountRepository, IEmailUtils emailUtils, IJWTUtils jWTUtils, IPasswordUtils passwordUtils, IMapper mapper)
         {
+            _authService = authService;
             _accountRepository = accountRepository;
             _emailUtils = emailUtils;
             _jWTUtils = jWTUtils;
@@ -42,34 +45,15 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return BadRequest(ModelState);
                 }
 
-                var accountEntity = _accountRepository.GetAccount(loginRequest.Email.Trim());
+                var response = _authService.Login(loginRequest.Email.Trim(), loginRequest.Password.Trim());
 
-                if (accountEntity == null)
-                {
-                    return NotFound("Not Found Account");
-                }
-
-                bool isCorrectPassword = _passwordUtils.VerifyPassword(loginRequest.Password.Trim(), accountEntity.Password.Trim());
-
-                if (!isCorrectPassword)
-                {
-                    return StatusCode(403, "Password is not correct");
-                }
-
-                var accessToken = _jWTUtils.GenerateAccessToken(accountEntity.Id.ToString(), accountEntity.RuleId.ToString());
-
-                var response = new
-                {
-                    token = accessToken,
-                };
-
-                return Ok(response);
+                return StatusCode(response.Status, response);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
-                    Title = "Something went wrong",
+                    Status = 500,
                     Message = ex.Message,
                 });
             }
