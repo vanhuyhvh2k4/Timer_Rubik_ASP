@@ -50,7 +50,6 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                                             Thumbnail = scramble.Account.Thumbnail,
                                             Email = scramble.Account.Email
                                         },
-                                        Solve = scramble.Solve?.Answer,
                                         Algorithm = scramble.Algorithm,
                                         Thumbnail = scramble.Thumbnail,
                                         CreatedAt = scramble.CreatedAt,

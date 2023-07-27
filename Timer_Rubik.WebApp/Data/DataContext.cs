@@ -19,8 +19,6 @@ namespace Timer_Rubik.WebApp.Data
 
         public DbSet<Scramble> Scrambles { get; set; }
 
-        public DbSet<Solve> Solves { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Account - Rule (one - many)
@@ -52,12 +50,6 @@ namespace Timer_Rubik.WebApp.Data
                 .HasOne(s => s.Category)
                 .WithMany(c => c.Scrambles)
                 .HasForeignKey(s => s.CategoryId);
-
-            // Scramble - Solve (one - one)
-            modelBuilder.Entity<Scramble>()
-                .HasOne(s => s.Solve)
-                .WithOne(so => so.Scramble)
-                .HasForeignKey<Solve>(so => so.ScrambleId);
         }
     }
 }

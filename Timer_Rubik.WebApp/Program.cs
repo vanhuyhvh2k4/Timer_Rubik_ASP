@@ -32,7 +32,6 @@ builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IScrambleRepository, ScrambleRepository>();
-builder.Services.AddScoped<ISolveRepository, SolveRepository>();
 builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
 builder.Services.AddScoped<IRuleRepository, RuleRepository>();
 
