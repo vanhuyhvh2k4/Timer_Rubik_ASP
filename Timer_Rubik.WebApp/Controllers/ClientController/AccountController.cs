@@ -186,7 +186,7 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return NotFound("Not Found Account");
                 }
 
-                var ownerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
+                var ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
 
                 if (accountId != ownerId)
                 {
@@ -231,7 +231,7 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return NotFound("Not Found Account");
                 }
 
-                var ownerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value!);
+                var ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
 
                 if (accountId != ownerId)
                 {

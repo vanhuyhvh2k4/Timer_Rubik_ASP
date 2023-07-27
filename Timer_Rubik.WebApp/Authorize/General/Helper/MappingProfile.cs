@@ -17,13 +17,6 @@ namespace Timer_Rubik.WebApp.Authorize.General.Helper
             CreateMap<Favorite, GetFavoriteDTO>();
             CreateMap<GetFavoriteDTO, Favorite>();
 
-            //Scramble
-            CreateMap<Scramble, GetScrambleDTO>();
-            CreateMap<GetScrambleDTO, Scramble>();
-
-            CreateMap<Scramble, CreateScrambleDTO>();
-            CreateMap<CreateScrambleDTO, Scramble>();
-
             //Solve
             CreateMap<Solve, GetSolveDTO>();
             CreateMap<GetSolveDTO, Solve>();

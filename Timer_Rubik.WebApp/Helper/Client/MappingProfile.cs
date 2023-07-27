@@ -17,6 +17,13 @@ namespace Timer_Rubik.WebApp.Helper.Client
 
             CreateMap<Account, UpdateAccountDTO>();
             CreateMap<UpdateAccountDTO, Account>();
+
+            //scramble
+            CreateMap<Scramble, CreateScrambleDTO>();
+            CreateMap<CreateScrambleDTO, Scramble>();
+
+            CreateMap<Scramble, UpdateScrambleDTO>();
+            CreateMap<UpdateScrambleDTO, Scramble>();
         }
     }
 }
