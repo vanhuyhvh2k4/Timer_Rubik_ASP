@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.DTO.Client;
-using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Interfaces.Repository;
 
 namespace Timer_Rubik.WebApp.Controllers.ClientController
 {

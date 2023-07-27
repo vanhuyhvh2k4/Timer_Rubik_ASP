@@ -1,6 +1,6 @@
 ﻿namespace Timer_Rubik.WebApp.Interfaces.Utils
 {
-    public interface IEmailService
+    public interface IEmailUtils
     {
         void SendEmail(string toAddress, string subject, string body);
 

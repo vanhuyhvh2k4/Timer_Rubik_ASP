@@ -4,14 +4,14 @@ using System.Security.Claims;
 using System.Text;
 using Timer_Rubik.WebApp.Interfaces.Utils;
 
-namespace Timer_Rubik.WebApp.Services.Utils
+namespace Timer_Rubik.WebApp.Utilities
 {
-    public class JWTService : IJWTService
+    public class JWTUtils : IJWTUtils
     {
         private readonly string secret;
         private readonly int exprise;
 
-        public JWTService(IConfiguration config)
+        public JWTUtils(IConfiguration config)
         {
             secret = config.GetSection("Token_Secret").Value!;
             exprise = int.Parse(config.GetSection("Token_Exp").Value!);

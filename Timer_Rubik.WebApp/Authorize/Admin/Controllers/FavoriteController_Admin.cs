@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Attributes;
-using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Interfaces.Repository;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
 {

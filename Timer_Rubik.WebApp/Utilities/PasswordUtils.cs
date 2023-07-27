@@ -1,9 +1,9 @@
 ﻿using Timer_Rubik.WebApp.Interfaces.Utils;
 using BcryptNet = BCrypt.Net.BCrypt;
 
-namespace Timer_Rubik.WebApp.Services.Utils
+namespace Timer_Rubik.WebApp.Utilities
 {
-    public class PasswordService : IPasswordService
+    public class PasswordUtils : IPasswordUtils
     {
         public string GenerateRandomPassword(int length)
         {

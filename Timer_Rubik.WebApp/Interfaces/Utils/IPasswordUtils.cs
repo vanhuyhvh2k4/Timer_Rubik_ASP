@@ -1,6 +1,6 @@
 ﻿namespace Timer_Rubik.WebApp.Interfaces.Utils
 {
-    public interface IPasswordService
+    public interface IPasswordUtils
     {
         string HashPassword(string password);
 

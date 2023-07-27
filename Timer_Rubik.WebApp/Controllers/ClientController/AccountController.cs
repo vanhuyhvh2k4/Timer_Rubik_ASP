@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Interfaces.Utils;
-using Timer_Rubik.WebApp.Interfaces;
 using Timer_Rubik.WebApp.DTO.Client;
 using Timer_Rubik.WebApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using Timer_Rubik.WebApp.Interfaces.Repository;
 
 namespace Timer_Rubik.WebApp.Controllers.ClientController
 {
@@ -13,17 +13,17 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
     public class AccountController : Controller
     {
         private readonly IAccountRepository _accountRepository;
-        private readonly IEmailService _emailService;
-        private readonly IJWTService _jWTService;
-        private readonly IPasswordService _passwordService;
+        private readonly IEmailUtils _emailUtils;
+        private readonly IJWTUtils _jWTUtils;
+        private readonly IPasswordUtils _passwordUtils;
         private readonly IMapper _mapper;
 
-        public AccountController(IAccountRepository accountRepository, IEmailService emailService, IJWTService jWTService, IPasswordService passwordService, IMapper mapper)
+        public AccountController(IAccountRepository accountRepository, IEmailUtils emailUtils, IJWTUtils jWTUtils, IPasswordUtils passwordUtils, IMapper mapper)
         {
             _accountRepository = accountRepository;
-            _emailService = emailService;
-            _jWTService = jWTService;
-            _passwordService = passwordService;
+            _emailUtils = emailUtils;
+            _jWTUtils = jWTUtils;
+            _passwordUtils = passwordUtils;
             _mapper = mapper;
         }
 
@@ -49,14 +49,14 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return NotFound("Not Found Account");
                 }
 
-                bool isCorrectPassword = _passwordService.VerifyPassword(loginRequest.Password.Trim(), accountEntity.Password.Trim());
+                bool isCorrectPassword = _passwordUtils.VerifyPassword(loginRequest.Password.Trim(), accountEntity.Password.Trim());
 
                 if (!isCorrectPassword)
                 {
                     return StatusCode(403, "Password is not correct");
                 }
 
-                var accessToken = _jWTService.GenerateAccessToken(accountEntity.Id.ToString(), accountEntity.RuleId.ToString());
+                var accessToken = _jWTUtils.GenerateAccessToken(accountEntity.Id.ToString(), accountEntity.RuleId.ToString());
 
                 var response = new
                 {
@@ -89,7 +89,7 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return BadRequest(ModelState);
                 }
 
-                if (!_emailService.EmailValid(registerRequest.Email))
+                if (!_emailUtils.EmailValid(registerRequest.Email))
                 {
                     return BadRequest("Email is invalid");
                 }
@@ -134,7 +134,7 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return BadRequest(ModelState);
                 }
 
-                if (!_emailService.EmailValid(emailDTO.Email))
+                if (!_emailUtils.EmailValid(emailDTO.Email))
                 {
                     return BadRequest("Email is invalid");
                 }
@@ -146,11 +146,11 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
 
                 var account = _accountRepository.GetAccount(emailDTO.Email.Trim());
 
-                string randomPassword = _passwordService.GenerateRandomPassword(6);
+                string randomPassword = _passwordUtils.GenerateRandomPassword(6);
 
                 _accountRepository.ChangePassword(account.Id, randomPassword);
 
-                _emailService.SendEmail(emailDTO.Email, "Reset Password", $"New Password: {randomPassword}");
+                _emailUtils.SendEmail(emailDTO.Email, "Reset Password", $"New Password: {randomPassword}");
 
                 return Ok("Email send");
             }

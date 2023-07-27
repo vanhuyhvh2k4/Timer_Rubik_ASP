@@ -1,5 +1,5 @@
 ﻿using Timer_Rubik.WebApp.Data;
-using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Interfaces.Repository;
 using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Services

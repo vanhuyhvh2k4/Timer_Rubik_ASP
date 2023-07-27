@@ -5,16 +5,16 @@ using MailKit.Net.Smtp;
 using Timer_Rubik.WebApp.Interfaces.Utils;
 using System.Text.RegularExpressions;
 
-namespace Timer_Rubik.WebApp.Services.Utils
+namespace Timer_Rubik.WebApp.Utilities
 {
-    public class EmailService : IEmailService
+    public class EmailUtils : IEmailUtils
     {
         private readonly string host;
         private readonly int port;
         private readonly string username;
         private readonly string password;
 
-        public EmailService(IConfiguration config)
+        public EmailUtils(IConfiguration config)
         {
             host = config.GetSection("Mail_Host").Value!;
             port = int.Parse(config.GetSection("Mail_Port").Value!);
