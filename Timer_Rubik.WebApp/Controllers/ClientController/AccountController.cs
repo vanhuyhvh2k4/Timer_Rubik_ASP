@@ -101,14 +101,9 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return BadRequest(ModelState);
                 }
 
-                var ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
+                Guid ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
 
-                if (accountId != ownerId)
-                {
-                    return BadRequest("Id is not match");
-                }
-
-                var response = _accountService.GetAccount(accountId);
+                var response = _accountService.GetAccount(ownerId, accountId);
 
                 return StatusCode(response.Status, response);
             }
@@ -133,14 +128,9 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return BadRequest(ModelState);
                 }
 
-                var ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
+                Guid ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
 
-                if (accountId != ownerId)
-                {
-                    return BadRequest("Id is not match");
-                }
-
-                var response = _accountService.UpdateAccount(accountId, updateAccount);
+                var response = _accountService.UpdateAccount(ownerId, accountId, updateAccount);
 
                 return StatusCode(response.Status, response);
             }

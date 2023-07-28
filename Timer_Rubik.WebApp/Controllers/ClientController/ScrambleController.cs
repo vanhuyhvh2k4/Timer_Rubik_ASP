@@ -1,9 +1,7 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.DTO.Client;
-using Timer_Rubik.WebApp.Interfaces.Repository;
-using Timer_Rubik.WebApp.Models;
+using Timer_Rubik.WebApp.Interfaces.Services;
 
 namespace Timer_Rubik.WebApp.Controllers.ClientController
 {
@@ -11,24 +9,14 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
     [Route("api/scramble")]
     public class ScrambleController : Controller
     {
-        private readonly IScrambleRepository _scrambleRepository;
-        private readonly IAccountRepository _accountRepository;
-        private readonly ICategoryRepository _categoryRepository;
-        private readonly IMapper _mapper;
+        private readonly IScrambleService _scrambleService;
 
-        public ScrambleController(IScrambleRepository scrambleRepository, IAccountRepository accountRepository, ICategoryRepository categoryRepository, IMapper mapper)
+        public ScrambleController(IScrambleService scrambleService)
         {
-            _scrambleRepository = scrambleRepository;
-            _accountRepository = accountRepository;
-            _categoryRepository = categoryRepository;
-            _mapper = mapper;
+            _scrambleService = scrambleService;
         }
 
         [HttpGet("category/{categoryId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetScrambleByCategory([FromRoute] Guid categoryId)
         {
             try
@@ -38,36 +26,9 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _scrambleRepository
-                                    .GetScrambleByCategory(categoryId)
-                                    .Select(scramble => new
-                                    {
-                                        Id = scramble.Id,
-                                        Category = new
-                                        {
-                                            Id = scramble.CategoryId,
-                                            Name = scramble.Category.Name
-                                        },
-                                        Account = new
-                                        {
-                                            Id = scramble.AccountId,
-                                            Name = scramble.Account.Name,
-                                            Thumbnail = scramble.Account.Thumbnail,
-                                        },
-                                        Algorithm = scramble.Algorithm,
-                                        Thumbnail = scramble.Thumbnail,
-                                        Solve = scramble.Solve,
-                                        CreatedAt = scramble.CreatedAt,
-                                        UpdatedAt = scramble.UpdatedAt,
-                                    })
-                                    .ToList();
+                var response = _scrambleService.GetScramblesByCategory(categoryId);
 
-                if (scramble.Count == 0)
-                {
-                    return NotFound("Not Found Scramble");
-                }
-
-                return Ok(scramble);
+                return StatusCode(response.Status, response);
             }
             catch (Exception ex)
             {
@@ -80,10 +41,6 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
         }
 
         [HttpGet("account/{accountId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetScrambleOfAccount([FromRoute] Guid accountId)
         {
             try
@@ -93,36 +50,9 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _scrambleRepository
-                                   .GetScramblesOfAccount(accountId)
-                                   .Select(scramble => new
-                                   {
-                                       Id = scramble.Id,
-                                       Category = new
-                                       {
-                                           Id = scramble.CategoryId,
-                                           Name = scramble.Category.Name
-                                       },
-                                       Account = new
-                                       {
-                                           Id = scramble.AccountId,
-                                           Name = scramble.Account.Name,
-                                           Thumbnail = scramble.Account.Thumbnail,
-                                       },
-                                       Algorithm = scramble.Algorithm,
-                                       Thumbnail = scramble.Thumbnail,
-                                       Solve = scramble.Solve,
-                                       CreatedAt = scramble.CreatedAt,
-                                       UpdatedAt = scramble.UpdatedAt,
-                                   })
-                                   .ToList();
+                var response = _scrambleService.GetScramblesOfAccount(accountId);
 
-                if (scramble.Count == 0)
-                {
-                    return NotFound("Not Found Scramble");
-                }
-
-                return Ok(scramble);
+                return StatusCode(response.Status, response);
             }
             catch (Exception ex)
             {
@@ -136,10 +66,6 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
 
 
         [HttpGet("{scrambleId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetScramble([FromRoute] Guid scrambleId)
         {
             try
@@ -149,37 +75,9 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
                     return BadRequest(ModelState);
                 }
 
-                var scramble = _scrambleRepository
-                                    .GetScramble(scrambleId);
+                var response = _scrambleService.GetScramble(scrambleId);
 
-                if (scramble == null)
-                {
-                    return NotFound("Not Found Scramble");
-                }
-                else
-                {
-                    var scrambleRes = new
-                    {
-                        Id = scramble.Id,
-                        Category = new
-                        {
-                            Id = scramble.CategoryId,
-                            Name = scramble.Category.Name
-                        },
-                        Account = new
-                        {
-                            Id = scramble.AccountId,
-                            Name = scramble.Account.Name,
-                            Thumbnail = scramble.Account.Thumbnail,
-                        },
-                        Algorithm = scramble.Algorithm,
-                        Thumbnail = scramble.Thumbnail,
-                        Solve = scramble.Solve,
-                        CreatedAt = scramble.CreatedAt,
-                        UpdatedAt = scramble.UpdatedAt,
-                    };
-                    return Ok(scrambleRes);
-                }
+                return StatusCode(response.Status, response);
             }
             catch (Exception ex)
             {
@@ -194,31 +92,20 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
 
         [HttpPost]
         [Authorize]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult CreateCategory([FromBody] CreateScrambleDTO createScramble)
         {
             try
             {
-                var ownerId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(cl => cl.Type == "UserId")!.Value);
+                Guid ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
 
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
 
-                if (!_categoryRepository.CategoryExists(createScramble.CategoryId))
-                {
-                    return NotFound("Category is not exists");
-                }
+                var response = _scrambleService.CreateScramble(ownerId, createScramble);
 
-                var scrambleMap = _mapper.Map<Scramble>(createScramble);
-
-                _scrambleRepository.CreateScramble(ownerId, scrambleMap);
-
-                return Ok("Created successfully");
+                return StatusCode(response.Status, response);
             }
             catch (Exception ex)
             {
@@ -232,44 +119,20 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
 
         [HttpPut("{scrambleId}")]
         [Authorize]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult UpdateScramble([FromRoute] Guid scrambleId, [FromBody] UpdateScrambleDTO updateScramble)
         {
             try
             {
+                Guid ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
+
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
 
-                if (!_categoryRepository.CategoryExists(updateScramble.CategoryId))
-                {
-                    return NotFound("Not Found Category");
-                }
+                var response = _scrambleService.UpdateScramble(ownerId, scrambleId, updateScramble);
 
-                if (!_scrambleRepository.ScrambleExists(scrambleId))
-                {
-                    return NotFound("Not Found Scramble");
-                }
-
-                var ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
-
-                var accountId = _accountRepository.GetAccountByScramble(scrambleId).Id;
-
-                if (ownerId != accountId)
-                {
-                    return BadRequest("Id is not match");
-                }
-
-                var categoryMap = _mapper.Map<Scramble>(updateScramble);
-
-                _scrambleRepository.UpdateScramble(scrambleId, categoryMap);
-
-                return Ok("Updated successfully");
+                return StatusCode(response.Status, response);
             }
             catch (Exception ex)
             {
@@ -283,39 +146,20 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
 
         [HttpDelete("{scrambleId}")]
         [Authorize]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult DeleteScramble([FromRoute] Guid scrambleId)
         {
             try
             {
+                Guid ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
 
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
 
-                if (!_scrambleRepository.ScrambleExists(scrambleId))
-                {
-                    return NotFound("Not Found Scramble");
-                }
+                var response = _scrambleService.DeleteScramble(ownerId, scrambleId);
 
-                var ownerId = Guid.Parse(HttpContext.User.FindFirst("UserId")!.Value);
-
-                var accountId = _accountRepository.GetAccountByScramble(scrambleId).Id;
-
-                if (ownerId != accountId)
-                {
-                    return BadRequest("Id is not match");
-                }
-
-                var scrambleEntity = _scrambleRepository.GetScramble(scrambleId);
-
-                _scrambleRepository.DeleteScramble(scrambleEntity);
-
-                return Ok("Deleted successfully");
+                return StatusCode(response.Status, response);
             }
             catch (Exception ex)
             {

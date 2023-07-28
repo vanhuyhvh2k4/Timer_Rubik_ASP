@@ -4,8 +4,8 @@ namespace Timer_Rubik.WebApp.Interfaces.Services
 {
     public interface IAccountService
     {
-        APIResponseDTO<GetAccountDTO> GetAccount(Guid accountId);
+        APIResponseDTO<GetAccountDTO> GetAccount(Guid ownerId, Guid accountId);
 
-        APIResponseDTO<string> UpdateAccount(Guid accountId, UpdateAccountDTO updateAccount);
+        APIResponseDTO<string> UpdateAccount(Guid ownerId, Guid accountId, UpdateAccountDTO updateAccount);
     }
 }
