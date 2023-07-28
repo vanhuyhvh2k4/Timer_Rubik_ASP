@@ -151,10 +151,6 @@ namespace Timer_Rubik.WebApp.Migrations
                     b.Property<string>("Solve")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Thumbnail")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 

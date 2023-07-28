@@ -11,8 +11,8 @@ using Timer_Rubik.WebApp.Data;
 namespace Timer_Rubik.WebApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230711070329_Update_Migration_1")]
-    partial class Update_Migration_1
+    [Migration("20230728022334_Update_Migration_3")]
+    partial class Update_Migration_3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -151,8 +151,7 @@ namespace Timer_Rubik.WebApp.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Thumbnail")
-                        .IsRequired()
+                    b.Property<string>("Solve")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -165,33 +164,6 @@ namespace Timer_Rubik.WebApp.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Scrambles");
-                });
-
-            modelBuilder.Entity("Timer_Rubik.WebApp.Models.Solve", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Answer")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("ScrambleId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ScrambleId")
-                        .IsUnique();
-
-                    b.ToTable("Solves");
                 });
 
             modelBuilder.Entity("Timer_Rubik.WebApp.Models.Account", b =>
@@ -243,17 +215,6 @@ namespace Timer_Rubik.WebApp.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Timer_Rubik.WebApp.Models.Solve", b =>
-                {
-                    b.HasOne("Timer_Rubik.WebApp.Models.Scramble", "Scramble")
-                        .WithOne("Solve")
-                        .HasForeignKey("Timer_Rubik.WebApp.Models.Solve", "ScrambleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Scramble");
-                });
-
             modelBuilder.Entity("Timer_Rubik.WebApp.Models.Account", b =>
                 {
                     b.Navigation("Favorites");
@@ -274,9 +235,6 @@ namespace Timer_Rubik.WebApp.Migrations
             modelBuilder.Entity("Timer_Rubik.WebApp.Models.Scramble", b =>
                 {
                     b.Navigation("Favorites");
-
-                    b.Navigation("Solve")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

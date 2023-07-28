@@ -10,8 +10,6 @@
 
         public string Algorithm { get; set; }
 
-        public string Thumbnail { get; set; }
-
         public string? Solve { get; set; }
 
         public DateTime CreatedAt { get; set; }

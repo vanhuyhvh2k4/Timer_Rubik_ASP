@@ -22,7 +22,6 @@ namespace Timer_Rubik.WebApp.Services
                 AccountId = accountId,
                 CategoryId = scramble.CategoryId,
                 Algorithm = scramble.Algorithm,
-                Thumbnail = scramble.Thumbnail,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.MinValue,
             };
@@ -93,7 +92,6 @@ namespace Timer_Rubik.WebApp.Services
 
             updateScramble.CategoryId = scramble.CategoryId;
             updateScramble.Algorithm = scramble.Algorithm;
-            updateScramble.Thumbnail = scramble.Thumbnail;
             updateScramble.UpdatedAt = DateTime.Now;
 
             return Save();

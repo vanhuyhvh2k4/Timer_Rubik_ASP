@@ -40,7 +40,6 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                                         {
                                             Id = fav.ScrambleId,
                                             fav.Scramble.Algorithm,
-                                            fav.Scramble.Thumbnail,
                                             Category = fav.Scramble.Category.Name
                                         },
                                         fav.Time,
@@ -102,7 +101,6 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     {
                         Id = favorite.ScrambleId,
                         favorite.Scramble.Algorithm,
-                        favorite.Scramble.Thumbnail,
                         Category = favorite.Scramble.Category.Name
                     },
                     favorite.Time,
@@ -153,7 +151,6 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                                          {
                                              Id = fav.ScrambleId,
                                              fav.Scramble.Algorithm,
-                                             fav.Scramble.Thumbnail,
                                              Category = fav.Scramble.Category.Name
                                          },
                                          fav.Time,
