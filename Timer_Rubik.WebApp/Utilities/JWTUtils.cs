@@ -21,8 +21,8 @@ namespace Timer_Rubik.WebApp.Utilities
         {
             var claims = new[]
             {
-                new Claim("UserId", userId),
-                new Claim("RuleId", ruleId),
+                new Claim("UserId", userId.Trim()),
+                new Claim("RuleId", ruleId.Trim()),
             };
 
             // Create the token

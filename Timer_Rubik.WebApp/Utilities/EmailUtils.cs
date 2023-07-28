@@ -25,14 +25,14 @@ namespace Timer_Rubik.WebApp.Utilities
         public bool EmailValid(string email)
         {
             string regex = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-            return Regex.IsMatch(email, regex);
+            return Regex.IsMatch(email.Trim(), regex);
         }
 
         public void SendEmail(string toAddress, string subject, string body)
         {
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(username));
-            email.To.Add(MailboxAddress.Parse(toAddress));
+            email.To.Add(MailboxAddress.Parse(toAddress.Trim()));
             email.Subject = subject;
             email.Body = new TextPart(TextFormat.Html) { Text = body };
 

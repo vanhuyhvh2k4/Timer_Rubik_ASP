@@ -23,6 +23,17 @@ namespace Timer_Rubik.WebApp.Services.Client
 
         public APIResponseDTO<string> CreateScramble(Guid ownerId, CreateScrambleDTO createScramble)
         {
+            var scrambleEntity = _scrambleRepository.GetScramble(createScramble.Algorithm);
+
+            if (scrambleEntity != null)
+            {
+                return new APIResponseDTO<string>
+                {
+                    Status = 409,
+                    Message = "Scramble already exist"
+                };
+            }
+
             if (!_categoryRepository.CategoryExists(createScramble.CategoryId))
             {
                 return new APIResponseDTO<string>

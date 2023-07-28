@@ -8,6 +8,8 @@ namespace Timer_Rubik.WebApp.Interfaces.Repository
 
         Scramble GetScramble(Guid scrambleId);
 
+        Scramble GetScramble(string algorithm);
+
         bool ScrambleExists(Guid scrambleId);
 
         ICollection<Scramble> GetScramblesOfAccount(Guid accountId);

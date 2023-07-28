@@ -30,7 +30,7 @@ namespace Timer_Rubik.WebApp.Services
 
         public Category GetCategory(string categoryName)
         {
-            return _context.Categories.Where(cate => cate.Name == categoryName).FirstOrDefault()!;
+            return _context.Categories.Where(cate => cate.Name.Trim().ToUpper() == categoryName.Trim().ToUpper()).FirstOrDefault()!;
         }
 
         public bool CreateCategory(Category category)
@@ -38,7 +38,7 @@ namespace Timer_Rubik.WebApp.Services
             var newCategory = new Category()
             {
                 Id = new Guid(),
-                Name = category.Name,
+                Name = category.Name.Trim(),
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.MinValue,
             };
@@ -58,7 +58,7 @@ namespace Timer_Rubik.WebApp.Services
         {
             var updateCategory = _context.Categories.Where(cate => cate.Id == categoryId).FirstOrDefault()!;
 
-            updateCategory.Name = category.Name;
+            updateCategory.Name = category.Name.Trim();
             updateCategory.UpdatedAt = DateTime.Now;
             return Save();
         }

@@ -22,13 +22,13 @@ namespace Timer_Rubik.WebApp.Utilities
 
         public string HashPassword(string password)
         {
-            string hashedPassword = BcryptNet.HashPassword(password, BcryptNet.GenerateSalt(10));
+            string hashedPassword = BcryptNet.HashPassword(password.Trim(), BcryptNet.GenerateSalt(10));
             return hashedPassword;
         }
 
         public bool VerifyPassword(string password, string hashedPassword)
         {
-            bool isPasswordCorrect = BcryptNet.Verify(password, hashedPassword);
+            bool isPasswordCorrect = BcryptNet.Verify(password.Trim(), hashedPassword.Trim());
             return isPasswordCorrect;
         }
     }

@@ -21,7 +21,7 @@ namespace Timer_Rubik.WebApp.Services
                 Id = new Guid(),
                 AccountId = accountId,
                 CategoryId = scramble.CategoryId,
-                Algorithm = scramble.Algorithm,
+                Algorithm = scramble.Algorithm.Trim(),
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.MinValue,
             };
@@ -44,6 +44,11 @@ namespace Timer_Rubik.WebApp.Services
                     .Include(scramble => scramble.Account)
                     .Include(scramble => scramble.Category)
                     .FirstOrDefault()!;
+        }
+
+        public Scramble GetScramble(string algorithm)
+        {
+            return _context.Scrambles.Where(sc => sc.Algorithm.Trim().ToUpper() == algorithm.Trim().ToUpper()).FirstOrDefault()!;
         }
 
         public ICollection<Scramble> GetScrambleByCategory(Guid categoryId)
@@ -91,7 +96,7 @@ namespace Timer_Rubik.WebApp.Services
             var updateScramble = _context.Scrambles.Where(scram => scram.Id == scrambleId).FirstOrDefault()!;
 
             updateScramble.CategoryId = scramble.CategoryId;
-            updateScramble.Algorithm = scramble.Algorithm;
+            updateScramble.Algorithm = scramble.Algorithm.Trim();
             updateScramble.UpdatedAt = DateTime.Now;
 
             return Save();

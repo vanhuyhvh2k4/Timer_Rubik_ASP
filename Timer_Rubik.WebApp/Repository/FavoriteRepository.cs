@@ -49,7 +49,7 @@ namespace Timer_Rubik.WebApp.Services
                     .Include(fav => fav.Account)
                     .Include(fav => fav.Scramble)
                     .Include(fav => fav.Scramble.Category)
-                    .FirstOrDefault();
+                    .FirstOrDefault()!;
         }
 
         public ICollection<Favorite> GetFavorites()
@@ -92,7 +92,7 @@ namespace Timer_Rubik.WebApp.Services
 
         public bool UpdateFavorite(Favorite favorite)
         {
-            var updateFavorite = _context.Favorites.Where(fav => fav.Id == favorite.Id).FirstOrDefault();
+            var updateFavorite = _context.Favorites.Where(fav => fav.Id == favorite.Id).FirstOrDefault()!;
 
             updateFavorite.AccountId = favorite.AccountId;
             updateFavorite.ScrambleId = favorite.ScrambleId;

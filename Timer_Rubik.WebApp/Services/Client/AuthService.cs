@@ -26,9 +26,9 @@ namespace Timer_Rubik.WebApp.Services.Client
 
         public APIResponseDTO<string> Login(LoginRequestDTO loginRequest)
         {
-            var accountEntity = _accountRepository.GetAccount(loginRequest.Email.Trim());
+            var accountEntity = _accountRepository.GetAccount(loginRequest.Email);
 
-            bool isCorrectPassword = _passwordUtils.VerifyPassword(loginRequest.Password.Trim(), accountEntity.Password.Trim());
+            bool isCorrectPassword = _passwordUtils.VerifyPassword(loginRequest.Password, accountEntity.Password);
 
             if (!isCorrectPassword || accountEntity == null)
             {
@@ -51,7 +51,7 @@ namespace Timer_Rubik.WebApp.Services.Client
 
         public APIResponseDTO<string> Register(RegisterRequestDTO registerRequest)
         {
-            if (!_emailUtils.EmailValid(registerRequest.Email.Trim()))
+            if (!_emailUtils.EmailValid(registerRequest.Email))
             {
                 return new APIResponseDTO<string>
                 {
@@ -60,7 +60,7 @@ namespace Timer_Rubik.WebApp.Services.Client
                 };
             }
 
-            if (registerRequest.Password.Trim().Length < 6)
+            if (registerRequest.Password.Length < 6)
             {
                 return new APIResponseDTO<string>
                 {
@@ -69,7 +69,7 @@ namespace Timer_Rubik.WebApp.Services.Client
                 };
             }
 
-            if (_accountRepository.GetAccount(registerRequest.Email.Trim()) != null)
+            if (_accountRepository.GetAccount(registerRequest.Email) != null)
             {
                 return new APIResponseDTO<string>
                 {
@@ -91,7 +91,7 @@ namespace Timer_Rubik.WebApp.Services.Client
 
         public APIResponseDTO<string> Forgot(ForgotPasswordDTO forgotPassword)
         {
-            if (!_emailUtils.EmailValid(forgotPassword.Email.Trim()))
+            if (!_emailUtils.EmailValid(forgotPassword.Email))
             {
                 return new APIResponseDTO<string>
                 {
@@ -100,7 +100,7 @@ namespace Timer_Rubik.WebApp.Services.Client
                 };
             }
 
-            if (_accountRepository.GetAccount(forgotPassword.Email.Trim()) == null)
+            if (_accountRepository.GetAccount(forgotPassword.Email) == null)
             {
                 return new APIResponseDTO<string>
                 {
@@ -109,7 +109,7 @@ namespace Timer_Rubik.WebApp.Services.Client
                 };
             }
 
-            var account = _accountRepository.GetAccount(forgotPassword.Email.Trim());
+            var account = _accountRepository.GetAccount(forgotPassword.Email);
 
             string randomPassword = _passwordUtils.GenerateRandomPassword(6);
 
