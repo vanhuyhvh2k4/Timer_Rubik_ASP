@@ -15,7 +15,7 @@ namespace Timer_Rubik.WebApp.Services
 
         public Rule GetRule(Guid ruleId)
         {
-            return _context.Rules.Find(ruleId);
+            return _context.Rules.Find(ruleId)!;
         }
 
         public ICollection<Rule> GetRules()

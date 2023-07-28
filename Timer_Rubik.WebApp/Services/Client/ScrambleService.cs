@@ -233,6 +233,18 @@ namespace Timer_Rubik.WebApp.Services.Client
                 };
             }
 
+            var scrambleEntity = _scrambleRepository.GetScramble(updateScramble.Algorithm);
+
+            if (scrambleEntity != null)
+            {
+                return new APIResponseDTO<string>
+                {
+                    Status = 409,
+                    Message = "Scramble already exist"
+                };
+            }
+
+
             var accountId = _accountRepository.GetAccountByScramble(scrambleId).Id;
 
             if (ownerId != accountId)
