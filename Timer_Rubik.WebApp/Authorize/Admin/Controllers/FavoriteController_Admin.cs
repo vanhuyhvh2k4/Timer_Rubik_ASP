@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Attributes;
-using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Interfaces.Repository;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
 {
@@ -8,11 +8,11 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/favorite")]
     public class FavoriteController_Admin : Controller
     {
-        private readonly IFavoriteService _favoriteService;
+        private readonly IFavoriteRepository _favoriteRepository;
 
-        public FavoriteController_Admin(IFavoriteService favoriteService)
+        public FavoriteController_Admin(IFavoriteRepository favoriteRepository)
         {
-            _favoriteService = favoriteService;
+            _favoriteRepository = favoriteRepository;
         }
 
         [HttpGet]
@@ -24,7 +24,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
         {
             try
             {
-                var favorites = _favoriteService
+                var favorites = _favoriteRepository
                                     .GetFavorites()
                                     .Select(fav => new
                                     {
@@ -40,7 +40,6 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                                         {
                                             Id = fav.ScrambleId,
                                             fav.Scramble.Algorithm,
-                                            fav.Scramble.Thumbnail,
                                             Category = fav.Scramble.Category.Name
                                         },
                                         fav.Time,
@@ -81,7 +80,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var favorite = _favoriteService.GetFavorite(favoriteId);
+                var favorite = _favoriteRepository.GetFavorite(favoriteId);
 
                 if (favorite == null)
                 {
@@ -102,7 +101,6 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     {
                         Id = favorite.ScrambleId,
                         favorite.Scramble.Algorithm,
-                        favorite.Scramble.Thumbnail,
                         Category = favorite.Scramble.Category.Name
                     },
                     favorite.Time,
@@ -137,7 +135,7 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var favorites = _favoriteService
+                var favorites = _favoriteRepository
                                     .GetFavoritesOfAccount(accountId)
                                      .Select(fav => new
                                      {
@@ -153,7 +151,6 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                                          {
                                              Id = fav.ScrambleId,
                                              fav.Scramble.Algorithm,
-                                             fav.Scramble.Thumbnail,
                                              Category = fav.Scramble.Category.Name
                                          },
                                          fav.Time,

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.Attributes;
 using Timer_Rubik.WebApp.Authorize.Admin.DTO;
-using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Interfaces.Repository;
 using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
@@ -11,12 +11,12 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
     [Route("api/admin/category")]
     public class CategoryController_Admin : Controller
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public CategoryController_Admin(ICategoryService categoryService, IMapper mapper)
+        public CategoryController_Admin(ICategoryRepository categoryRepository, IMapper mapper)
         {
-            _categoryService = categoryService;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
@@ -35,17 +35,18 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (_categoryService.GetCategory(createCategory.Name) != null)
+                if (_categoryRepository.GetCategory(createCategory.Name) != null)
                 {
                     return Conflict("Name Already Exists");
                 }
 
                 var categoryMap = _mapper.Map<Category>(createCategory);
 
-                _categoryService.CreateCategory(categoryMap);
+                _categoryRepository.CreateCategory(categoryMap);
 
                 return Ok("Created successfully");
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
@@ -70,19 +71,19 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_categoryService.CategoryExists(categoryId))
+                if (!_categoryRepository.CategoryExists(categoryId))
                 {
                     return NotFound("Not Found Category");
                 }
 
-                if (_categoryService.GetCategory(updateCategory.Name) != null)
+                if (_categoryRepository.GetCategory(updateCategory.Name) != null)
                 {
                     return Conflict("Name already exists");
                 }
 
                 var categoryMap = _mapper.Map<Category>(updateCategory);
 
-                _categoryService.UpdateCategory(categoryId, categoryMap);
+                _categoryRepository.UpdateCategory(categoryId, categoryMap);
 
                 return Ok("Updated successfully");
             }
@@ -111,14 +112,14 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (!_categoryService.CategoryExists(categoryId))
+                if (!_categoryRepository.CategoryExists(categoryId))
                 {
                     return NotFound("Not Found Category");
                 }
 
-                var categoryEntity = _categoryService.GetCategory(categoryId);
+                var categoryEntity = _categoryRepository.GetCategory(categoryId);
 
-                _categoryService.DeleteCategory(categoryEntity);
+                _categoryRepository.DeleteCategory(categoryEntity);
 
                 return Ok("Deleted successfully");
             }

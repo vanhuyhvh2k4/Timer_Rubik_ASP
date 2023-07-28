@@ -21,4 +21,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\AdminController\" />
+    <Folder Include="DTO\Admin\" />
+    <Folder Include="Helper\Admin\" />
+  </ItemGroup>
+
 </Project>

@@ -4,11 +4,13 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
 using Timer_Rubik.WebApp.Data;
-using Timer_Rubik.WebApp.Interfaces;
+using Timer_Rubik.WebApp.Interfaces.Repository;
+using Timer_Rubik.WebApp.Interfaces.Services;
 using Timer_Rubik.WebApp.Interfaces.Utils;
 using Timer_Rubik.WebApp.Middlewares;
 using Timer_Rubik.WebApp.Services;
-using Timer_Rubik.WebApp.Services.Utils;
+using Timer_Rubik.WebApp.Services.Client;
+using Timer_Rubik.WebApp.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,16 +27,21 @@ builder.Services.AddDbContext<DataContext>(options =>
         new MySqlServerVersion(new Version(10, 4, 25))));
 
 //Register Interface
-builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<IJWTService, JWTService>();
-builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddScoped<IEmailUtils, EmailUtils>();
+builder.Services.AddScoped<IJWTUtils, JWTUtils>();
+builder.Services.AddScoped<IPasswordUtils, PasswordUtils>();
 
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IcategoryService, CategoryService>();
 builder.Services.AddScoped<IScrambleService, ScrambleService>();
-builder.Services.AddScoped<ISolveService, SolveService>();
 builder.Services.AddScoped<IFavoriteService, FavoriteService>();
-builder.Services.AddScoped<IRuleService, RuleService>();
+
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IScrambleRepository, ScrambleRepository>();
+builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+builder.Services.AddScoped<IRuleRepository, RuleRepository>();
 
 // Register auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

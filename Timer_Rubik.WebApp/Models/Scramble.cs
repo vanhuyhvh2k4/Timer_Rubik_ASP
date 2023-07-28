@@ -10,7 +10,7 @@
 
         public string Algorithm { get; set; }
 
-        public string Thumbnail { get; set; }
+        public string? Solve { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
@@ -21,7 +21,5 @@
         public ICollection<Favorite> Favorites { get; set; }
 
         public Category Category { get; set; }
-
-        public Solve Solve { get; set; }
     }
 }
