@@ -1,43 +1,67 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿:root {
+    --font-size: 1.6;
+    --line-height: 2.2;
+    --text-color: #333;
+    --font-weight: 500;
+    --font-family: Poppins;
 }
 
-/* Set padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+@font-face {
+    font-family: Poppins;
+    src: url("~/font/Poppins-Light.ttf");
+    font-weight: 300;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+@font-face {
+    font-family: Poppins;
+    src: url("~/font/Poppins-Regular.ttf");
+    font-weight: 400;
 }
 
-/* styles for validation helpers */
-.field-validation-error {
-    color: #b94a48;
+@font-face {
+    font-family: Poppins;
+    src: url("~/font/Poppins-Medium.ttf");
+    font-weight: 500;
 }
 
-.field-validation-valid {
-    display: none;
+@font-face {
+    font-family: Poppins;
+    src: url("~/font/Poppins-SemiBold.ttf");
+    font-weight: 600;
 }
 
-input.input-validation-error {
-    border: 1px solid #b94a48;
+@font-face {
+    font-family: Poppins;
+    src: url("~/font/Poppins-Bold.ttf");
+    font-weight: 700;
 }
 
-input[type="checkbox"].input-validation-error {
-    border: 0 none;
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
-.validation-summary-errors {
-    color: #b94a48;
+html,body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
 }
 
-.validation-summary-valid {
-    display: none;
+html {
+    text-rendering: optimizeSpeed;
+    font-size: 50%;
 }
 
+body {
+    font-size: var(--font-size);
+    font-weight: var(--font-weight);
+    font-family: var(--font-family);
+    line-height: var(--line-height);
+    color: var(--text-color);
+}
+
+#app {
+    width: 100%;
+    height: 100%;
+}
