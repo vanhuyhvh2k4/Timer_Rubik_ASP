@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Timer_Rubik.WebApp.DTO.Client;
 using Timer_Rubik.WebApp.Interfaces.Repository;
-using Timer_Rubik.WebApp.Interfaces.Services;
+using Timer_Rubik.WebApp.Interfaces.Services.Client;
 
 namespace Timer_Rubik.WebApp.Services.Client
 {

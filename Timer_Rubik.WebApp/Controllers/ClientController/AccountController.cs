@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Timer_Rubik.WebApp.DTO.Client;
 using Microsoft.AspNetCore.Authorization;
-using Timer_Rubik.WebApp.Interfaces.Services;
+using Timer_Rubik.WebApp.Interfaces.Services.Client;
 
 namespace Timer_Rubik.WebApp.Controllers.ClientController
 {

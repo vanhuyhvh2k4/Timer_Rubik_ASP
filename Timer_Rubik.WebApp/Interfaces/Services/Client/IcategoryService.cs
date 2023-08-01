@@ -1,6 +1,6 @@
 ﻿using Timer_Rubik.WebApp.DTO.Client;
 
-namespace Timer_Rubik.WebApp.Interfaces.Services
+namespace Timer_Rubik.WebApp.Interfaces.Services.Client
 {
     public interface IcategoryService
     {

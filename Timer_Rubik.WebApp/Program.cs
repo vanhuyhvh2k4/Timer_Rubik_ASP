@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Timer_Rubik.WebApp.Data;
 using Timer_Rubik.WebApp.Interfaces.Repository;
-using Timer_Rubik.WebApp.Interfaces.Services;
+using Timer_Rubik.WebApp.Interfaces.Services.Client;
 using Timer_Rubik.WebApp.Interfaces.Utils;
 using Timer_Rubik.WebApp.Middlewares;
 using Timer_Rubik.WebApp.Services;
