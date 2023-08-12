@@ -15,30 +15,31 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
         }
 
         [HttpGet("login")]
-        public IActionResult RenderLoginView(LoginDTO login)
+        public IActionResult Login()
         {
-            return View(login);
+            return View();
+        }
+
+        [HttpGet("success")]
+        public IActionResult RenderSuccessPage()
+        {
+            return View();
         }
 
         [HttpPost("login")]
         public IActionResult Login(LoginDTO login)
         {
-            if (!ModelState.IsValid)
-            {
-                login.Message = "Empty";
-                return RedirectToAction("RenderLoginView");
-            }
-
             var response = _accountService.Login(login);
-
-            login.Message = response.Message;
 
             if (response.Status == 403)
             {
-                return RedirectToAction("RenderLoginView");
+                ViewBag.isLogged = 0;
+            } else
+            {
+                return RedirectToAction("RenderSuccessPage");
             }
 
-            return Ok("Successful");
+            return View(login);
         }
     }
 }
