@@ -3,7 +3,16 @@
     ViewBag.Title = "Login | Adminitrator";
 }
 
+@model DTO.Admin.LoginDTO;
+
 <section class="vh-100">
+    @if (Model.Message != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
     <div class="container h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-md-9 col-lg-6 col-xl-5">
@@ -11,31 +20,32 @@
                      class="img-fluid" alt="Sample image">
             </div>
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                <form>
+                <form method="post">
                     <h2 class="fs-3">Login</h2>
 
                     <!-- Email input -->
                     <div class="form-outline mb-4">
-                        <input type="email" id="form3Example3" class="form-control form-control-lg"
+                        <input asp-for="Email" type="email" id="email" class="form-control form-control-lg"
                                placeholder="Enter a valid email address" />
-                        <label class="form-label" for="form3Example3">Email address</label>
+                        <label class="form-label" for="email">Email address</label>
                     </div>
 
                     <!-- Password input -->
                     <div class="form-outline mb-3">
-                        <input type="password" id="form3Example4" class="form-control form-control-lg"
+                        <input asp-for="Password" type="password" id="password" class="form-control form-control-lg"
                                placeholder="Enter password" />
-                        <label class="form-label" for="form3Example4">Password</label>
+                        <label class="form-label" for="password">Password</label>
                     </div>
 
                     <div class="text-center text-lg-start mt-4 pt-2">
-                        <button type="button" class="btn btn-primary btn-md"
+                        <button type="submit" class="btn btn-primary btn-md"
                                 style="padding-left: 2.5rem; padding-right: 2.5rem;">
                             Login
                         </button>
                     </div>
-
                 </form>
+
+                <h1>@Model?.Email</h1>
             </div>
         </div>
     </div>

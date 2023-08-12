@@ -1,4 +1,5 @@
-﻿using Timer_Rubik.WebApp.DTO.Client;
+﻿using Timer_Rubik.WebApp.DTO;
+using Timer_Rubik.WebApp.DTO.Client;
 
 namespace Timer_Rubik.WebApp.Interfaces.Services.Client
 {

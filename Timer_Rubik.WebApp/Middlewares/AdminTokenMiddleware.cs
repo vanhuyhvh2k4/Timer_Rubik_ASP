@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Timer_Rubik.WebApp.Attributes;
@@ -9,12 +8,14 @@ namespace Timer_Rubik.WebApp.Middlewares
     public class AdminTokenMiddleware
     {
         private readonly string secret;
+        private readonly string adminId;
         private readonly RequestDelegate _next;
 
         public AdminTokenMiddleware(RequestDelegate next, IConfiguration config)
         {
             _next = next;
             secret = config.GetSection("Token_Secret").Value!;
+            adminId = config.GetSection("Admin_Id").Value!;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -42,7 +43,7 @@ namespace Timer_Rubik.WebApp.Middlewares
 
                         var ruleId = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == "RuleId")?.Value;
 
-                        if (ruleId.ToString().Equals("231429c6-1fa3-11ee-9b01-a02bb82e10f9"))
+                        if (ruleId.ToString().Equals(adminId))
                         {
                             context.User = claimsPrincipal;
                             await _next(context);

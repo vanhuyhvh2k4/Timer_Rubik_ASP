@@ -1,4 +1,4 @@
-﻿namespace Timer_Rubik.WebApp.DTO.Client
+﻿namespace Timer_Rubik.WebApp.DTO
 {
     public class APIResponseDTO<T>
     {

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
+using Timer_Rubik.WebApp.Authorize.Admin.Controllers;
 using Timer_Rubik.WebApp.Data;
 using Timer_Rubik.WebApp.Interfaces.Repository;
 using Timer_Rubik.WebApp.Interfaces.Services.Client;
@@ -11,6 +12,8 @@ using Timer_Rubik.WebApp.Middlewares;
 using Timer_Rubik.WebApp.Services;
 using Timer_Rubik.WebApp.Services.Client;
 using Timer_Rubik.WebApp.Utilities;
+using IAdmin = Timer_Rubik.WebApp.Interfaces.Services.Admin;
+using SAdmin = Timer_Rubik.WebApp.Services.Admin;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +40,8 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IcategoryService, CategoryService>();
 builder.Services.AddScoped<IScrambleService, ScrambleService>();
 builder.Services.AddScoped<IFavoriteService, FavoriteService>();
+
+builder.Services.AddScoped<IAdmin.IAccountService, SAdmin.AccountService>();
 
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();

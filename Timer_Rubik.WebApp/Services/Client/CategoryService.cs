@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Timer_Rubik.WebApp.DTO;
 using Timer_Rubik.WebApp.DTO.Client;
 using Timer_Rubik.WebApp.Interfaces.Repository;
 using Timer_Rubik.WebApp.Interfaces.Services.Client;
