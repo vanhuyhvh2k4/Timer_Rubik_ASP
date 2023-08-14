@@ -33,13 +33,13 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
 
             if (response.Status == 403)
             {
-                ViewBag.isLogged = 0;
-            } else
+                ViewBag.Response = response;
+                return View();
+            }
+            else
             {
                 return RedirectToAction("RenderSuccessPage");
             }
-
-            return View(login);
         }
     }
 }

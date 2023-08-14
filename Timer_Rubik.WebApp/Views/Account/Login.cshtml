@@ -5,9 +5,13 @@
 
 @model DTO.Admin.LoginDTO;
 
+@{
+    var response = ViewBag.Response;
+}
+
 <section class="vh-100">
     @{
-        if (ViewBag.isLogged == 0)
+        if (response?.Status == 403)
         {
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <strong>Login Failed</strong> Username or password is incorrect
@@ -27,14 +31,14 @@
 
                     <!-- Email input -->
                     <div class="form-outline mb-4">
-                        <input asp-for="Email" type="email" id="email" class="form-control form-control-lg"
+                        <input required asp-for="Email" type="email" id="email" class="form-control form-control-lg"
                                placeholder="Enter a valid email address" />
                         <label class="form-label" for="email">Email address</label>
                     </div>
 
                     <!-- Password input -->
                     <div class="form-outline mb-3">
-                        <input asp-for="Password" type="password" id="password" class="form-control form-control-lg"
+                        <input required asp-for="Password" type="password" id="password" class="form-control form-control-lg"
                                placeholder="Enter password" />
                         <label class="form-label" for="password">Password</label>
                     </div>

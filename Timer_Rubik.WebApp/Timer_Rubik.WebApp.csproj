@@ -33,7 +33,6 @@
     <Folder Include="Data\" />
     <Folder Include="Helper\Admin\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Shared\Partials\" />
   </ItemGroup>
 
 </Project>
