@@ -45,7 +45,9 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
         [HttpGet("account")]
         public IActionResult GetAccounts()
         {
-            return View();
+            var token = HttpContext.User.FindFirst("UserId")!.Value;
+            var response = _accountService.GetAccounts(Guid.Parse(token));
+            return View(response.Data);
         }
     }
 }
