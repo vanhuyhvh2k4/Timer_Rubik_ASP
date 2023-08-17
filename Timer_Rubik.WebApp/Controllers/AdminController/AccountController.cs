@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Timer_Rubik.WebApp.Attributes;
 using Timer_Rubik.WebApp.DTO.Admin;
 using Timer_Rubik.WebApp.Interfaces.Services.Admin;
 
@@ -20,12 +21,6 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
             return View();
         }
 
-        [HttpGet("success")]
-        public IActionResult RenderSuccessPage()
-        {
-            return View();
-        }
-
         [HttpPost("login")]
         public IActionResult Login(LoginDTO login)
         {
@@ -37,9 +32,20 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
                 return View();
             }
             else
-            {
-                return RedirectToAction("RenderSuccessPage");
-            }
+                // Set cookie
+                Response.Cookies.Append("token", response.Data!, new CookieOptions
+                {
+                    Expires = DateTime.Now.AddDays(1),
+                    HttpOnly = true
+                });
+            return RedirectToAction("GetAccounts", "Account");
+        }
+
+        [AdminToken]
+        [HttpGet("account")]
+        public IActionResult GetAccounts()
+        {
+            return View();
         }
     }
 }

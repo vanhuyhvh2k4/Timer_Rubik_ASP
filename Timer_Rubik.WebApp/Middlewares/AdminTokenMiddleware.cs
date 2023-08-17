@@ -22,11 +22,9 @@ namespace Timer_Rubik.WebApp.Middlewares
         {
             if (context.GetEndpoint()?.Metadata?.GetMetadata<AdminTokenAttribute>() != null)
             {
-                var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
-                if (authHeader != null && authHeader.StartsWith("Bearer "))
+                context.Request.Cookies.TryGetValue("token", out var token);
+                if (token != null)
                 {
-                    var token = authHeader.Substring("Bearer ".Length);
-
                     // Xác thực JWT token
                     var tokenHandler = new JwtSecurityTokenHandler();
                     var key = Encoding.UTF8.GetBytes(secret);

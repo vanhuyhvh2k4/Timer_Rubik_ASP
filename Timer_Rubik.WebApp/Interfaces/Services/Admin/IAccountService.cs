@@ -6,5 +6,7 @@ namespace Timer_Rubik.WebApp.Interfaces.Services.Admin
     public interface IAccountService
     {
         APIResponseDTO<string> Login(LoginDTO loginRequest);
+
+        APIResponseDTO<ICollection<GetAccountDTO>> GetAccounts(Guid ownerId);
     }
 }
