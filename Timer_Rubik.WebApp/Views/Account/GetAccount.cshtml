@@ -1,0 +1,50 @@
+﻿@model DTO.Admin.GetAccountDTO;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Account | Adminitrator";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/test/account">Accounts</a></li>
+        <li class="breadcrumb-item active" aria-current="page">View</li>
+    </ol>
+</nav>
+
+@if (Model != null)
+{
+
+    <div class="text-center">
+        <img src="@Model.Thumbnail" alt="Avatar" width="250" height="250" style="border-radius: 50%; object-fit: cover; flex-shrink: 0;" />
+    </div>
+
+    <form method="post">
+        <div class="mb-3">
+            <label for="Id" class="form-label">Id</label>
+            <input disabled type="text" class="form-control" id="Id" value="@Model.Id">
+        </div>
+        <div class="mb-3">
+            <label for="Name" class="form-label">Name</label>
+            <input required type="text" class="form-control" id="Name" value="@Model.Name" asp-for="Name">
+        </div>
+        <div class="mb-3">
+            <label for="Email" class="form-label">Email</label>
+            <input disabled type="text" class="form-control" id="Email" value="@Model.Email">
+        </div>
+        <div class="mb-3">
+            <label for="Thumbnail" class="form-label">Thumbnail</label>
+            <input required type="text" class="form-control" id="Thumbnail" value="@Model.Thumbnail" asp-for="Thumbnail">
+        </div>
+        <div class="mb-3">
+            <label for="Created" class="form-label">Created</label>
+            <input disabled type="text" class="form-control" id="Created" value="@Model.CreatedAt">
+        </div>
+        <div class="mb-3">
+            <label for="Updated" class="form-label">Updated</label>
+            <input disabled type="text" class="form-control" id="Updated" value="@Model.UpdatedAt">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+} else {
+    <h2>Not Found</h2>
+}

@@ -15,6 +15,12 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
             _accountService = accountService;
         }
 
+        [HttpGet("error")]
+        public IActionResult ErrorPage()
+        {
+            return View();
+        }
+
         [HttpGet("login")]
         public IActionResult Login()
         {
@@ -24,20 +30,31 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
         [HttpPost("login")]
         public IActionResult Login(LoginDTO login)
         {
-            var response = _accountService.Login(login);
-
-            if (response.Status == 403)
+            try
             {
-                ViewBag.Response = response;
-                return View();
-            }
-            else
-                // Set cookie
-                Response.Cookies.Append("token", response.Data!, new CookieOptions
+                var response = _accountService.Login(login);
+
+                if (response.Status == 403)
                 {
-                    Expires = DateTime.Now.AddDays(1),
-                    HttpOnly = true
+                    ViewBag.Response = response;
+                    return View();
+                }
+                else
+                    // Set cookie
+                    Response.Cookies.Append("token", response.Data!, new CookieOptions
+                    {
+                        Expires = DateTime.Now.AddDays(1),
+                        HttpOnly = true
+                    });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Status = 500,
+                    Message = ex.Message,
                 });
+            }
             return RedirectToAction("GetAccounts", "Account");
         }
 
@@ -45,9 +62,63 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
         [HttpGet("account")]
         public IActionResult GetAccounts()
         {
-            var token = HttpContext.User.FindFirst("UserId")!.Value;
-            var response = _accountService.GetAccounts(Guid.Parse(token));
-            return View(response.Data);
+            try
+            {
+                var token = HttpContext.User.FindFirst("UserId")!.Value;
+                var response = _accountService.GetAccounts(Guid.Parse(token));
+                return View(response.Data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Status = 500,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpGet("account/{accountId}")]
+        public IActionResult GetAccount([FromRoute] Guid accountId)
+        {
+            try
+            {
+                var response = _accountService.GetAccount(accountId);
+
+                return View(response.Data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Status = 500,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpPost("account/{accountId}")]
+        public IActionResult UpdateAccount([FromRoute] Guid accountId, UpdateAccountDTO updateAccount)
+        {
+            try
+            {
+                var response = _accountService.UpdateAccount(accountId, updateAccount);
+
+                if (response.Status == 404)
+                {
+                    return RedirectToAction("ErrorPage", "Account");
+                } else
+                {
+                    return RedirectToAction("GetAccounts", "Account");
+                }
+            } catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Status = 500,
+                    Message = ex.Message,
+                });
+            }
         }
     }
 }

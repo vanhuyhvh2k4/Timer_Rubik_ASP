@@ -21,4 +21,11 @@
 
         public DateTime UpdatedAt { get; set; }
     }
+
+    public class UpdateAccountDTO
+    {
+        public string Name { get; set; }
+
+        public string Thumbnail { get; set; }
+    }
 }

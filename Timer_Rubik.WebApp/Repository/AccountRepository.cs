@@ -45,11 +45,9 @@ namespace Timer_Rubik.WebApp.Services
         public bool UpdateAccount(Guid accountId, Account account)
         {
             var updateAccount = _context.Accounts.Where(ac => ac.Id == accountId).FirstOrDefault()!;
-            var hashedPassword = _passwordUtils.HashPassword(account.Password.Trim());
 
             updateAccount.Name = account.Name.Trim();
             updateAccount.Thumbnail = account.Thumbnail.Trim();
-            updateAccount.Password = hashedPassword;
             updateAccount.UpdatedAt = DateTime.Now;
             return Save();
         }

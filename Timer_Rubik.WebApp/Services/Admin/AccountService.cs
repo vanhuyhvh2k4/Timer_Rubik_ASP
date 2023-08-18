@@ -4,6 +4,7 @@ using Timer_Rubik.WebApp.DTO.Admin;
 using Timer_Rubik.WebApp.Interfaces.Repository;
 using Timer_Rubik.WebApp.Interfaces.Services.Admin;
 using Timer_Rubik.WebApp.Interfaces.Utils;
+using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Services.Admin
 {
@@ -22,6 +23,27 @@ namespace Timer_Rubik.WebApp.Services.Admin
             _jWTUtils = jWTUtils;
             _mapper = mapper;
             adminId = config.GetSection("Admin_Id").Value!;
+        }
+
+        public APIResponseDTO<GetAccountDTO> GetAccount(Guid accountId)
+        {
+            var account = _mapper.Map<GetAccountDTO>(_accountRepository.GetAccount(accountId));
+
+            if (account == null)
+            {
+                return new APIResponseDTO<GetAccountDTO>
+                {
+                    Status = 404,
+                    Message = "Not Found Account",
+                };
+            }
+
+            return new APIResponseDTO<GetAccountDTO>
+            {
+                Status = 200,
+                Message = "Sucessful",
+                Data = account
+            };
         }
 
         public APIResponseDTO<ICollection<GetAccountDTO>> GetAccounts(Guid ownerId)
@@ -69,6 +91,28 @@ namespace Timer_Rubik.WebApp.Services.Admin
                 Status = 200,
                 Message = "Success",
                 Data = token
+            };
+        }
+
+        public APIResponseDTO<string> UpdateAccount(Guid accountId, UpdateAccountDTO updateAccount)
+        {
+            if (!_accountRepository.AccountExists(accountId))
+            {
+                return new APIResponseDTO<string>
+                {
+                    Status = 404,
+                    Message = "Not Found Account"
+                };
+            }
+
+            var accountMap = _mapper.Map<Account>(updateAccount);
+
+            _accountRepository.UpdateAccount(accountId, accountMap);
+
+            return new APIResponseDTO<string>
+            {
+                Status = 200,
+                Message = "Successful"
             };
         }
     }

@@ -99,13 +99,6 @@ namespace Timer_Rubik.WebApp.Authorize.Admin.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-
-                if (updateAccount.Password.Length < 6)
-                {
-                    return BadRequest("Password at least 6 characters");
-                }
-
-                var oldAccount = _accountRepository.GetAccount(accountId);
                     
                 if (!_accountRepository.AccountExists(accountId))
                 {
