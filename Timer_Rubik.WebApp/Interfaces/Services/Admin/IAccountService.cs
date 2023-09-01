@@ -12,5 +12,7 @@ namespace Timer_Rubik.WebApp.Interfaces.Services.Admin
         APIResponseDTO<GetAccountDTO> GetAccount(Guid accountId);
 
         APIResponseDTO<string> UpdateAccount(Guid accountId, UpdateAccountDTO updateAccount);
+
+        APIResponseDTO<string> DeleteAccount(Guid accountId);
     }
 }

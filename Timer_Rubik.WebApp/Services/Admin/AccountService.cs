@@ -25,6 +25,29 @@ namespace Timer_Rubik.WebApp.Services.Admin
             adminId = config.GetSection("Admin_Id").Value!;
         }
 
+        public APIResponseDTO<string> DeleteAccount(Guid accountId)
+        {
+
+            if (!_accountRepository.AccountExists(accountId))
+            {
+                return new APIResponseDTO<string>
+                {
+                    Status = 404,
+                    Message = "Not Found Account"
+                };
+            }
+
+            var accountEntity = _accountRepository.GetAccount(accountId);
+
+            _accountRepository.DeleteAccount(accountEntity);
+
+            return new APIResponseDTO<string>
+            {
+                Status = 200,
+                Message = "Successful"
+            };
+        }
+
         public APIResponseDTO<GetAccountDTO> GetAccount(Guid accountId)
         {
             var account = _mapper.Map<GetAccountDTO>(_accountRepository.GetAccount(accountId));

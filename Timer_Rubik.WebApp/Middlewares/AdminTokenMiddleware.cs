@@ -48,19 +48,19 @@ namespace Timer_Rubik.WebApp.Middlewares
                         } else
                         {
                             context.Response.StatusCode = 403;
-                            await context.Response.WriteAsync("You does not have permision to access");
+                            context.Response.Redirect("/login");
                         }
                     }
                     catch (Exception)
                     {
                         context.Response.StatusCode = 401;
-                        await context.Response.WriteAsync("Invalid token");
+                        context.Response.Redirect("/login");
                         return;
                     }
                 } else
                 {
                     context.Response.StatusCode = 401;
-                    await context.Response.WriteAsync("Missing or invalid authorization header");
+                    context.Response.Redirect("/login");
                     return;
                 }
             } else

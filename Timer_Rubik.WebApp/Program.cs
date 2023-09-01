@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
-using Timer_Rubik.WebApp.Authorize.Admin.Controllers;
 using Timer_Rubik.WebApp.Data;
 using Timer_Rubik.WebApp.Interfaces.Repository;
 using Timer_Rubik.WebApp.Interfaces.Services.Client;
@@ -85,6 +84,8 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseHttpMethodOverride();
 
 app.UseMiddleware<AdminTokenMiddleware>();
 

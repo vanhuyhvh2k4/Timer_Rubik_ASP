@@ -5,7 +5,7 @@ using Timer_Rubik.WebApp.Interfaces.Services.Admin;
 
 namespace Timer_Rubik.WebApp.Controllers.AdminController
 {
-    [Route("test")]
+    [Route("account")]
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
@@ -15,51 +15,8 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
             _accountService = accountService;
         }
 
-        [HttpGet("error")]
-        public IActionResult ErrorPage()
-        {
-            return View();
-        }
-
-        [HttpGet("login")]
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        [HttpPost("login")]
-        public IActionResult Login(LoginDTO login)
-        {
-            try
-            {
-                var response = _accountService.Login(login);
-
-                if (response.Status == 403)
-                {
-                    ViewBag.Response = response;
-                    return View();
-                }
-                else
-                    // Set cookie
-                    Response.Cookies.Append("token", response.Data!, new CookieOptions
-                    {
-                        Expires = DateTime.Now.AddDays(1),
-                        HttpOnly = true
-                    });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Status = 500,
-                    Message = ex.Message,
-                });
-            }
-            return RedirectToAction("GetAccounts", "Account");
-        }
-
         [AdminToken]
-        [HttpGet("account")]
+        [HttpGet]
         public IActionResult GetAccounts()
         {
             try
@@ -78,14 +35,21 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
             }
         }
 
-        [HttpGet("account/{accountId}")]
+        [HttpGet("{accountId}")]
         public IActionResult GetAccount([FromRoute] Guid accountId)
         {
             try
             {
                 var response = _accountService.GetAccount(accountId);
 
-                return View(response.Data);
+                if (response.Status == 200)
+                {
+                    return View(response.Data);
+                } else
+                {
+                    return RedirectToAction("Error", "Auth");
+                }
+
             }
             catch (Exception ex)
             {
@@ -97,7 +61,7 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
             }
         }
 
-        [HttpPost("account/{accountId}")]
+        [HttpPost("{accountId}")]
         public IActionResult UpdateAccount([FromRoute] Guid accountId, UpdateAccountDTO updateAccount)
         {
             try
@@ -106,11 +70,31 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
 
                 if (response.Status == 404)
                 {
-                    return RedirectToAction("ErrorPage", "Account");
-                } else
+                    return RedirectToAction("Error", "Auth");
+                }
+                else
                 {
                     return RedirectToAction("GetAccounts", "Account");
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Status = 500,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpDelete("{accountId}")]
+        public IActionResult DeleteAccount([FromRoute] Guid accountId)
+        {
+            try
+            {
+                var response = _accountService.DeleteAccount(accountId);
+
+                return Ok(response);
             } catch (Exception ex)
             {
                 return StatusCode(500, new
