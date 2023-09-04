@@ -35,6 +35,7 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
         }
 
         [HttpGet("account/{accountId}")]
+        [AdminToken]
         public IActionResult GetAccount([FromRoute] Guid accountId)
         {
             try
@@ -62,6 +63,7 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
         }
 
         [HttpPost("account/{accountId}")]
+        [AdminToken]
         public IActionResult UpdateAccount([FromRoute] Guid accountId, UpdateAccountDTO updateAccount)
         {
             try
@@ -88,6 +90,7 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
         }
 
         [HttpDelete("account/{accountId}")]
+        [AdminToken]
         public IActionResult DeleteAccount([FromRoute] Guid accountId)
         {
             try

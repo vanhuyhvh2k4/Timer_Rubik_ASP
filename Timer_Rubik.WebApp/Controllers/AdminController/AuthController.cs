@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using Timer_Rubik.WebApp.Attributes;
 using Timer_Rubik.WebApp.DTO.Admin;
 using Timer_Rubik.WebApp.Interfaces.Services.Admin;
 
@@ -32,12 +35,14 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
                     return View();
                 }
                 else
-                    // Set cookie
+                {
                     Response.Cookies.Append("token", response.Data!, new CookieOptions
                     {
                         Expires = DateTime.Now.AddDays(1),
                         HttpOnly = true
                     });
+                    return RedirectToAction("GetAccounts", "Account");
+                }
             }
             catch (Exception ex)
             {
@@ -47,7 +52,6 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
                     Message = ex.Message,
                 });
             }
-            return RedirectToAction("GetAccounts", "Account");
         }
 
         [HttpGet("error")]
@@ -57,6 +61,7 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
         }
 
         [HttpGet("logout")]
+        [AdminToken]
         public IActionResult Logout()
         {
             try

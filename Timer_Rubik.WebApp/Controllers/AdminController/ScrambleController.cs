@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Timer_Rubik.WebApp.Attributes;
 using Timer_Rubik.WebApp.Interfaces.Repository;
 using Timer_Rubik.WebApp.Interfaces.Services.Admin;
 using Timer_Rubik.WebApp.Services.Admin;
@@ -15,6 +16,7 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
         }
 
         [HttpGet("scramble")]
+        [AdminToken]
         public IActionResult GetScrambles([FromQuery(Name = "catId")] string categoryId)
         {
             try

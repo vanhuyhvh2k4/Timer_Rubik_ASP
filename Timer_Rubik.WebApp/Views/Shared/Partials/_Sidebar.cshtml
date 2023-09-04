@@ -41,7 +41,7 @@
             <li><a class="dropdown-item" href="#">New Category</a></li>
             <li><a class="dropdown-item" href="/profile">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="/logout">Sign out</a></li>
+            <li><button class="dropdown-item" onclick="logout()">Sign out</button></li>
         </ul>
     </div>
 </div>
@@ -55,4 +55,10 @@
             element.classList.add("active");
         }
     })
+</script>
+
+<script>
+    function logout() {
+        window.location.href = "/logout";
+    }
 </script>
