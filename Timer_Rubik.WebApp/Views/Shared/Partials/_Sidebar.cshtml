@@ -29,12 +29,6 @@
                 Favorite
             </a>
         </li>
-        <li>
-            <a href="/profile" class="nav-link text-white">
-                <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg>
-                My Profile
-            </a>
-        </li>
     </ul>
     <hr>
     <div class="dropdown">
@@ -43,11 +37,22 @@
             <strong>mdo</strong>
         </a>
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" href="#">New project...</a></li>
-            <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li><a class="dropdown-item" href="#">New Scramble</a></li>
+            <li><a class="dropdown-item" href="#">New Category</a></li>
+            <li><a class="dropdown-item" href="/profile">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Sign out</a></li>
         </ul>
     </div>
 </div>
+
+<script>
+    var url = window.location.pathname;
+    var navElement = document.querySelectorAll(".nav-link");
+
+    navElement.forEach(element => {
+        if (element.getAttribute("href").includes(url)) {
+            element.classList.add("active");
+        }
+    })
+</script>
