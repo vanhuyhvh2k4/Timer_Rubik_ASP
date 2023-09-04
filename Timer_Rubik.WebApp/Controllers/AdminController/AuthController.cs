@@ -55,5 +55,22 @@ namespace Timer_Rubik.WebApp.Controllers.AdminController
         {
             return View();
         }
+
+        [HttpGet("logout")]
+        public IActionResult Logout()
+        {
+            try
+            {
+                Response.Cookies.Delete("token");
+                return RedirectToAction("Login");
+            } catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Status = 500,
+                    Message = ex.Message,
+                });
+            }
+        }
     }
 }
