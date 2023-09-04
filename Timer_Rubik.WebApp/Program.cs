@@ -41,6 +41,7 @@ builder.Services.AddScoped<IScrambleService, ScrambleService>();
 builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 
 builder.Services.AddScoped<IAdmin.IAccountService, SAdmin.AccountService>();
+builder.Services.AddScoped<IAdmin.IScrambleService, SAdmin.ScrambleService>();
 
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
