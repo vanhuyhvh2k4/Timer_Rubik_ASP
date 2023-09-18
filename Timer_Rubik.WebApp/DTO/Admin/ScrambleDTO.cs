@@ -16,4 +16,13 @@
 
         public DateTime UpdatedAt { get; set; }
     }
+
+    public class CreateScrambleDTO
+    {
+        public Guid CategoryId { get; set; }
+
+        public string Algorithm { get; set; }
+
+        public string Solve { get; set; }
+    }
 }

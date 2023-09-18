@@ -24,6 +24,7 @@ namespace Timer_Rubik.WebApp.Services
                 Algorithm = scramble.Algorithm.Trim(),
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.MinValue,
+                Solve = string.IsNullOrEmpty(scramble.Solve) ? null : scramble.Solve.Trim(),
             };
 
             _context.Scrambles.Add(newScramble);

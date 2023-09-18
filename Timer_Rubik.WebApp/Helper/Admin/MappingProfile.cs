@@ -16,6 +16,9 @@ namespace Timer_Rubik.WebApp.Helper.Admin
 
             CreateMap<Scramble, GetScrambleDTO>();
             CreateMap<GetScrambleDTO, Scramble>();
+
+            CreateMap<Scramble, CreateScrambleDTO>();
+            CreateMap<CreateScrambleDTO, Scramble>();
         }
     }
 }

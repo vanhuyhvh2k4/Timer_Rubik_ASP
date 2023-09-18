@@ -3,6 +3,7 @@ using Timer_Rubik.WebApp.DTO;
 using Timer_Rubik.WebApp.DTO.Admin;
 using Timer_Rubik.WebApp.Interfaces.Repository;
 using Timer_Rubik.WebApp.Interfaces.Services.Admin;
+using Timer_Rubik.WebApp.Models;
 
 namespace Timer_Rubik.WebApp.Services.Admin
 {
@@ -19,6 +20,39 @@ namespace Timer_Rubik.WebApp.Services.Admin
             _categoryRepository = categoryRepository;
             _accountRepository = accountRepository;
             _mapper = mapper;
+        }
+
+        public APIResponseDTO<string> CreateScramble(Guid ownerId, CreateScrambleDTO createScramble)
+        {
+            var scrambleEntity = _scrambleRepository.GetScramble(createScramble.Algorithm);
+
+            if (scrambleEntity != null)
+            {
+                return new APIResponseDTO<string>
+                {
+                    Status = 409,
+                    Message = "Scramble already exist"
+                };
+            }
+
+            if (!_categoryRepository.CategoryExists(createScramble.CategoryId))
+            {
+                return new APIResponseDTO<string>
+                {
+                    Status = 404,
+                    Message = "Not found category"
+                };
+            }
+
+            var scrambleMap = _mapper.Map<Scramble>(createScramble);
+
+            _scrambleRepository.CreateScramble(ownerId, scrambleMap);
+
+            return new APIResponseDTO<string>
+            {
+                Status = 201,
+                Message = "Created successful"
+            };
         }
 
         public APIResponseDTO<ICollection<GetScrambleDTO>> GetScramblesByCategory(Guid categoryId)

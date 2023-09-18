@@ -47,23 +47,23 @@
 <div class="modal" hidden>
     <div class="overlay"></div>
     <div class="popup p-4">
-        <form>
+        <form method="post" action="/scramble">
             <h3 class="text-center text-success">Create scramble</h3>
             <div class="mb-3">
                 <label for="Category" class="form-label">Category</label><br />
-                <select class="w-100" id="Category">
-                    <option>3x3x3</option>
-                    <option>4x4x4</option>
-                    <option>5x5x5</option>
+                <select class="w-100" id="Category" name="CategoryId">
+                    <option value="a81e2eed-1fab-11ee-9b01-a02bb82e10f9">3x3x3</option>
+                    <option value="08db8432-4949-4e0a-8087-b23c646db400">4x4x4</option>
+                    <option value="08db8bee-c2d3-4aaa-83ef-728471e8b34d">5x5x5</option>
                 </select>
             </div>
             <div class="mb-3">
                 <label for="Algorithm" class="form-label">Algorithm</label>
-                <input type="text" class="form-control" id="Algorithm" required>
+                <input name="Algorithm" type="text" class="form-control" id="Algorithm" required>
             </div>
             <div class="mb-3">
                 <label for="Solve" class="form-label">Solve</label>
-                <input type="text" class="form-control" id="Solve">
+                <input name="Solve" type="text" class="form-control" id="Solve">
             </div>
             <button type="submit" class="btn btn-danger btn-md w-100">Create Scramble</button>
         </form>

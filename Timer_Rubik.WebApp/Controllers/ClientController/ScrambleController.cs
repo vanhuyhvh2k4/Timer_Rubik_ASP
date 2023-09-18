@@ -92,7 +92,7 @@ namespace Timer_Rubik.WebApp.Controllers.ClientController
 
         [HttpPost]
         [Authorize]
-        public IActionResult CreateCategory([FromBody] CreateScrambleDTO createScramble)
+        public IActionResult CreateScramble([FromBody] CreateScrambleDTO createScramble)
         {
             try
             {
